@@ -1,0 +1,66 @@
+body {
+    margin:0px; /* centraliza a página */
+    text-align:center; /* centraliza a página no Internet Explorer */
+    background-color:#09F; /* definimos uma cor de fundo para a página*/
+    font-family:"Trebuchet MS, Tahoma, Verdana"; /* definimos uma fonte */
+    font-size:12px; /* definimos o tamanho da fonte */
+    color:#999; /* definimos a cor da fonte */
+}
+#corpo {
+    margin:0px auto; /* centraliza a div na página */
+    text-align:left; /* alinha o texto à esquerda */
+    width:700px; /* definimos uma largura de 700px */
+    background-color:#FFF; /* definimos a cor de fundo da div */
+    border:1px solid #CCC; /* definimos os atributos da borda da div */
+    padding-bottom:12px; /* definimos o espaçamento da base */
+}
+#topo {
+	width:100%;
+    height:100px; /* definimos a altura da div */
+}
+#menu {
+    background-color:#F92; /* cor de fundo da div */
+    padding:4px; /* distância entre a borda e o conteúdo do elemento na div */
+    color:#FFF; /* cor da fonte */
+    border-top:1px solid #FFF; /* definimos os atributos da borda superior */
+}
+#menu ul { /* vamos estilizar uma lista na div menu */
+    margin:0px 0px 0px 20px; /* margem no sentido horário(topo,direita,base,esquerda) */
+    padding:0px; /* sem espaçamento */
+    list-style-type:none; /* tipo do estilo da lista */
+    border-left:1px solid #DDD; /* definimos os atributos da borda esquerda */
+}
+     
+#menu li { /* vamos estilizar os elementos da lista na div menu */
+    display:inline; /* definimos que os elementos da lista serão exibidos numa linha */
+    padding:0px 10px 0px 10px; /* espaçamento no sentido horário(topo,direita,base,esquerda) */
+    border-right:1px solid #DDD; /* definimos os atributos da borda direita */
+}
+     
+#menu li a { /* link no estado normal e visitado */
+    text-decoration:none; /* sem decoração no link */
+    color:#FFF; /* definimos a cor do link */
+}
+     
+#menu li a:hover { /* link no estado quando se passa o mouse em cima */
+    text-decoration:underline; /* decoração sublinhado no link */
+    background-color:#990; /* cor de fundo no link */
+}
+#lateral {
+    float:right; /* definimos que a div lateral vai flutuar para a direita */
+    padding:4px; /* espaçamento de 4px para todos os lados */
+    border:1px solid #AAA; /* definimos os atributos da borda */
+    width:190px; /* Temos 190px + 2px da borda direita e esquerda + 8px do espaçamento = 200px */
+    margin:10px 0px 0px 10px; /* margem no sentido horário(topo,direita,base,esquerda) */
+    position:relative; /* definimos que a nossa div tem posição relativa */
+    right:5px; /* com isso definimos que ela vai ter margem de 5px da direita */
+}
+#conteudo {
+    margin:10px 215px 0px 5px; /* margem no sentido horário(topo,direita,base,esquerda) */
+    text-indent:20px; /* espaçamento de 20px nos parágrafos */
+    text-align:justify; /* texto justificado */
+}
+ 
+#conteudo p {
+    margin:0px; /* sem margem nos parágrafos na div conteúdo */
+}
