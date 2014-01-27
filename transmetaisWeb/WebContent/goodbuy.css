@@ -1,0 +1,178 @@
+*{margin:0px; padding:0px; font-family:Arial, Helvetica, sans-serif;}
+
+#header {
+	height: 100px;
+	background-color: navy;
+}
+#carrinho {
+	height: 80px;
+	background-color: #dcdee0;
+	width: 300px;
+	margin: 10px;
+	float: right;
+	border: 1px solid gray;
+	-moz-border-radius: 10px;
+}
+
+#carrinho h3 a {
+	color: navy;
+}
+#carrinho h3 {
+	margin: 10px;
+}
+#carrinho span {
+	margin: 10px;	
+}
+#carrinho ul {
+	list-style: none;
+	padding-left: 10px;
+}
+#carrinho li {
+	float: left;
+	margin-right: 20px;	
+}
+
+#usuario {
+	float: left;
+	heigth: 50px;
+	background-color: #dcdee0;
+	margin: 10px;
+	padding: 5px;
+	border: 1px solid gray;
+	-moz-border-radius: 5px;	
+}
+#erros {
+	background-color: red;
+}
+
+#footer {
+	border-top: 1px solid gray;
+	clear:both;
+}
+body {
+	background-color: navy;
+}
+#body {
+	border-top: 1px solid gray;
+	width: 100%;
+	margin: 0 auto;
+	min-height: 300px;
+	padding: 10px 0;
+	float:left;
+	background-color: #dcdee0;
+}
+
+#content {
+	float:left;
+	padding-left: 10px;
+}
+
+##topo {
+	width:100%;
+    height:100px; /* definimos a altura da div */
+}
+#menu {
+    background-color:#F92; /* cor de fundo da div */
+    padding:4px; /* distância entre a borda e o conteúdo do elemento na div */
+    color:#FFF; /* cor da fonte */
+    border-top:1px solid #FFF; /* definimos os atributos da borda superior */
+}
+#menu ul { /* vamos estilizar uma lista na div menu */
+    margin:0px 0px 0px 20px; /* margem no sentido horário(topo,direita,base,esquerda) */
+    padding:0px; /* sem espaçamento */
+    list-style-type:none; /* tipo do estilo da lista */
+    border-left:1px solid #DDD; /* definimos os atributos da borda esquerda */
+}
+     
+#menu li { /* vamos estilizar os elementos da lista na div menu */
+    display:inline; /* definimos que os elementos da lista serão exibidos numa linha */
+    padding:0px 10px 0px 10px; /* espaçamento no sentido horário(topo,direita,base,esquerda) */
+    border-right:1px solid #DDD; /* definimos os atributos da borda direita */
+}
+     
+#menu li a { /* link no estado normal e visitado */
+    text-decoration:none; /* sem decoração no link */
+    color:#FFF; /* definimos a cor do link */
+}
+     
+#menu li a:hover { /* link no estado quando se passa o mouse em cima */
+    text-decoration:underline; /* decoração sublinhado no link */
+    background-color:#990; /* cor de fundo no link */
+}
+.link {
+	text-decoration: underline;
+	border: none;
+	background: none;
+	color: blue;
+	cursor: pointer;
+	padding:0;
+	margin:0;
+}
+
+input:FOCUS, textarea:FOCUS {
+	background-color: #e7ecf1;
+	border: 1px solid gray;
+	-moz-border-radius: 2px;
+	padding: 1px;
+}
+input, label, textarea {
+	display: block;
+}
+input.qtde {
+	display: inline;
+	width: 2em;
+}
+.hint {
+	color: gray;
+	font-size: 10pt;
+}
+label.error {
+	color:red;	
+}
+fieldset {
+	border:none;
+	padding: 10px;
+	width: 700px;
+	border-top: 3px solid #365372;
+}
+
+fieldset legend {
+	border: 1px solid #365372;
+	-moz-border-radius: 3px;
+	background-color: #c7c9cb;
+	font-weight: bold;
+	padding: 3px;
+	margin-bottom: 15px;
+	font-size: 16pt;
+	color: #365372;
+}
+
+table thead {
+	background-color: #2a2948;
+	color: white;
+	font-weight: bold;
+}
+
+table tbody tr:nth-child(even) {
+	background-color: #a29bc0;
+}
+table tbody td {
+	vertical-align: text-bottom;	
+}
+table tfoot th {
+	background-color: #2a2948;
+	color: white;
+	font-weight: bold;
+}
+div.dropdown { color: #555; margin: 3px -22px 0 0; width: 143px; position: relative; height: 17px; text-align:left; }
+
+div.submenu { background: #fff; position: absolute; top: -12px; left: -20px; z-index: 100; width: 135px; display: none; margin-left: 10px; padding: 40px 0 5px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45); }
+
+.dropdown li a { color: #555555; display: block; font-family: arial; font-weight: bold; padding: 6px 15px; cursor: pointer; text-decoration:none; }
+
+.dropdown li a:hover{ background:#155FB0; color: #FFFFFF; text-decoration: none; }
+
+a.conta { font-size: 11px; line-height: 16px; color: #555; position: absolute; z-index: 110; display: block; padding: 11px 0 0 20px; height: 28px;width: 121px; margin: -11px 0 0 -10px; text-decoration: none; background: url(../icons/arrow.png) 116px 17px no-repeat; cursor:pointer; }
+
+.raiz { list-style:none; margin:0px; padding:0px; font-size: 11px;padding: 11px 0 0 0px; border-top:1px solid #dedede; }
+
