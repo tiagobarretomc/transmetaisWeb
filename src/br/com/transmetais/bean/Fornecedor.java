@@ -8,6 +8,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -33,8 +35,10 @@ public class Fornecedor {
 	private String telefoneFixo;
 	private  String email;
 	private String endereco;
-	private String cidade;
-	private String estado;
+	@ManyToOne
+	@JoinColumn(name="cidade_id")
+	private Cidade cidade;
+	
 	private String banco;
 	private String agencia;
 	@Column(name="tipo_conta")
@@ -104,18 +108,13 @@ public class Fornecedor {
 	public void setEndereco(String endereco) {
 		this.endereco = endereco;
 	}
-	public String getCidade() {
+	public Cidade getCidade() {
 		return cidade;
 	}
-	public void setCidade(String cidade) {
+	public void setCidade(Cidade cidade) {
 		this.cidade = cidade;
 	}
-	public String getEstado() {
-		return estado;
-	}
-	public void setEstado(String estado) {
-		this.estado = estado;
-	}
+	
 	public String getBanco() {
 		return banco;
 	}

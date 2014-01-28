@@ -11,7 +11,7 @@ function showResponse(data) {
     alert(jsonObject);
     //update html  
     var html = "";  
-     html += "<select name='fornecedor.cidade'>" ;  
+     html += "<select name='fornecedor.cidade.id' id='fornecedor.cidade.id'>" ;  
      for(i=0;i<users.length;i++) {  
          html += "<option value='"+cidades[i].id +"'>"+cidades[i].nome+"</option>";                           
      }  
@@ -47,10 +47,10 @@ function showResponse(data) {
     				preco: $("#precoMaterial").val()},
     		
     		success: function(retorno){
-    			alert(retorno);
+    			//alert(retorno);
     			var startTable = retorno.indexOf("<table width=\"400px\">");
     			var endTable = retorno.indexOf("</table>")+8;
-    			alert(retorno.substring(startTable,endTable));
+    			//alert(retorno.substring(startTable,endTable));
     			$("#tabelaPreco").html(retorno.substring(startTable,endTable));
     		},
 			error: function(data){
@@ -83,13 +83,13 @@ function showResponse(data) {
 				        url: '${pageContext.request.contextPath}/fornecedor/loadCidades?_format=json',
 				        data:	{id: $("#estado").val()},
 				 	    success: function(json){
-				 	    	alert(json);
+				 	    	//alert(json);
 				 	    	var jsonObject = eval('(' + json + ')');
 				 	    	var cidades = jsonObject.list;
-				 	    	alert(cidades); 
+				 	    	//alert(cidades); 
 				 	    	
 				 	    	var html = "";  
-				 	       html += "<select name='fornecedor.cidade'>" ;  
+				 	       html += "<select name='fornecedor.cidade.id'>" ;  
 				 	       for(i=0;i<cidades.length;i++) {  
 				 	           html += "<option value='"+cidades[i].id +"'>"+cidades[i].nome+"</option>";                           
 				 	       }  
@@ -146,19 +146,28 @@ function showResponse(data) {
 		</tr>
 		<tr style="background-color: #dcdee0">
 			<td >Endere&ccedil;o:<input name="fornecedor.endereco" value = "${fornecedor.endereco }" size="60"/></td>
-			<td >Estado:
+			<td >Estado:<br/>
 					<select id="estado" name="estado" class="required">
 						<option value ="">Selecione</option>
 						<c:forEach var="estado" items="${estados}" varStatus="contador">
-							<option value ="${estado.id}">${estado.nome}</option>
+						
+							<option value ="${estado.id}" ${fornecedor.cidade.estado.id eq estado.id ? 'selected' : ''}>${estado.nome}</option>
 		
 						</c:forEach>	
 					</select>
 				</td>
 			<td >Cidade:
 				<div id="ajaxResultDiv">
-					<select name="fornecedor.cidade" class="required" id="fornecedor.cidade"> 
+					<select name="fornecedor.cidade.id" class="required" id="fornecedor.cidade.id"> 
 						<option value="">Selecione</option>
+						
+						<c:forEach var="cidade" items="${fornecedor.cidade.estado.cidades}" varStatus="contador">
+						
+							<option value ="${cidade.id}" ${fornecedor.cidade.id eq cidade.id ? 'selected' : ''}>${cidade.nome}</option>
+		
+						</c:forEach>
+						
+						
 					</select>
  				</div>
 			</td>

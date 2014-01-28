@@ -1,13 +1,17 @@
 package br.com.transmetais.controller;
 
+import static br.com.caelum.vraptor.view.Results.json;
+
 import java.util.List;
-import static br.com.caelum.vraptor.view.Results.*;
+
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.transmetais.bean.Cidade;
 import br.com.transmetais.bean.Estado;
 import br.com.transmetais.bean.Fornecedor;
 import br.com.transmetais.bean.Material;
+import br.com.transmetais.dao.CidadeDAO;
 import br.com.transmetais.dao.EstadoDAO;
 import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.dao.impl.FornecedorDaoImpl;
@@ -23,12 +27,14 @@ public class FornecedorController {
 	private MaterialDaoImpl materialDao;
 	
 	private EstadoDAO estadoDAO;
+	private CidadeDAO cidadeDAO;
 
-	public FornecedorController(Result result, FornecedorDaoImpl dao, MaterialDaoImpl materialDao, EstadoDAO estadoDAO) {
+	public FornecedorController(Result result, FornecedorDaoImpl dao, MaterialDaoImpl materialDao, EstadoDAO estadoDAO, CidadeDAO cidadeDAO) {
 		this.result = result;
 		this.dao = dao;
 		this.materialDao = materialDao;
 		this.estadoDAO = estadoDAO;
+		this.cidadeDAO = cidadeDAO;
 		
 	}
 	
@@ -55,7 +61,10 @@ public class FornecedorController {
 	
 	public void adiciona(Fornecedor fornecedor) {
 		try {
+			Cidade cidade = cidadeDAO.findById(fornecedor.getCidade().getId());
+			fornecedor.setCidade(cidade);
 			if (fornecedor.getId() != null && fornecedor.getId()>0){
+				
 				dao.updateEntity(fornecedor);
 			}else{
 				dao.addEntity(fornecedor);

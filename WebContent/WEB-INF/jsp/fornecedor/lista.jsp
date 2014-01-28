@@ -34,10 +34,10 @@
 				${fornecedor.nome} 
 			</td>
 			<td>
-				${fornecedor.estado}
+				${fornecedor.cidade.uf}
 			</td>
 			<td>
-				${fornecedor.cidade}
+				${fornecedor.cidade.nome}
 			</td>
 			<td>
 				${fornecedor.email}
