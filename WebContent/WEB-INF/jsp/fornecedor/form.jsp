@@ -64,6 +64,14 @@ function showResponse(data) {
     	
     	
     	$(function(){
+    		$('#optTipoPessoaFisica').click(function(){
+    			$("#cpfCnpj").mask('999.999.999-99');
+    		});
+    		
+    		$('#optTipoPessoaJuridica').click(function(){
+    			$("#cpfCnpj").mask('99.999.999/9999-99');
+    		});
+    		
     	    $('#estado').change(function(){
     	    	
     	        if($(this).val()) {
@@ -136,7 +144,18 @@ function showResponse(data) {
 		<tr style="background-color: #dcdee0">
 			<td width="320px">Nome: <input name="fornecedor.nome" id="fornecedor.nome" value="${fornecedor.nome}" class="required" size="60"/></td>
 			<td width="130px">Apelido: <input name="fornecedor.apelido" id="fornecedor.apelido" value="${fornecedor.apelido}" class="required" size="20"/></td>
-		    <td >Cpf/Cnpj:<input id="cpfCnpj" name="fornecedor.cpfCnpj" value = "${fornecedor.cpfCnpj }" size="20"class="required"/></td>
+		    <td></td>
+		</tr>
+		<tr style="background-color: #dcdee0">
+			<td colspan="2">Tipo Pessoa: 
+				<input type="radio" name="tipoPessoa" value="F" id="optTipoPessoaFisica"/>Física
+				<input type="radio" name="tipoPessoa" value="J" id="optTipoPessoaJuridica"/>Jurídica
+			</td>
+			
+			<td >Cpf/Cnpj:<input id="cpfCnpj" name="fornecedor.cpfCnpj" value = "${fornecedor.cpfCnpj }" size="20"class="required"/></td>
+			
+			
+			
 		</tr>
 		
 		<tr style="background-color: #dcdee0">
