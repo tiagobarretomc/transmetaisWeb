@@ -8,7 +8,7 @@ function showResponse(data) {
     //get the user array from the json object  
     var cidades = jsonObject.list;  
     
-    alert(jsonObject);
+    //alert(jsonObject);
     //update html  
     var html = "";  
      html += "<select name='fornecedor.cidade.id' id='fornecedor.cidade.id'>" ;  
@@ -46,7 +46,7 @@ function showResponse(data) {
     	*/
     	
     	$("#btnAdicionar").click(function(){
-    		alert('testando 1');
+    		//alert('testando 1');
     		//document.location.href
     		document.location.href = "${pageContext.request.contextPath}/fornecedorMaterial/associar?fornecedorId="+ $("#fornecedorId").val()+"&materialId=" + $("#cboMaterial").val() + "&preco="+$("#precoMaterial").val();
     		/*
