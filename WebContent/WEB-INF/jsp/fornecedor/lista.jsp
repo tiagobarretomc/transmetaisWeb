@@ -23,6 +23,8 @@
       </div>
     </div>
 <script src="js/bootstrap.min.js"></script>
+<div class="container">
+		<br/>
 		<h2>Fornecedores</h2>
 		<br>
 		<table width="1024px">
@@ -45,7 +47,7 @@
 	
 		<tr>
 			<td>
-				<a href="/transmetaisWeb/fornecedor/${fornecedor.id}"><span class="glyphicon glyphicon-pencil"></span></a> 
+				<a href="${fornecedor.id}"><span style="color: black;" class="glyphicon glyphicon-pencil"></span></a> 
 			</td>
 			<td>
 				${fornecedor.apelido}
@@ -69,5 +71,6 @@
 		</c:forEach>
 	</tbody>
 	</table>
+	</div>
 </body>
 </html>

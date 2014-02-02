@@ -164,13 +164,14 @@ function showResponse(data) {
         </div><!--/.nav-collapse -->
       </div>
     </div>
+    <div class="container">
     <br>
 	<h2>Dados do Fornecedor</h2>
 	<form action="<c:url value='/fornecedor/adiciona'/>" id="formFornecedor" name="formFornecedor" method="post">
 		<input type="hidden" id="fornecedorId" name="fornecedor.id" value="${fornecedor.id}"/>
 		
 		<div class="row">
-        	<div class="col-md-4">Nome: <input name="fornecedor.nome" id="fornecedor.nome" value="${fornecedor.nome}" class="required" size="60"/></div>
+        	<div class="col-md-4">Nome: <br><input name="fornecedor.nome" id="fornecedor.nome" value="${fornecedor.nome}" class="required" size="45"/></div>
         	<div class="col-md-4">Apelido: <br><input name="fornecedor.apelido" id="fornecedor.apelido" value="${fornecedor.apelido}" class="required" size="20"/></div>
         	<div class="col-md-4"></div>
       	</div>
@@ -183,13 +184,13 @@ function showResponse(data) {
       	</div>
       	
       	<div class="row">
-        	<div class="col-md-4">Email: <input name="fornecedor.email" value = "${fornecedor.email }" size="60"/></div>
+        	<div class="col-md-4">Email: <br><input name="fornecedor.email" value = "${fornecedor.email }" size="45"/></div>
         	<div class="col-md-4">Telefone:<br/><input id="telefoneFixo" name="fornecedor.telefoneFixo" value = "${fornecedor.telefoneFixo}" size="20"/></div>
         	<div class="col-md-4">Celular:<br/><input id="telefoneCelular" class="required" name="fornecedor.telefoneCelular" value="${ fornecedor.telefoneCelular}" size="20"/></div>
       	</div>
       	
       	<div class="row">
-        	<div class="col-md-4">Endereço:<input name="fornecedor.endereco" value = "${fornecedor.endereco }" size="60"/></div>
+        	<div class="col-md-4">Endereço:<br><input name="fornecedor.endereco" value = "${fornecedor.endereco }" size="45"/></div>
         	<div class="col-md-4">Estado:<br/>
 					<select id="estado" name="estado" class="required">
 						<option value ="">Selecione</option>
@@ -214,12 +215,12 @@ function showResponse(data) {
  				</div></div>
       	</div>
       	<div class="row">
-        	<div class="col-md-4">Banco: <input name="fornecedor.banco" value = "${fornecedor.banco }" size="60"/></div>
+        	<div class="col-md-4">Banco: <br><input name="fornecedor.banco" value = "${fornecedor.banco }" size="45"/></div>
         	<div class="col-md-4">Agência:<br/><input name="fornecedor.agencia" value = "${fornecedor.agencia }" size="20" maxlength="6"/></div>
         	<div class="col-md-4">Conta Corrente: <br/><input name="fornecedor.contaCorrente" value = "${fornecedor.contaCorrente }" size="20"/></div>
       	</div>
       	<div class="row">
-        	<div class="col-md-4">Nome Titular: <input name="fornecedor.nomeTitular" value = "${fornecedor.nomeTitular }" size="60"/></div>
+        	<div class="col-md-4">Nome Titular: <br><input name="fornecedor.nomeTitular" value = "${fornecedor.nomeTitular }" size="45"/></div>
         	<div class="col-md-4">Cpf/Cnpj Titular:<br/><input name="fornecedor.cpfCnpjTitular" value = "${fornecedor.cpfCnpjTitular }" size="20"/></div>
         	<div class="col-md-4"></div>
       	</div>
@@ -228,33 +229,47 @@ function showResponse(data) {
 	<br>
 	<br/>
 	<h3>Materiais Fornecidos</h3>
-	<table>
-		<tr>
-			<td>Material:
+	
+	<div class="row" style="width: 600px;">
+        	<div class="col-md-4">Material:<br/>
 				<select style="width: 180px;" id="cboMaterial">
 					<option value="" >--Selecione--</option>
 					<c:forEach var="material" items="${materiais}">
 						<option value="${material.id }" >${material.descricao}</option>
 					</c:forEach>
-				</select>
-			</td>
-			<td>Preço:
+				</select></div>
+        	<div class="col-md-4">Preço:<br/>
 				
-			</td>
-			<td>
-				<input  type="text" id="precoMaterial" size="15"/>
-			</td>
-			<td><input id="btnAdicionar" type="button" value="Adicionar"/>
-			</td>
 			
-		</tr>
-	</table>
+				<input  type="text" id="precoMaterial" size="15"/></div>
+        	<div class="col-md-4">Forma de Frete/Entrega:<br/>
+				<select style="width: 180px;" id="cboTipoFrete">
+					<option value="" >--Selecione--</option>
+						<option value="CIF" >Cif</option>
+						<option value="FOB" >Fob</option>
+						<option value="POS" >Posto na Usina</option>
+						
+					
+				</select></div>
+      	</div>
+	
+	
+	<button id="btnAdicionar" type="button" class="btn btn-default btn-sm">
+  <span class="glyphicon glyphicon-plus"></span> Adicionar
+</button>
+	
+	<br/>
+	<br/>
 	<div id="tabelaPreco">
-	<table width="400px">
+	
+	
+          
+	<table  class="table table-bordered table-striped" style="width: 500px">
 		<thead>
 			<tr>
-				<td>Material</td>
-				<td>Preço</td>
+				<th>Material</th>
+				<th>Preço</th>
+				<th></th>
 			</tr>
 		</thead>
 		<tbody>
@@ -262,7 +277,7 @@ function showResponse(data) {
 		<tr>
 			<td>${materialFornecedor.material.descricao}</td>
 			<td>${materialFornecedor.valor}</td>
-			<td><a href="<c:url value='/fornecedorMaterial/excluir/'/>${materialFornecedor.id}">Excluir</a></td>
+			<td><a href="<c:url value='/fornecedorMaterial/excluir/'/>${materialFornecedor.id}"><span class="glyphicon glyphicon-remove-sign"></span></a></td>
 		</tr>
 		
 		</c:forEach>
@@ -270,6 +285,8 @@ function showResponse(data) {
 	</table>
     </div>
     <input type="submit" value="Salvar"/>
+    
 </form>
+</div>
 </body>
 </html>
