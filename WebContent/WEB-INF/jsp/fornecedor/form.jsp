@@ -144,36 +144,53 @@ function showResponse(data) {
 <title>Transmetais</title>
 </head>
 <body>
-
+	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">Transmetais</a>
+        </div>
+        <div class="collapse navbar-collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Cadastros</a></li>
+            <li><a href="#about">Comercial</a></li>
+            <li><a href="#contact">Relatórios</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+    <br>
+	<h2>Dados do Fornecedor</h2>
 	<form action="<c:url value='/fornecedor/adiciona'/>" id="formFornecedor" name="formFornecedor" method="post">
 		<input type="hidden" id="fornecedorId" name="fornecedor.id" value="${fornecedor.id}"/>
-		<table width="1000px">
-		<tbody>
-		<tr style="background-color: #dcdee0">
-			<td width="320px">Nome: <input name="fornecedor.nome" id="fornecedor.nome" value="${fornecedor.nome}" class="required" size="60"/></td>
-			<td width="130px">Apelido: <input name="fornecedor.apelido" id="fornecedor.apelido" value="${fornecedor.apelido}" class="required" size="20"/></td>
-		    <td></td>
-		</tr>
-		<tr style="background-color: #dcdee0">
-			<td colspan="2">Tipo Documento: 
-				<input type="radio" name="tipoPessoa" value="F" id="optTipoPessoaFisica"/>CPF
-				<input type="radio" name="tipoPessoa" value="J" id="optTipoPessoaJuridica"/>CNPJ
-			</td>
-			
-			<td >Cpf/Cnpj:<input id="cpfCnpj" name="fornecedor.cpfCnpj" value = "${fornecedor.cpfCnpj }" size="20"class="required"/></td>
-			
-			
-			
-		</tr>
 		
-		<tr style="background-color: #dcdee0">
-			<td >Email: <input name="fornecedor.email" value = "${fornecedor.email }" size="60"/></td>
-			<td >Telefone:<input id="telefoneFixo" name="fornecedor.telefoneFixo" value = "${fornecedor.telefoneFixo}" size="20"/></td>
-			<td >Celular:<input id="telefoneCelular" class="required" name="fornecedor.telefoneCelular" value="${ fornecedor.telefoneCelular}" size="20"/></td>
-		</tr>
-		<tr style="background-color: #dcdee0">
-			<td >Endere&ccedil;o:<input name="fornecedor.endereco" value = "${fornecedor.endereco }" size="60"/></td>
-			<td >Estado:<br/>
+		<div class="row">
+        	<div class="col-md-4">Nome: <input name="fornecedor.nome" id="fornecedor.nome" value="${fornecedor.nome}" class="required" size="60"/></div>
+        	<div class="col-md-4">Apelido: <br><input name="fornecedor.apelido" id="fornecedor.apelido" value="${fornecedor.apelido}" class="required" size="20"/></div>
+        	<div class="col-md-4"></div>
+      	</div>
+		<div class="row">
+        	<div class="col-md-4">Tipo Documento: <br/>
+				<input type="radio" name="tipoPessoa" value="F" id="optTipoPessoaFisica"/>&nbsp;CPF&nbsp;
+				<input type="radio" name="tipoPessoa" value="J" id="optTipoPessoaJuridica"/>&nbsp;CNPJ&nbsp;</div>
+        	<div class="col-md-4">Cpf/Cnpj:<br/><input id="cpfCnpj" name="fornecedor.cpfCnpj" value = "${fornecedor.cpfCnpj }" size="20"class="required"/></div>
+        	
+      	</div>
+      	
+      	<div class="row">
+        	<div class="col-md-4">Email: <input name="fornecedor.email" value = "${fornecedor.email }" size="60"/></div>
+        	<div class="col-md-4">Telefone:<br/><input id="telefoneFixo" name="fornecedor.telefoneFixo" value = "${fornecedor.telefoneFixo}" size="20"/></div>
+        	<div class="col-md-4">Celular:<br/><input id="telefoneCelular" class="required" name="fornecedor.telefoneCelular" value="${ fornecedor.telefoneCelular}" size="20"/></div>
+      	</div>
+      	
+      	<div class="row">
+        	<div class="col-md-4">Endereço:<input name="fornecedor.endereco" value = "${fornecedor.endereco }" size="60"/></div>
+        	<div class="col-md-4">Estado:<br/>
 					<select id="estado" name="estado" class="required">
 						<option value ="">Selecione</option>
 						<c:forEach var="estado" items="${estados}" varStatus="contador">
@@ -181,10 +198,8 @@ function showResponse(data) {
 							<option value ="${estado.id}" ${fornecedor.cidade.estado.id eq estado.id ? 'selected' : ''}>${estado.nome}</option>
 		
 						</c:forEach>	
-					</select>
-				</td>
-			<td >Cidade:
-				<div id="ajaxResultDiv">
+					</select></div>
+        	<div class="col-md-4"><div id="ajaxResultDiv">Cidade:<br/>
 					<select name="fornecedor.cidade.id" class="required" id="fornecedor.cidade.id"> 
 						<option value="">Selecione</option>
 						
@@ -196,27 +211,23 @@ function showResponse(data) {
 						
 						
 					</select>
- 				</div>
-			</td>
-		</tr>
+ 				</div></div>
+      	</div>
+      	<div class="row">
+        	<div class="col-md-4">Banco: <input name="fornecedor.banco" value = "${fornecedor.banco }" size="60"/></div>
+        	<div class="col-md-4">Agência:<br/><input name="fornecedor.agencia" value = "${fornecedor.agencia }" size="20" maxlength="6"/></div>
+        	<div class="col-md-4">Conta Corrente: <br/><input name="fornecedor.contaCorrente" value = "${fornecedor.contaCorrente }" size="20"/></div>
+      	</div>
+      	<div class="row">
+        	<div class="col-md-4">Nome Titular: <input name="fornecedor.nomeTitular" value = "${fornecedor.nomeTitular }" size="60"/></div>
+        	<div class="col-md-4">Cpf/Cnpj Titular:<br/><input name="fornecedor.cpfCnpjTitular" value = "${fornecedor.cpfCnpjTitular }" size="20"/></div>
+        	<div class="col-md-4"></div>
+      	</div>
 		
-		<tr style="background-color: #dcdee0">
-			<td >Banco: <input name="fornecedor.banco" value = "${fornecedor.banco }" size="60"/></td>
-			<td >Agência:<input name="fornecedor.agencia" value = "${fornecedor.agencia }" size="20"/></td>
-			<td >Conta Corrente: <input name="fornecedor.contaCorrente" value = "${fornecedor.contaCorrente }" size="20"/></td>
-			
-		</tr>
 		
-		
-		<tr style="background-color: #dcdee0">
-			<td colspan="2">Nome Titular: <input name="fornecedor.nomeTitular" value = "${fornecedor.nomeTitular }" size="80"/></td>
-			<td >Cpf/Cnpj Titular:<input name="fornecedor.cpfCnpjTitular" value = "${fornecedor.cpfCnpjTitular }" size="20"/></td>
-		</tr>
-	</tbody>
-	</table>
 	<br>
 	<br/>
-	<div>Tablela de Pre&ccedil;os</div>
+	<h3>Materiais Fornecidos</h3>
 	<table>
 		<tr>
 			<td>Material:
