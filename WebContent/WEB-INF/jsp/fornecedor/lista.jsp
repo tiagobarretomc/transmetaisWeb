@@ -47,7 +47,7 @@
 	
 		<tr>
 			<td>
-				<a href="${fornecedor.id}"><span style="color: black;" class="glyphicon glyphicon-pencil"></span></a> 
+				<a href="${fornecedor.id}"><span style="color: black;" class="glyphicon glyphicon-edit"></span></a> 
 			</td>
 			<td>
 				${fornecedor.apelido}

@@ -53,7 +53,9 @@ public class FornecedorMaterialController {
 		
 		result.include("fornecedor", fornecedor);
 		//result.use(Results.page()).forward("WEB-INF/jsp/fornecedorMaterial/tabelaPreco.jsp");
-		result.forwardTo("/WEB-INF/jsp/fornecedorMaterial/tabelaPreco.json.jsp");
+		//result.forwardTo("/WEB-INF/jsp/fornecedorMaterial/tabelaPreco.json.jsp");
+		
+		this.result.use(Results.logic()).redirectTo(FornecedorController.class).form(fornecedor);
 		
 		
 	}
@@ -73,7 +75,8 @@ public class FornecedorMaterialController {
 			e.printStackTrace();
 		}
 	
-		result.forwardTo("/WEB-INF/jsp/fornecedorMaterial/tabelaPreco.json.jsp");
+		//result.forwardTo("/WEB-INF/jsp/fornecedorMaterial/tabelaPreco.json.jsp");
+		this.result.use(Results.logic()).redirectTo(FornecedorController.class).form(fornecedorMaterial.getFornecedor());
 	}
 
 }

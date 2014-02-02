@@ -46,7 +46,10 @@ function showResponse(data) {
     	*/
     	
     	$("#btnAdicionar").click(function(){
-    		
+    		alert('testando 1');
+    		//document.location.href
+    		document.location.href = "${pageContext.request.contextPath}/fornecedorMaterial/associar?fornecedorId="+ $("#fornecedorId").val()+"&materialId=" + $("#cboMaterial").val() + "&preco="+$("#precoMaterial").val();
+    		/*
     		$.ajax({
     		method: "get",
     		url: "${pageContext.request.contextPath}/fornecedorMaterial/associar",
@@ -64,8 +67,8 @@ function showResponse(data) {
 			error: function(data){
 		    	alert(data);
 		    }		
-    				
-    		});
+    			*/	
+    		//});
     		
     		//alert($("#cboMaterial").val());
     	});
@@ -232,7 +235,7 @@ function showResponse(data) {
 	
 	<div class="row" style="width: 600px;">
         	<div class="col-md-4">Material:<br/>
-				<select style="width: 180px;" id="cboMaterial">
+				<select style="width: 180px;" id="cboMaterial" name="materialId">
 					<option value="" >--Selecione--</option>
 					<c:forEach var="material" items="${materiais}">
 						<option value="${material.id }" >${material.descricao}</option>
@@ -241,13 +244,14 @@ function showResponse(data) {
         	<div class="col-md-4">Preço:<br/>
 				
 			
-				<input  type="text" id="precoMaterial" size="15"/></div>
+				<input  type="text" id="precoMaterial" size="15" name="preco"/></div>
         	<div class="col-md-4">Forma de Frete/Entrega:<br/>
 				<select style="width: 180px;" id="cboTipoFrete">
 					<option value="" >--Selecione--</option>
-						<option value="CIF" >Cif</option>
-						<option value="FOB" >Fob</option>
+						<option value="CIF" >Cif Transmetais</option>
+						<option value="FOB" >Fob Transmetais</option>
 						<option value="POS" >Posto na Usina</option>
+						<option value="CAC" >Caminão Carregado</option>
 						
 					
 				</select></div>
