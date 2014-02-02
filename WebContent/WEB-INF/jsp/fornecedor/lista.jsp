@@ -6,11 +6,14 @@
 <title>Transmetais</title>
 </head>
 <body>
+
+<script src="js/bootstrap.min.js"></script>
+		<h2>Fornecedores</h2>
 		<table width="1024px">
 		
 		<thead>
 	<tr>
-		<td width="3%">Código</td>
+		<td width="3%">CÃ³digo</td>
 		<td width="10%">Apelido</td>
 		<td width="30%">Nome</td>
 		<td width="10%">Estado</td>

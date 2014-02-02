@@ -25,7 +25,15 @@ function showResponse(data) {
     	//$("#cpfCnpj").keyup(function() {
     	//	if($("#cpfCnpj").val().length==14)
         //	{
-    			$("#cpfCnpj").mask('999.999.999-99');
+    		
+    		
+
+    			
+    		if('${fornecedor.cpfCnpj}'.length<=14){
+	    		$("#cpfCnpj").mask('999.999.999-99');
+    		}else{
+    			$("#cpfCnpj").mask('99.999.999/9999-99');
+    		}
     	/*
         	}
         	else if($("#cpfCnpj").val().length==18)
@@ -63,7 +71,7 @@ function showResponse(data) {
     	});
     	
     	
-    	$(function(){
+    	
     		$('#optTipoPessoaFisica').click(function(){
     			$("#cpfCnpj").mask('999.999.999-99');
     		});
@@ -91,10 +99,10 @@ function showResponse(data) {
 				        url: '${pageContext.request.contextPath}/fornecedor/loadCidades?_format=json',
 				        data:	{id: $("#estado").val()},
 				 	    success: function(json){
-				 	    	//alert(json);
-				 	    	var jsonObject = eval('(' + json + ')');
-				 	    	var cidades = jsonObject.list;
-				 	    	//alert(cidades); 
+				 	    	alert(json);
+				 	    	//var jsonObject = eval('(' + json + ')');
+				 	    	var cidades = json.list;
+				 	    	alert(cidades); 
 				 	    	
 				 	    	var html = "";  
 				 	       html += "<select name='fornecedor.cidade.id'>" ;  
@@ -118,7 +126,7 @@ function showResponse(data) {
     	            //estoura um erro qualquer informando que nao foi selecionado nada
     	        }
     	    });
-    	});
+    	
     	
     	
     	$("#telefoneFixo").mask("(99) 9999-9999");
@@ -147,9 +155,9 @@ function showResponse(data) {
 		    <td></td>
 		</tr>
 		<tr style="background-color: #dcdee0">
-			<td colspan="2">Tipo Pessoa: 
-				<input type="radio" name="tipoPessoa" value="F" id="optTipoPessoaFisica"/>Física
-				<input type="radio" name="tipoPessoa" value="J" id="optTipoPessoaJuridica"/>Jurídica
+			<td colspan="2">Tipo Documento: 
+				<input type="radio" name="tipoPessoa" value="F" id="optTipoPessoaFisica"/>CPF
+				<input type="radio" name="tipoPessoa" value="J" id="optTipoPessoaJuridica"/>CNPJ
 			</td>
 			
 			<td >Cpf/Cnpj:<input id="cpfCnpj" name="fornecedor.cpfCnpj" value = "${fornecedor.cpfCnpj }" size="20"class="required"/></td>
@@ -194,7 +202,7 @@ function showResponse(data) {
 		
 		<tr style="background-color: #dcdee0">
 			<td >Banco: <input name="fornecedor.banco" value = "${fornecedor.banco }" size="60"/></td>
-			<td >Ag&ecirc;ncia:<input name="fornecedor.agencia" value = "${fornecedor.agencia }" size="20"/></td>
+			<td >Agência:<input name="fornecedor.agencia" value = "${fornecedor.agencia }" size="20"/></td>
 			<td >Conta Corrente: <input name="fornecedor.contaCorrente" value = "${fornecedor.contaCorrente }" size="20"/></td>
 			
 		</tr>
@@ -219,7 +227,7 @@ function showResponse(data) {
 					</c:forEach>
 				</select>
 			</td>
-			<td>Pre&ccedil;o:
+			<td>Preço:
 				
 			</td>
 			<td>
@@ -235,7 +243,7 @@ function showResponse(data) {
 		<thead>
 			<tr>
 				<td>Material</td>
-				<td>Pre&ccedil;o</td>
+				<td>Preço</td>
 			</tr>
 		</thead>
 		<tbody>

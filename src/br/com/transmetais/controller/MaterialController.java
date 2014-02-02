@@ -1,5 +1,7 @@
 package br.com.transmetais.controller;
 
+import static br.com.caelum.vraptor.view.Results.json;
+
 import java.util.List;
 
 import br.com.caelum.vraptor.Path;
@@ -37,7 +39,27 @@ private final Result result;
 			e.printStackTrace();
 		}
 		
+		//result.use(json()).from(lista, "listaJson");
+		
 		return lista;
+	}
+	
+	public void loadJsonMateriais() throws Exception{
+		
+		List<Material> lista = null;
+		
+		
+		lista = dao.findAll();
+			
+			
+		result.include("materiais",lista);
+		
+		
+		//result.include("cidades",estadoSelecionado.getCidades());
+		result.use(json()).from(lista).serialize();
+		//result.forwardTo("/fornecedor/loadCidades.json.jsp");
+		result.nothing();
+		
 	}
 	
 	@Path({"/material/{material.id}","/material/form"})
