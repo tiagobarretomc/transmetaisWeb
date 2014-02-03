@@ -3,75 +3,16 @@
 <fmt:setLocale value="pt-BR" /> 
 <script type="text/javascript">
 
-function showResponse(data) {  
-    //get the jsonObject  
-    var jsonObject = eval(data);  
-    //get the user array from the json object  
-    var cidades = jsonObject.list;  
-    
-    //alert(jsonObject);
-    //update html  
-    var html = "";  
-     html += "<select name='fornecedor.cidade.id' id='fornecedor.cidade.id'>" ;  
-     for(i=0;i<users.length;i++) {  
-         html += "<option value='"+cidades[i].id +"'>"+cidades[i].nome+"</option>";                           
-     }  
-     html += "</select> " ;  
-     var div = document.getElementById("ajaxResultDiv");  
-     div.innerHTML = html;  
-}  
-
-
     $(document).ready(function(){
-    	//$("#cpfCnpj").keyup(function() {
-    	//	if($("#cpfCnpj").val().length==14)
-        //	{
-    		
-    		
-
-    			
-    		if('${fornecedor.cpfCnpj}'.length<=14){
+    	if('${fornecedor.cpfCnpj}'.length<=14){
 	    		$("#cpfCnpj").mask('999.999.999-99');
     		}else{
     			$("#cpfCnpj").mask('99.999.999/9999-99');
     		}
-    	/*
-        	}
-        	else if($("#cpfCnpj").val().length==18)
-        	{
-        		$("#cpfCnpj").mask('99.999.999/9999-99');
-        	 
-        	}
-    		});
     	
-    	*/
     	
     	$("#btnAdicionar").click(function(){
-    		//alert('testando 1');
-    		//document.location.href
     		document.location.href = "${pageContext.request.contextPath}/fornecedorMaterial/associar?fornecedorId="+ $("#fornecedorId").val()+"&materialId=" + $("#cboMaterial").val() + "&preco="+$("#precoMaterial").val();
-    		/*
-    		$.ajax({
-    		method: "get",
-    		url: "${pageContext.request.contextPath}/fornecedorMaterial/associar",
-    		data: { fornecedorId: $("#fornecedorId").val(),
-    				materialId: $("#cboMaterial").val(),
-    				preco: $("#precoMaterial").val()},
-    		
-    		success: function(retorno){
-    			//alert(retorno);
-    			var startTable = retorno.indexOf("<table width=\"400px\">");
-    			var endTable = retorno.indexOf("</table>")+8;
-    			//alert(retorno.substring(startTable,endTable));
-    			$("#tabelaPreco").html(retorno.substring(startTable,endTable));
-    		},
-			error: function(data){
-		    	alert(data);
-		    }		
-    			*/	
-    		//});
-    		
-    		//alert($("#cboMaterial").val());
     	});
     	
     	
@@ -87,25 +28,14 @@ function showResponse(data) {
     	    $('#estado').change(function(){
     	    	
     	        if($(this).val()) {
-    	        	//alert('testando certinho');
-    	    	/*
-    	            $.ajax({
-    	                  url: "/retorna_dados_para_meu_novo_combo"
-    	            }).done(function() {
-    	              //lógica para preencher um combo novo com os dados que vem em JSON da chamada ajax
-    	            }).fail(function(){ 
-    	                alert("Um erro qualquer informando que houve problema na chamada Ajax")
-    	            });
-    	    	*/
-    	    	
-    	        	$.ajax({
+    	        		$.ajax({
 				        type: 'GET',
 				        url: '${pageContext.request.contextPath}/fornecedor/loadCidades?_format=json',
 				        data:	{id: $("#estado").val()},
 				 	    success: function(json){
 				 	    	alert(json);
-				 	    	//var jsonObject = eval('(' + json + ')');
-				 	    	var cidades = json.list;
+				 	    	var jsonObject = eval('(' + json + ')');
+				 	    	var cidades = jsonObject.list;
 				 	    	alert(cidades); 
 				 	    	
 				 	    	var html = "";  
@@ -143,31 +73,7 @@ function showResponse(data) {
     	});
     });
 </script>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Transmetais</title>
-</head>
-<body>
-	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Transmetais</a>
-        </div>
-        <div class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Cadastros</a></li>
-            <li><a href="#about">Comercial</a></li>
-            <li><a href="#contact">Relatórios</a></li>
-          </ul>
-        </div><!--/.nav-collapse -->
-      </div>
-    </div>
+
     <div class="container">
     <br>
 	<h2>Dados do Fornecedor</h2>
@@ -253,9 +159,9 @@ function showResponse(data) {
 					<option value="" >--Selecione--</option>
 						<option value="CIF" >Cif Transmetais</option>
 						<option value="FOB" >Fob Transmetais</option>
-						<option value="POS" >Posto na Usina</option>
-						<option value="CAC" >Caminão Carregado</option>
-						
+						<option value="POU" >Posto na Usina</option>
+						<option value="CAC" >Caminhão Carregado</option>
+						<option value="ENC" >Encharutada</option>
 					
 				</select></div>
       	</div>
@@ -295,5 +201,4 @@ function showResponse(data) {
     
 </form>
 </div>
-</body>
-</html>
+

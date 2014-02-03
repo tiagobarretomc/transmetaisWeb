@@ -1,21 +1,17 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-<title>Transmetais</title>
-</head>
-<body>
-		<table width="1024px">
+<div class="container">
+<br/>
+		<h2>Transpordadores</h2>
+		<br>
+		<table width="1024px" class="table table-bordered table-striped">
 		
 		<thead>
 	<tr>
-		<td width="30%">Nome</td>
-		<td width="20%">CPF</td>
-		<td width="10%">Placa</td>
-		<td width="10%">Uf</td>
-		<td width="10%">ANTT</td>
-		<td width="20%">Valor Frete</td>
+		<th width="30%">Nome</th>
+		<th width="20%">CPF</th>
+		<th width="10%">Placa</th>
+		<th width="10%">Uf</th>
+		<th width="10%">ANTT</th>
+		<th width="20%">Valor Frete</th>
 		
 	</tr>
 	</thead>
@@ -39,11 +35,10 @@
 				${transportador.rntrc}
 			</td>
 			<td>
-				${transportador.valorFrete}
+				<fmt:formatNumber value="${transportador.valorFrete}" minFractionDigits="2" type="currency"/>
 			</td>
 		</tr>
 		</c:forEach>
 	</tbody>
 	</table>
-</body>
-</html>
+</div>
