@@ -1,5 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
+<fmt:setLocale value="pt-BR" /> 
 <script type="text/javascript">
 
 function showResponse(data) {  
@@ -203,7 +204,7 @@ function showResponse(data) {
 		
 						</c:forEach>	
 					</select></div>
-        	<div class="col-md-4"><div id="ajaxResultDiv">Cidade:<br/>
+        	<div class="col-md-4">Cidade:<br/><div id="ajaxResultDiv">
 					<select name="fornecedor.cidade.id" class="required" id="fornecedor.cidade.id"> 
 						<option value="">Selecione</option>
 						
@@ -228,8 +229,10 @@ function showResponse(data) {
         	<div class="col-md-4"></div>
       	</div>
 		
-		
-	<br>
+	<br/>
+	<input type="submit" value="Salvar"/>	
+	
+	<br/>
 	<br/>
 	<h3>Materiais Fornecidos</h3>
 	
@@ -272,7 +275,7 @@ function showResponse(data) {
 		<thead>
 			<tr>
 				<th>Material</th>
-				<th>Preço</th>
+				<th>Preço/Kg</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -280,7 +283,7 @@ function showResponse(data) {
 		<c:forEach var="materialFornecedor" items="${fornecedor.materiaisFornecedores}" varStatus="contador">
 		<tr>
 			<td>${materialFornecedor.material.descricao}</td>
-			<td>${materialFornecedor.valor}</td>
+			<td><fmt:formatNumber value="${materialFornecedor.valor}" minFractionDigits="2" type="currency"/> </td>
 			<td><a href="<c:url value='/fornecedorMaterial/excluir/'/>${materialFornecedor.id}"><span class="glyphicon glyphicon-remove-sign"></span></a></td>
 		</tr>
 		
@@ -288,7 +291,7 @@ function showResponse(data) {
 		</tbody>
 	</table>
     </div>
-    <input type="submit" value="Salvar"/>
+    
     
 </form>
 </div>

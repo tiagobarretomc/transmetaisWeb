@@ -29,4 +29,9 @@
       <include-coda>/footer.jspf</include-coda>
     </jsp-property-group>
   </jsp-config>
+  <context-param>
+    <param-name>javax.servlet.jsp.jstl.fmt.locale</param-name>
+    <param-value>pt_BR</param-value>
+</context-param>
+  
 </web-app>
