@@ -45,10 +45,6 @@ public class FornecedorController {
 		
 		try {
 			lista = dao.findAll();
-			//System.out.println();
-			for (Fornecedor fornecedor : lista) {
-				System.out.println(fornecedor.getNome());
-			}
 			
 			result.include("fornecedores",lista);
 		} catch (DAOException e) {
@@ -86,7 +82,7 @@ public class FornecedorController {
 		if (fornecedor != null && fornecedor.getId() != null && fornecedor.getId()>0){
 			try {
 				fornecedor = dao.findById(fornecedor.getId());
-				
+				//System.out.println(fornecedor.getInformacoesBancarias());
 				
 			} catch (DAOException e) {
 				// TODO Auto-generated catch block

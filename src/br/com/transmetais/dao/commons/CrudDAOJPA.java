@@ -76,9 +76,9 @@ public class CrudDAOJPA<T> implements CrudDAO<T> {
 		} catch (Exception e) {
 		    throw new DAOException(e);
 		} finally {
-			if (manager != null) {
-				manager.close();
-			}
+//			if (manager != null) {
+//				manager.close();
+//			}
 		}
 	}
 

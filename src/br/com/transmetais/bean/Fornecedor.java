@@ -15,6 +15,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 
 
@@ -50,12 +52,26 @@ public class Fornecedor {
 	@Column(name="nome_titular")
 	private String nomeTitular;
 	private String apelido;
+	
 	@OneToMany(mappedBy="fornecedor")
-	@Fetch(FetchMode.JOIN)
+	@LazyCollection(LazyCollectionOption.TRUE)
+	@Fetch(FetchMode.SELECT)
 	private List<FornecedorMaterial> materiaisFornecedores;
 	
+	@OneToMany(mappedBy="fornecedor")
+	@LazyCollection(LazyCollectionOption.TRUE)
+	@Fetch(FetchMode.SELECT)
+	private List<InformacaoBancaria> informacoesBancarias;
 	
 	
+	
+	public List<InformacaoBancaria> getInformacoesBancarias() {
+		return informacoesBancarias;
+	}
+	public void setInformacoesBancarias(
+			List<InformacaoBancaria> informacoesBancarias) {
+		this.informacoesBancarias = informacoesBancarias;
+	}
 	public Long getId() {
 		return id;
 	}

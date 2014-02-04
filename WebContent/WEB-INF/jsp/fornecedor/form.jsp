@@ -15,8 +15,6 @@
     		document.location.href = "${pageContext.request.contextPath}/fornecedorMaterial/associar?fornecedorId="+ $("#fornecedorId").val()+"&materialId=" + $("#cboMaterial").val() + "&preco="+$("#precoMaterial").val();
     	});
     	
-    	
-    	
     		$('#optTipoPessoaFisica').click(function(){
     			$("#cpfCnpj").mask('999.999.999-99');
     		});
@@ -68,7 +66,6 @@
     	
         $('#formFornecedor').validate({
             
- 
         
     	});
     });
@@ -124,19 +121,45 @@
 					</select>
  				</div></div>
       	</div>
+      	<br/>
+		<input type="submit" value="Salvar"/>	<br/>
+      	<h2>Informações Bancárias</h2>
       	<div class="row">
         	<div class="col-md-4">Banco: <br><input name="fornecedor.banco" value = "${fornecedor.banco }" size="45"/></div>
         	<div class="col-md-4">Agência:<br/><input name="fornecedor.agencia" value = "${fornecedor.agencia }" size="20" maxlength="6"/></div>
         	<div class="col-md-4">Conta Corrente: <br/><input name="fornecedor.contaCorrente" value = "${fornecedor.contaCorrente }" size="20"/></div>
       	</div>
       	<div class="row">
-        	<div class="col-md-4">Nome Titular: <br><input name="fornecedor.nomeTitular" value = "${fornecedor.nomeTitular }" size="45"/></div>
+        	<div class="col-md-4">Titular: <br><input name="fornecedor.nomeTitular" value = "${fornecedor.nomeTitular }" size="45"/></div>
         	<div class="col-md-4">Cpf/Cnpj Titular:<br/><input name="fornecedor.cpfCnpjTitular" value = "${fornecedor.cpfCnpjTitular }" size="20"/></div>
         	<div class="col-md-4"></div>
       	</div>
+      	
+      	<table  class="table table-bordered table-striped" style="width: 500px">
+		<thead>
+			<tr>
+				<th>Banco</th>
+				<th>Agência</th>
+				<th>Conta Corrente</th>
+				<th>Titular</th>
+				<th>Cpf/Cnpj</th>
+			</tr>
+		</thead>
+		<tbody>
+		<c:forEach var="informacaoBancaria" items="${fornecedor.informacoesBancarias}" varStatus="contador">
+		<tr>
+			<td>${informacaoBancaria.banco}</td>
+			<td>${informacaoBancaria.agencia}</td>
+			<td>${informacaoBancaria.conta}</td>
+			<td>${informacaoBancaria.titular}</td>
+			<td>${informacaoBancaria.cpfCnpjTitular}</td>
+		</tr>
+		
+		</c:forEach>
+		</tbody>
+	</table>
 		
 	<br/>
-	<input type="submit" value="Salvar"/>	
 	
 	<br/>
 	<br/>
