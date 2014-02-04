@@ -20,6 +20,10 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 
 
+/**
+ * @author tiagocouto
+ *
+ */
 @Entity
 @Table(name="fornecedor")
 public class Fornecedor {
@@ -52,6 +56,7 @@ public class Fornecedor {
 	@Column(name="nome_titular")
 	private String nomeTitular;
 	private String apelido;
+	private String status;
 	
 	@OneToMany(mappedBy="fornecedor")
 	@LazyCollection(LazyCollectionOption.TRUE)
@@ -179,5 +184,12 @@ public class Fornecedor {
 			List<FornecedorMaterial> materiaisFornecedores) {
 		this.materiaisFornecedores = materiaisFornecedores;
 	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
 
 }

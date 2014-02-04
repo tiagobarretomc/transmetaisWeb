@@ -1,6 +1,7 @@
 eclipse.preferences.version=1
 encoding//WebContent/WEB-INF/jsp/fornecedor/form.jsp=UTF-8
 encoding//WebContent/WEB-INF/jsp/fornecedor/lista.jsp=UTF-8
+encoding//WebContent/WEB-INF/jsp/fornecedorMaterial/form.jsp=UTF-8
 encoding//WebContent/WEB-INF/jsp/material/lista.jsp=UTF-8
 encoding//WebContent/WEB-INF/jsp/material/lista_jquerydatatable.jsp=UTF-8
 encoding//WebContent/WEB-INF/teste.html=UTF-8

@@ -3,9 +3,10 @@ package br.com.transmetais.dao.impl;
 
 import br.com.caelum.vraptor.ioc.Component;
 import br.com.transmetais.bean.Fornecedor;
+import br.com.transmetais.dao.FornecedorDAO;
 import br.com.transmetais.dao.commons.CrudDAOJPA;
 @Component
-public class FornecedorDaoImpl extends CrudDAOJPA<Fornecedor>{
+public class FornecedorDaoImpl extends CrudDAOJPA<Fornecedor> implements FornecedorDAO{
 	
 	private static FornecedorDaoImpl instance = null;
 	public  static  FornecedorDaoImpl getInstance(){

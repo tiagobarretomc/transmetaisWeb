@@ -15,6 +15,10 @@
     		document.location.href = "${pageContext.request.contextPath}/fornecedorMaterial/associar?fornecedorId="+ $("#fornecedorId").val()+"&materialId=" + $("#cboMaterial").val() + "&preco="+$("#precoMaterial").val();
     	});
     	
+    	$("#btnAdicionarInfBanc").click(function(){
+    		$("#formInfoBancarias").submit();
+    	});
+    	
     		$('#optTipoPessoaFisica').click(function(){
     			$("#cpfCnpj").mask('999.999.999-99');
     		});
@@ -80,7 +84,9 @@
 		<div class="row">
         	<div class="col-md-4">Nome: <br><input name="fornecedor.nome" id="fornecedor.nome" value="${fornecedor.nome}" class="required" size="45"/></div>
         	<div class="col-md-4">Apelido: <br><input name="fornecedor.apelido" id="fornecedor.apelido" value="${fornecedor.apelido}" class="required" size="20"/></div>
-        	<div class="col-md-4"></div>
+        	<div class="col-md-4">
+        		<input type="checkbox" name="fornecedor.status" value="A" ${fornecedor.status eq 'A' ? 'checked="checked"': '' }>Ativo
+        	</div>
       	</div>
 		<div class="row">
         	<div class="col-md-4">Tipo Documento: <br/>
@@ -123,24 +129,44 @@
       	</div>
       	<br/>
 		<input type="submit" value="Salvar"/>	<br/>
+		<c:if test="${fornecedor.id ne 0}">
+		</form>
+		<form action="<c:url value='/informacaoBancaria/adicionar'/>" id="formInfoBancarias" name="formInfoBancarias" method="post">
+		<input type="hidden" id=informacaoBancaria.fornecedor.id name="informacaoBancaria.fornecedor.id" value="${fornecedor.id}"/>
       	<h2>Informações Bancárias</h2>
       	<div class="row">
-        	<div class="col-md-4">Banco: <br><input name="fornecedor.banco" value = "${fornecedor.banco }" size="45"/></div>
-        	<div class="col-md-4">Agência:<br/><input name="fornecedor.agencia" value = "${fornecedor.agencia }" size="20" maxlength="6"/></div>
-        	<div class="col-md-4">Conta Corrente: <br/><input name="fornecedor.contaCorrente" value = "${fornecedor.contaCorrente }" size="20"/></div>
+        	<div class="col-md-3">Banco: <br><input name="informacaoBancaria.banco"  size="35"/></div>
+        	<div class="col-md-3">Agência:<br/><input name="informacaoBancaria.agencia"  size="20" maxlength="6"/></div>
+        	<div class="col-md-3">Conta Corrente: <br/><input name="informacaoBancaria.conta"  size="20"/></div>
+        	<div class="col-md-3">Tipo Conta: <br/>
+        		
+        		<select  id="informacaoBancaria.tipoConta" name="informacaoBancaria.tipoConta">
+					<option value="" >--Selecione--</option>
+						<option value="C" >Corrente</option>
+						<option value="P" >Poupança</option>
+						
+				</select>
+        	</div>
       	</div>
       	<div class="row">
-        	<div class="col-md-4">Titular: <br><input name="fornecedor.nomeTitular" value = "${fornecedor.nomeTitular }" size="45"/></div>
-        	<div class="col-md-4">Cpf/Cnpj Titular:<br/><input name="fornecedor.cpfCnpjTitular" value = "${fornecedor.cpfCnpjTitular }" size="20"/></div>
+        	<div class="col-md-4">Titular: <br><input name="informacaoBancaria.titular" value = "" size="45"/></div>
+        	<div class="col-md-4">Cpf/Cnpj Titular:<br/><input name="informacaoBancaria.cpfCnpjTitular" value = "" size="20"/></div>
         	<div class="col-md-4"></div>
       	</div>
+      	<br/>
       	
-      	<table  class="table table-bordered table-striped" style="width: 500px">
+      	<button id="btnAdicionarInfBanc" type="button" class="btn btn-default btn-sm">
+  		<span class="glyphicon glyphicon-plus"></span> Adicionar
+		</button>
+		<br/>
+		<br/>
+      	<table  class="table table-bordered table-striped" style="width: 690px">
 		<thead>
 			<tr>
 				<th>Banco</th>
 				<th>Agência</th>
-				<th>Conta Corrente</th>
+				<th>Conta</th>
+				<th>Tipo de Conta</th>
 				<th>Titular</th>
 				<th>Cpf/Cnpj</th>
 			</tr>
@@ -151,6 +177,7 @@
 			<td>${informacaoBancaria.banco}</td>
 			<td>${informacaoBancaria.agencia}</td>
 			<td>${informacaoBancaria.conta}</td>
+			<td>${informacaoBancaria.tipoConta eq 'P' ? 'Poupança' : 'Corrente'}</td>
 			<td>${informacaoBancaria.titular}</td>
 			<td>${informacaoBancaria.cpfCnpjTitular}</td>
 		</tr>
@@ -158,11 +185,12 @@
 		</c:forEach>
 		</tbody>
 	</table>
-		
+	</form>	
 	<br/>
 	
 	<br/>
 	<br/>
+	<form action="" id="formMateriais" name="formMateriais" method="post">
 	<h3>Materiais Fornecidos</h3>
 	
 	<div class="row" style="width: 600px;">
@@ -223,5 +251,6 @@
     
     
 </form>
+		</c:if>
 </div>
 

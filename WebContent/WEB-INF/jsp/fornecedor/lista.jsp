@@ -13,7 +13,7 @@
 		<th width="30%">Nome</th>
 		<th width="10%">Estado</th>
 		<th width="20%">Cidade</th>
-		<th width="10%">Email</th>
+		<th width="10%">Status</th>
 		<th width="17%">Telefone</th>
 		
 	</tr>
@@ -39,7 +39,7 @@
 				${fornecedor.cidade.nome}
 			</td>
 			<td>
-				${fornecedor.email}
+				${fornecedor.status eq 'A' ? 'Ativo' : 'Inativo'}
 			</td>
 			<td>
 				${fornecedor.telefoneCelular}

@@ -27,6 +27,8 @@ public class InformacaoBancaria {
 	@ManyToOne
 	@JoinColumn(name="transportador_id")
 	private Transportador transportador;
+	@Column(name="tipo_conta")
+	private String tipoConta;
 	public Integer getId() {
 		return id;
 	}
@@ -74,6 +76,12 @@ public class InformacaoBancaria {
 	}
 	public void setTransportador(Transportador transportador) {
 		this.transportador = transportador;
+	}
+	public String getTipoConta() {
+		return tipoConta;
+	}
+	public void setTipoConta(String tipoConta) {
+		this.tipoConta = tipoConta;
 	}
 	
 	
