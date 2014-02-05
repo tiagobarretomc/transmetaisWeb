@@ -39,7 +39,7 @@ public class FornecedorController {
 	}
 	
 	
-	
+	@Path({"/fornecedor/","/fornecedor","/fornecedor/lista"})
 	public List<Fornecedor> lista(){
 		List<Fornecedor> lista = null;
 		

@@ -5,12 +5,17 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import br.com.transmetais.type.StatusFornecedorMaterialEnum;
+import br.com.transmetais.type.TipoFreteEnum;
 @Entity
 @Table(name="fornecedor_material")
 public class FornecedorMaterial {
@@ -25,9 +30,11 @@ public class FornecedorMaterial {
 	@JoinColumn(name="material_id")
 	private Material material;
 	private BigDecimal valor;
-	private String status;
+	@Enumerated(EnumType.STRING)
+	private StatusFornecedorMaterialEnum status;
 	@Column(name="tipo_frete")
-	private String tipoFrete;
+	@Enumerated(EnumType.STRING)
+	private TipoFreteEnum tipoFrete;
 	@Column(name="inicio_vigencia")
 	private Date inicioVigencia;
 	@Column(name="fim_vigencia")
@@ -60,16 +67,16 @@ public class FornecedorMaterial {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getStatus() {
+	public StatusFornecedorMaterialEnum getStatus() {
 		return status;
 	}
-	public void setStatus(String status) {
+	public void setStatus(StatusFornecedorMaterialEnum status) {
 		this.status = status;
 	}
-	public String getTipoFrete() {
+	public TipoFreteEnum getTipoFrete() {
 		return tipoFrete;
 	}
-	public void setTipoFrete(String tipoFrete) {
+	public void setTipoFrete(TipoFreteEnum tipoFrete) {
 		this.tipoFrete = tipoFrete;
 	}
 	public Date getInicioVigencia() {

@@ -1,4 +1,4 @@
-
+<%@page contentType="text/html; charset=UTF-8"%> 
 
 <div class="container">
 		<br/>
@@ -24,7 +24,7 @@
 	
 		<tr>
 			<td>
-				<a href="${fornecedor.id}"><span style="color: black;" class="glyphicon glyphicon-edit"></span></a> 
+				<a href="${pageContext.request.contextPath}/fornecedor/${fornecedor.id}"><span style="color: black;" class="glyphicon glyphicon-edit"></span></a> 
 			</td>
 			<td>
 				${fornecedor.apelido}
@@ -38,7 +38,7 @@
 			<td>
 				${fornecedor.cidade.nome}
 			</td>
-			<td>
+			<td style="te">
 				${fornecedor.status eq 'A' ? 'Ativo' : 'Inativo'}
 			</td>
 			<td>

@@ -1,21 +1,20 @@
 package br.com.transmetais.controller;
 
-import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.view.Results;
-import br.com.transmetais.bean.Estado;
 import br.com.transmetais.bean.Fornecedor;
 import br.com.transmetais.bean.FornecedorMaterial;
 import br.com.transmetais.bean.Material;
 import br.com.transmetais.dao.FornecedorDAO;
 import br.com.transmetais.dao.commons.DAOException;
-import br.com.transmetais.dao.impl.FornecedorDaoImpl;
 import br.com.transmetais.dao.impl.FornecedorMaterialDaoImpl;
 import br.com.transmetais.dao.impl.MaterialDaoImpl;
+import br.com.transmetais.type.TipoFreteEnum;
 
 @Resource
 public class FornecedorMaterialController {
@@ -32,22 +31,23 @@ public class FornecedorMaterialController {
 		this.fornecedorDao = fornecedorDao;
 	}
 	
-	public void associar(Long fornecedorId, Long materialId, BigDecimal preco){
-		FornecedorMaterial fornecedorMaterial = new FornecedorMaterial();
+	public void associar(FornecedorMaterial fornecedorMaterial){
+		//FornecedorMaterial fornecedorMaterial = new FornecedorMaterial();
 		Fornecedor fornecedor = null;
 		Material material = null;
 		
 		try {
-			fornecedor = fornecedorDao.findById(fornecedorId);
-			material = materialDao.findById(materialId);
+			fornecedor = fornecedorDao.findById(fornecedorMaterial.getFornecedor().getId());
+			material = materialDao.findById(fornecedorMaterial.getMaterial().getId());
 			
 			fornecedorMaterial.setFornecedor(fornecedor);
 			fornecedorMaterial.setMaterial(material);
-			fornecedorMaterial.setValor(preco);
+			//fornecedorMaterial.setValor(preco);
+			fornecedorMaterial.setInicioVigencia(new Date());
 			
 			dao.addEntity(fornecedorMaterial);
 			
-			fornecedor = fornecedorDao.findById(fornecedorId);
+			fornecedor = fornecedorDao.findById(fornecedor.getId());
 			
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
@@ -97,6 +97,8 @@ public class FornecedorMaterialController {
 		}
 		List<Material> materiais = null;
 		
+		System.out.println(fornecedor.getMateriaisFornecedores());
+		
 		try {
 			materiais = materialDao.findAll();
 			
@@ -105,6 +107,7 @@ public class FornecedorMaterialController {
 			e.printStackTrace();
 		}
 		result.include("materiais", materiais);
+		result.include("tiposFrete",TipoFreteEnum.values());
 		
 		return fornecedor;
 	}
