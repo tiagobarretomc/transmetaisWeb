@@ -1,3 +1,4 @@
+<%@page contentType="text/html; charset=UTF-8"%> 
 <div class="container">
 		
         <br/>
@@ -8,9 +9,10 @@
 		
 		<thead>
 	<tr>
-		<th width="10%">Código</th>
-		<th width="10%">Sigla</th>
-		<th width="90%">Descri&ccedil;&atilde;o</th>
+		
+		<th ></th>
+		<th >Sigla</th>
+		<th >Descrição</th>
 		
 		
 	</tr>
@@ -20,7 +22,7 @@
 	
 		<tr>
 			<td>
-				<a href="<c:url value='/material/'/>${material.id}">${material.id}</a> 
+				<a href="<c:url value='/material/'/>${material.id}"><span title="Alterar" style="color: black;" class="glyphicon glyphicon-edit"></span></a> 
 			</td>
 			<td>
 				${material.sigla} 

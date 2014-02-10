@@ -66,9 +66,12 @@
         </div>
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Cadastros</a></li>
-            <li><a href="#about">Comercial</a></li>
-            <li><a href="#contact">Relatórios</a></li>
+            <li class="active"><a href="<c:url value='/fornecedor/'/>">Fornecedor</a></li>
+            <li><a href="<c:url value='/transportador/'/>">Transportador</a></li>
+            
+            <li><a href="<c:url value='/material/'/>">Materiais</a></li>
+            
+            
           </ul>
         </div><!--/.nav-collapse -->
       </div>

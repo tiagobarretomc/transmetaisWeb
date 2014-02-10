@@ -2,6 +2,7 @@ package br.com.transmetais.controller;
 
 import java.util.List;
 
+import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.Transportador;
@@ -22,6 +23,7 @@ public class TransportadorController {
 		
 	}
 	
+	@Path({"/transportador/","/transportador","/transportador/lista"})
 	public List<Transportador> lista(){
 		List<Transportador> lista = null;
 		

@@ -14,6 +14,7 @@ import br.com.transmetais.dao.FornecedorDAO;
 import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.dao.impl.FornecedorMaterialDaoImpl;
 import br.com.transmetais.dao.impl.MaterialDaoImpl;
+import br.com.transmetais.type.StatusFornecedorMaterialEnum;
 import br.com.transmetais.type.TipoFreteEnum;
 
 @Resource
@@ -32,7 +33,7 @@ public class FornecedorMaterialController {
 	}
 	
 	public void associar(FornecedorMaterial fornecedorMaterial){
-		//FornecedorMaterial fornecedorMaterial = new FornecedorMaterial();
+		
 		Fornecedor fornecedor = null;
 		Material material = null;
 		
@@ -42,15 +43,14 @@ public class FornecedorMaterialController {
 			
 			fornecedorMaterial.setFornecedor(fornecedor);
 			fornecedorMaterial.setMaterial(material);
-			//fornecedorMaterial.setValor(preco);
-			fornecedorMaterial.setInicioVigencia(new Date());
 			
+			fornecedorMaterial.setInicioVigencia(null);
+			fornecedorMaterial.setStatus(StatusFornecedorMaterialEnum.BLOQUEADO);
 			dao.addEntity(fornecedorMaterial);
 			
 			fornecedor = fornecedorDao.findById(fornecedor.getId());
 			
 		} catch (DAOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -58,28 +58,59 @@ public class FornecedorMaterialController {
 		//result.use(Results.page()).forward("WEB-INF/jsp/fornecedorMaterial/tabelaPreco.jsp");
 		//result.forwardTo("/WEB-INF/jsp/fornecedorMaterial/tabelaPreco.json.jsp");
 		
-		this.result.use(Results.logic()).redirectTo(FornecedorController.class).form(fornecedor);
+		this.result.use(Results.logic()).redirectTo(FornecedorMaterialController.class).form(fornecedor);
 		
 		
 	}
 	
-	@Path({"/fornecedorMaterial/excluir/{fornecedorMaterial.id}"})
-	public void excluir(FornecedorMaterial fornecedorMaterial){
-		//FornecedorMaterial fornecedorMaterial = new FornecedorMaterial();
-		//fornecedorMaterial.setId(fornecedorMaterialId);
+	@Path({"/fornecedorMaterial/inativar/{fornecedorMaterial.id}"})
+	public void inativar(FornecedorMaterial fornecedorMaterial){
 		
 		try {
 			fornecedorMaterial = dao.findById(fornecedorMaterial.getId());
+			fornecedorMaterial.setFimVigencia(new Date());
+			fornecedorMaterial.setStatus(StatusFornecedorMaterialEnum.INATIVO);
 			
 			result.include("fornecedor", fornecedorMaterial.getFornecedor());
-			dao.removeEntity(fornecedorMaterial);
+			dao.updateEntity(fornecedorMaterial);
 		} catch (DAOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	
 		//result.forwardTo("/WEB-INF/jsp/fornecedorMaterial/tabelaPreco.json.jsp");
-		this.result.use(Results.logic()).redirectTo(FornecedorController.class).form(fornecedorMaterial.getFornecedor());
+		this.result.use(Results.logic()).redirectTo(FornecedorMaterialController.class).form(fornecedorMaterial.getFornecedor());
+	}
+	
+	@Path({"/fornecedorMaterial/ativar/{fornecedorMaterial.id}"})
+	public void ativar(FornecedorMaterial fornecedorMaterial){
+		
+		try {
+			fornecedorMaterial = dao.findById(fornecedorMaterial.getId());
+			
+			List<FornecedorMaterial> listaMateriais = fornecedorMaterial.getFornecedor().getMateriaisFornecedores();
+			for (FornecedorMaterial fornecedorMat : listaMateriais) {
+				if(fornecedorMat.getMaterial().getId() == fornecedorMaterial.getMaterial().getId() &&
+					fornecedorMat.getTipoFrete() == fornecedorMaterial.getTipoFrete() &&
+					fornecedorMat.getStatus() == StatusFornecedorMaterialEnum.ATIVO){
+					
+					fornecedorMat.setStatus(StatusFornecedorMaterialEnum.INATIVO);
+					fornecedorMat.setFimVigencia(new Date());
+					dao.updateEntity(fornecedorMat);
+				}
+			
+			}
+			
+			fornecedorMaterial.setInicioVigencia(new Date());
+			fornecedorMaterial.setStatus(StatusFornecedorMaterialEnum.ATIVO);
+			
+			result.include("fornecedor", fornecedorMaterial.getFornecedor());
+			dao.updateEntity(fornecedorMaterial);
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+	
+		//result.forwardTo("/WEB-INF/jsp/fornecedorMaterial/tabelaPreco.json.jsp");
+		this.result.use(Results.logic()).redirectTo(FornecedorMaterialController.class).form(fornecedorMaterial.getFornecedor());
 	}
 	
 	@Path("/fornecedorMaterial/{fornecedor.id}")

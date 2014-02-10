@@ -45,16 +45,7 @@ public class Fornecedor {
 	@JoinColumn(name="cidade_id")
 	private Cidade cidade;
 	
-	private String banco;
-	private String agencia;
-	@Column(name="tipo_conta")
-	private String tipoConta;
-	@Column(name="conta")
-	private String contaCorrente;
-	@Column(name="cpf_cnpj_titular")
-	private String cpfCnpjTitular;
-	@Column(name="nome_titular")
-	private String nomeTitular;
+	
 	private String apelido;
 	private String status;
 	
@@ -87,20 +78,7 @@ public class Fornecedor {
 		return nome;
 	}
 	
-	public String getCpfCnpjTitular() {
-		return cpfCnpjTitular;
-	}
-	public void setCpfCnpjTitular(String cpfCnpjTitular) {
-		this.cpfCnpjTitular = cpfCnpjTitular;
-	}
 	
-	public String getTipoConta() {
-		return tipoConta;
-	}
-	
-	public void setTipoConta(String tipoConta) {
-		this.tipoConta = tipoConta;
-	}
 	
 	public void setNome(String nome) {
 		this.nome = nome;
@@ -136,24 +114,7 @@ public class Fornecedor {
 		this.cidade = cidade;
 	}
 	
-	public String getBanco() {
-		return banco;
-	}
-	public void setBanco(String banco) {
-		this.banco = banco;
-	}
-	public String getAgencia() {
-		return agencia;
-	}
-	public void setAgencia(String agencia) {
-		this.agencia = agencia;
-	}
-	public String getContaCorrente() {
-		return contaCorrente;
-	}
-	public void setContaCorrente(String contaCorrente) {
-		this.contaCorrente = contaCorrente;
-	}
+	
 	public String getCpfCnpj() {
 		return cpfCnpj;
 	}
@@ -161,13 +122,7 @@ public class Fornecedor {
 		this.cpfCnpj = cpfCnpj;
 	}
 	
-	public String getNomeTitular() {
-		return nomeTitular;
-	}
 	
-	public void setNomeTitular(String nomeTitular) {
-		this.nomeTitular = nomeTitular;
-	}
 	
 	public String getApelido() {
 		return apelido;

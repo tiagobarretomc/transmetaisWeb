@@ -2,15 +2,15 @@
 
 <div class="container">
 		<br/>
-		<h2>Fornecedores</h2>
+		<h2>Clientes</h2>
 		<br>
 		<table width="1024px" class="table table-bordered table-striped">
 		
 		<thead>
 	<tr>
 		<th ></th>
-		<th >Apelido</th>
-		<th>Nome</th>
+		<th >Razão Social</th>
+		<th>Cpf/Cnpj</th>
 		<th >Cidade</th>
 		<th>Status</th>
 		<th>Telefone</th>
@@ -23,14 +23,14 @@
 	
 		<tr>
 			<td>
-				<a href="${pageContext.request.contextPath}/fornecedor/${fornecedor.id}"><span title="Alterar" style="color: black;" class="glyphicon glyphicon-edit"></span></a>
-				<a href="${pageContext.request.contextPath}/fornecedorMaterial/${fornecedor.id}"><span title="Tabela de Preços" style="color: black;" class="glyphicon glyphicon-list-alt"></span></a> 
+				<a href="${pageContext.request.contextPath}/cliente/${cliente.id}"><span title="Alterar" style="color: black;" class="glyphicon glyphicon-edit"></span></a>
+				<a href="${pageContext.request.contextPath}/clienteMaterial/${cliente.id}"><span title="Tabela de Preços" style="color: black;" class="glyphicon glyphicon-list-alt"></span></a> 
 			</td>
 			<td>
-				${fornecedor.apelido}
+				${cliente.razaoSocial}
 			</td>
 			<td>
-				${fornecedor.nome} 
+				${cliente.cpfCnpj} 
 			</td>
 			
 			<td>

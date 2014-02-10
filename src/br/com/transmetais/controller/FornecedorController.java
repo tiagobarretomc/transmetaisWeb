@@ -75,7 +75,7 @@ public class FornecedorController {
 	  }
 	
 	
-	@Path({"/fornecedor/{fornecedor.id}","/fornecedor/form"})
+	@Path({"/fornecedor/{fornecedor.id}","/fornecedor/form","/fornecedor/novo"})
 	public Fornecedor form(Fornecedor fornecedor){
 		
 		

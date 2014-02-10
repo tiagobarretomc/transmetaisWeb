@@ -13,4 +13,6 @@ private static FornecedorMaterialDaoImpl instance = null;
 			instance = new FornecedorMaterialDaoImpl(); 
 		return instance;
 	}
+	
+	
 }

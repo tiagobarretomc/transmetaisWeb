@@ -1,4 +1,6 @@
 eclipse.preferences.version=1
+encoding//WebContent/WEB-INF/jsp/cliente/form.jsp=UTF-8
+encoding//WebContent/WEB-INF/jsp/cliente/lista.jsp=UTF-8
 encoding//WebContent/WEB-INF/jsp/fornecedor/form.jsp=UTF-8
 encoding//WebContent/WEB-INF/jsp/fornecedor/lista.jsp=UTF-8
 encoding//WebContent/WEB-INF/jsp/fornecedorMaterial/form.jsp=UTF-8

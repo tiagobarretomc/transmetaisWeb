@@ -26,6 +26,7 @@ private final Result result;
 	
 	}
 
+	@Path({"/material/","/material","/material/lista"})
 	public List<Material> lista(){
 		List<Material> lista = null;
 		

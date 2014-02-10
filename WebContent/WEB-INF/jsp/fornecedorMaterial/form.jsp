@@ -1,7 +1,20 @@
 <%@page contentType="text/html; charset=UTF-8"%> 
 <fmt:setLocale value="pt-BR" /> 
 <script type="text/javascript">
-
+	
+	
+	$(document).ready(function(){
+		$("#btnAdicionar").click(function(){
+			
+			$("#formMateriais").submit();
+		});
+		
+		$('#formMateriais').validate({
+	        
+	        
+		});
+		
+	});
   
 </script>
     <div class="container">
@@ -41,7 +54,7 @@
 	
 	<div class="row" style="width: 600px;">
         	<div class="col-md-4">Material:<br/>
-				<select style="width: 180px;" id="cboMaterial" name="fornecedorMaterial.material.id">
+				<select style="width: 180px;" id="cboMaterial" name="fornecedorMaterial.material.id" class="required">
 					<option value="" >--Selecione--</option>
 					<c:forEach var="material" items="${materiais}">
 						<option value="${material.id }" >${material.descricao}</option>
@@ -50,10 +63,10 @@
         	<div class="col-md-4">Preço:<br/>
 				
 			
-				<input  type="text" id="precoMaterial" size="15" name="fornecedorMaterial.valor"/></div>
+				<input  type="text" id="precoMaterial" size="15" name="fornecedorMaterial.valor" class="required"/></div>
         	<div class="col-md-4">Forma de Frete/Entrega:<br/>
 				
-				<select style="width: 180px;" id="cboTipoFrete" name="fornecedorMaterial.tipoFrete">
+				<select style="width: 180px;" id="cboTipoFrete" name="fornecedorMaterial.tipoFrete" class="required">
 					<option value="" >--Selecione--</option>
 					<c:forEach var="tipoFrete" items="${tiposFrete}">
 						<option value="${tipoFrete.name }" >${tipoFrete.descricao}</option>
@@ -62,7 +75,7 @@
 				</div>
       	</div>
 	
-	<input type="submit" value="Adicionar"/>
+	
 	<button id="btnAdicionar" type="button" class="btn btn-default btn-sm">
   <span class="glyphicon glyphicon-plus"></span> Adicionar
 </button>
@@ -73,13 +86,15 @@
 	
 	
           
-	<table  class="table table-bordered table-striped" style="width: 500px">
+	<table  class="table table-bordered table-striped" style="width: 800px">
 		<thead>
 			<tr>
 				<th>Material</th>
 				<th>Preço/Kg</th>
 				<th>Tipo Frete</th>
+				<th>Status</th>
 				<th>Início Vigência</th>
+				<th>Fim Vigência</th>
 				<th></th>
 			</tr>
 		</thead>
@@ -89,8 +104,17 @@
 			<td>${materialFornecedor.material.descricao}</td>
 			<td><fmt:formatNumber value="${materialFornecedor.valor}" minFractionDigits="2" type="currency"/> </td>
 			<td>${materialFornecedor.tipoFrete.descricao}</td>
+			<td>${materialFornecedor.status}</td>
 			<td><fmt:formatDate value="${materialFornecedor.inicioVigencia}" type="date" pattern="dd/MM/yyyy"/></td>
-			<td><a href="<c:url value='/fornecedorMaterial/excluir/'/>${materialFornecedor.id}"><span class="glyphicon glyphicon-remove-sign"></span></a></td>
+			<td><fmt:formatDate value="${materialFornecedor.fimVigencia}" type="date" pattern="dd/MM/yyyy"/></td>
+			<td>
+				<c:if test="${materialFornecedor.status eq 'ATIVO' or  materialFornecedor.status eq 'BLOQUEADO'}">
+					<a href="<c:url value='/fornecedorMaterial/inativar/'/>${materialFornecedor.id}"><span title="Inativar" class="glyphicon glyphicon-remove-sign"></span></a>
+				</c:if>
+				<c:if test="${materialFornecedor.status eq 'BLOQUEADO'}">
+					<a  href="<c:url value='/fornecedorMaterial/ativar/'/>${materialFornecedor.id}"><span title="Ativar" class="glyphicon glyphicon-ok"></span></a>
+				</c:if>
+			</td>
 		</tr>
 		
 		</c:forEach>
