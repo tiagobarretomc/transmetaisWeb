@@ -19,7 +19,7 @@
 	</thead>
 	<tbody>
 	
-		<c:forEach var="fornecedor" items="${fornecedores}" varStatus="contador">
+		<c:forEach var="cliente" items="${clientes}" varStatus="contador">
 	
 		<tr>
 			<td>
@@ -34,13 +34,13 @@
 			</td>
 			
 			<td>
-				${fornecedor.cidade.nome} - ${fornecedor.cidade.uf}
+				${cliente.cidade.nome} - ${cliente.cidade.uf}
 			</td>
 			<td >
-				${fornecedor.status eq 'A' ? 'Ativo' : 'Inativo'}
+				${cliente.status eq 'A' ? 'Ativo' : 'Inativo'}
 			</td>
 			<td>
-				${fornecedor.telefoneCelular}
+				${cliente.telefoneFixo}
 			</td>
 		</tr>
 		</c:forEach>

@@ -33,13 +33,13 @@
 				        url: '${pageContext.request.contextPath}/fornecedor/loadCidades?_format=json',
 				        data:	{id: $("#estado").val()},
 				 	    success: function(json){
-				 	    	alert(json);
+				 	    	//alert(json);
 				 	    	var jsonObject = eval('(' + json + ')');
 				 	    	var cidades = jsonObject.list;
-				 	    	alert(cidades); 
+				 	    	//alert(cidades); 
 				 	    	
 				 	    	var html = "";  
-				 	       html += "<select name='fornecedor.cidade.id'>" ;  
+				 	       html += "<select name='cliente.cidade.id'>" ;  
 				 	       for(i=0;i<cidades.length;i++) {  
 				 	           html += "<option value='"+cidades[i].id +"'>"+cidades[i].nome+"</option>";                           
 				 	       }  
@@ -76,8 +76,8 @@
     <div class="container">
     <br>
 	<h2>Dados do Cliente</h2>
-	<form action="<c:url value='cliente/adicionar'/>" id="formCliente" name="formCliente" method="post">
-		<input type="hidden" id="fornecedorId" name="cliente.id" value="${cliente.id}"/>
+	<form action="<c:url value='/cliente/adicionar'/>" id="formCliente" name="formCliente" method="post">
+		<input type="hidden" id="clienteId" name="cliente.id" value="${cliente.id}"/>
 		
 		<div class="row">
         	<div class="col-md-4">Razão Social: <br><input name="cliente.razaoSocial" id="cliente.razaoSocial" value="${cliente.razaoSocial}" class="required" size="45"/></div>
@@ -91,6 +91,7 @@
 				<input type="radio" name="tipoPessoa" value="F" id="optTipoPessoaFisica"/>&nbsp;CPF&nbsp;
 				<input type="radio" name="tipoPessoa" value="J" id="optTipoPessoaJuridica"/>&nbsp;CNPJ&nbsp;</div>
         	<div class="col-md-4">Cpf/Cnpj:<br/><input id="cpfCnpj" name="cliente.cpfCnpj" value = "${cliente.cpfCnpj }" size="20"class="required"/></div>
+        	<div class="col-md-4">Inscrição Estadual:<br/><input id="cpfCnpj" name="cliente.inscricaoEstadual" value = "${cliente.inscricaoEstadual }" size="20"class="required"/></div>
         	
       	</div>
       	
@@ -101,9 +102,13 @@
       	</div>
       	
       	<div class="row">
-        	<div class="col-md-4">Endereço:<br><input name="cliente.logradouro" value = "${cliente.logradouro }" size="45"/></div>
-        	<div class="col-md-4">Número:<br><input name="cliente.numero" value = "${cliente.numero }" size="45"/></div>
-        	<div class="col-md-4">Estado:<br/>
+        	<div class="col-md-4">Logradouro:<br><input name="cliente.logradouro" value = "${cliente.logradouro }" size="45"/></div>
+        	<div class="col-md-4">Número:<br><input name="cliente.numero" value = "${cliente.numero }" size="15"/></div>
+        	<div class="col-md-4">Bairro:<br><input name="cliente.bairro" value = "${cliente.bairro }" size="15"/></div>
+        	
+      	</div>
+      		<div class="row">
+      		<div class="col-md-4">Estado:<br/>
 					<select id="estado" name="estado" class="required">
 						<option value ="">Selecione</option>
 						<c:forEach var="estado" items="${estados}" varStatus="contador">
@@ -111,84 +116,25 @@
 							<option value ="${estado.id}" ${fornecedor.cidade.estado.id eq estado.id ? 'selected' : ''}>${estado.nome}</option>
 		
 						</c:forEach>	
-					</select></div>
-        	<div class="col-md-4">Cidade:<br/><div id="ajaxResultDiv">
-					<select name="fornecedor.cidade.id" class="required" id="fornecedor.cidade.id"> 
+					</select>
+			</div>
+      		<div class="col-md-4">Cidade:<br/><div id="ajaxResultDiv">
+					<select name="cliente.cidade.id" class="required" id="cliente.cidade.id"> 
 						<option value="">Selecione</option>
 						
-						<c:forEach var="cidade" items="${fornecedor.cidade.estado.cidades}" varStatus="contador">
+						<c:forEach var="cidade" items="${cliente.cidade.estado.cidades}" varStatus="contador">
 						
-							<option value ="${cidade.id}" ${fornecedor.cidade.id eq cidade.id ? 'selected' : ''}>${cidade.nome}</option>
+							<option value ="${cidade.id}" ${cliente.cidade.id eq cidade.id ? 'selected' : ''}>${cidade.nome}</option>
 		
 						</c:forEach>
 						
 						
 					</select>
  				</div></div>
-      	</div>
+ 				<div class="col-md-4">Cep:<br><input name="cliente.cep" value = "${cliente.cep }" size="15"/></div>
+ 			</div>
       	<br/>
 		<input type="submit" value="Salvar"/>	<br/>
-		<c:if test="${fornecedor.id ne 0}">
-		</form>
-		<form action="<c:url value='/informacaoBancaria/adicionar'/>" id="formInfoBancarias" name="formInfoBancarias" method="post">
-		<input type="hidden" id=informacaoBancaria.fornecedor.id name="informacaoBancaria.fornecedor.id" value="${fornecedor.id}"/>
-      	<h2>Informações Bancárias</h2>
-      	<div class="row">
-        	<div class="col-md-3">Banco: <br><input name="informacaoBancaria.banco"  size="35"/></div>
-        	<div class="col-md-3">Agência:<br/><input name="informacaoBancaria.agencia"  size="20" maxlength="6"/></div>
-        	<div class="col-md-3">Conta Corrente: <br/><input name="informacaoBancaria.conta"  size="20"/></div>
-        	<div class="col-md-3">Tipo Conta: <br/>
-        		
-        		<select  id="informacaoBancaria.tipoConta" name="informacaoBancaria.tipoConta">
-					<option value="" >--Selecione--</option>
-						<option value="C" >Corrente</option>
-						<option value="P" >Poupança</option>
-						
-				</select>
-        	</div>
-      	</div>
-      	<div class="row">
-        	<div class="col-md-4">Titular: <br><input name="informacaoBancaria.titular" value = "" size="45"/></div>
-        	<div class="col-md-4">Cpf/Cnpj Titular:<br/><input name="informacaoBancaria.cpfCnpjTitular" value = "" size="20"/></div>
-        	<div class="col-md-4"></div>
-      	</div>
-      	<br/>
-      	
-      	<button id="btnAdicionarInfBanc" type="button" class="btn btn-default btn-sm">
-  		<span class="glyphicon glyphicon-plus"></span> Adicionar
-		</button>
-		<br/>
-		<br/>
-      	<table  class="table table-bordered table-striped" style="width: 690px">
-		<thead>
-			<tr>
-				<th>Banco</th>
-				<th>Agência</th>
-				<th>Conta</th>
-				<th>Tipo de Conta</th>
-				<th>Titular</th>
-				<th>Cpf/Cnpj</th>
-			</tr>
-		</thead>
-		<tbody>
-		<c:forEach var="informacaoBancaria" items="${fornecedor.informacoesBancarias}" varStatus="contador">
-		<tr>
-			<td>${informacaoBancaria.banco}</td>
-			<td>${informacaoBancaria.agencia}</td>
-			<td>${informacaoBancaria.conta}</td>
-			<td>${informacaoBancaria.tipoConta eq 'P' ? 'Poupança' : 'Corrente'}</td>
-			<td>${informacaoBancaria.titular}</td>
-			<td>${informacaoBancaria.cpfCnpjTitular}</td>
-		</tr>
 		
-		</c:forEach>
-		</tbody>
-	</table>
-	</form>	
-	<br/>
-	
-	<br/>
-	<br/>
-		</c:if>
 </div>
 

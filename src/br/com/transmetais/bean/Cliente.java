@@ -1,18 +1,31 @@
 package br.com.transmetais.bean;
 
+import java.util.List;
+
 import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
+@Entity
+@Table(name="cliente")
 public class Cliente {
 	
 	
 	@Id 
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
+	@Column(name="razao_social")
 	private String razaoSocial;
 	
 	@Column(name="cpf_cnpj")
@@ -34,6 +47,11 @@ public class Cliente {
 	private Cidade cidade;
 	private String apelido;
 	private String status;
+	@OneToMany(mappedBy="cliente")
+	@LazyCollection(LazyCollectionOption.TRUE)
+	@Fetch(FetchMode.SELECT)
+	private List<ClienteMaterial> clientesMateriais;
+	
 	public Long getId() {
 		return id;
 	}
@@ -117,6 +135,12 @@ public class Cliente {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public List<ClienteMaterial> getClientesMateriais() {
+		return clientesMateriais;
+	}
+	public void setClientesMateriais(List<ClienteMaterial> clientesMateriais) {
+		this.clientesMateriais = clientesMateriais;
 	}
 	
 	
