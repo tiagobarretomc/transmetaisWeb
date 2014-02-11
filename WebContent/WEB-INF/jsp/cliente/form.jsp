@@ -113,7 +113,7 @@
 						<option value ="">Selecione</option>
 						<c:forEach var="estado" items="${estados}" varStatus="contador">
 						
-							<option value ="${estado.id}" ${fornecedor.cidade.estado.id eq estado.id ? 'selected' : ''}>${estado.nome}</option>
+							<option value ="${estado.id}" ${cliente.cidade.estado.id eq estado.id ? 'selected' : ''}>${estado.nome}</option>
 		
 						</c:forEach>	
 					</select>

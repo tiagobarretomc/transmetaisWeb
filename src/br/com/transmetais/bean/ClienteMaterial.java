@@ -15,7 +15,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import br.com.transmetais.type.StatusFornecedorMaterialEnum;
-import br.com.transmetais.type.TipoFreteEnum;
+import br.com.transmetais.type.TipoFreteCliente;
 @Entity
 @Table(name="cliente_material")
 public class ClienteMaterial {
@@ -34,7 +34,7 @@ public class ClienteMaterial {
 	private StatusFornecedorMaterialEnum status;
 	@Column(name="tipo_frete")
 	@Enumerated(EnumType.STRING)
-	private TipoFreteEnum tipoFrete;
+	private TipoFreteCliente tipoFrete;
 	@Column(name="inicio_vigencia")
 	private Date inicioVigencia;
 	@Column(name="fim_vigencia")
@@ -75,10 +75,10 @@ public class ClienteMaterial {
 	public void setStatus(StatusFornecedorMaterialEnum status) {
 		this.status = status;
 	}
-	public TipoFreteEnum getTipoFrete() {
+	public TipoFreteCliente getTipoFrete() {
 		return tipoFrete;
 	}
-	public void setTipoFrete(TipoFreteEnum tipoFrete) {
+	public void setTipoFrete(TipoFreteCliente tipoFrete) {
 		this.tipoFrete = tipoFrete;
 	}
 	public Date getInicioVigencia() {

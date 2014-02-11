@@ -2,7 +2,6 @@
 <fmt:setLocale value="pt-BR" /> 
 <script type="text/javascript">
 	
-	
 	$(document).ready(function(){
 		$("#btnAdicionar").click(function(){
 			
@@ -34,7 +33,7 @@
 		</tr>
 		<tr>
 			<td>
-				<b>Fornecedor:</b>
+				<b>Cliente:</b>
 			</td>
 			<td>
 				<a href="${pageContext.request.contextPath}/cliente/${cliente.id}">${cliente.razaoSocial}</a>
@@ -42,7 +41,7 @@
 		</tr>
 		<tr>
 			<td>
-				<b>Apelido:</b>
+				<b>Contato:</b>
 			</td>
 			<td>
 				<a href="${pageContext.request.contextPath}/cliente/${cliente.id}">${cliente.apelido}</a>
@@ -54,7 +53,7 @@
 	
 	<div class="row" style="width: 600px;">
         	<div class="col-md-4">Material:<br/>
-				<select style="width: 180px;" id="cboMaterial" name="fornecedorMaterial.material.id" class="required">
+				<select style="width: 180px;" id="cboMaterial" name="clienteMaterial.material.id" class="required">
 					<option value="" >--Selecione--</option>
 					<c:forEach var="material" items="${materiais}">
 						<option value="${material.id }" >${material.descricao}</option>
