@@ -63,6 +63,14 @@ public class FornecedorMaterialController {
 		
 	}
 	
+	public void obterPreco(FornecedorMaterial fornecedorMaterial) throws DAOException{
+		fornecedorMaterial = dao.findById(fornecedorMaterial.getId());
+		
+		//result.include();
+		result.use(Results.http()).body(fornecedorMaterial.getValor().toString());
+		result.nothing();
+	}
+	
 	@Path({"/fornecedorMaterial/inativar/{fornecedorMaterial.id}"})
 	public void inativar(FornecedorMaterial fornecedorMaterial){
 		

@@ -114,15 +114,12 @@ public class Fornecedor {
 		this.cidade = cidade;
 	}
 	
-	
 	public String getCpfCnpj() {
 		return cpfCnpj;
 	}
 	public void setCpfCnpj(String cpfCnpj) {
 		this.cpfCnpj = cpfCnpj;
 	}
-	
-	
 	
 	public String getApelido() {
 		return apelido;
@@ -146,5 +143,13 @@ public class Fornecedor {
 		this.status = status;
 	}
 	
+	@Override
+	public boolean equals(Object arg0) {
+		// TODO Auto-generated method stub
+		
+		
+		
+		return getId().equals(((Fornecedor)arg0).getId());
+	}
 
 }
