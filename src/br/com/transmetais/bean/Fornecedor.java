@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
@@ -58,6 +59,9 @@ public class Fornecedor {
 	@LazyCollection(LazyCollectionOption.TRUE)
 	@Fetch(FetchMode.SELECT)
 	private List<InformacaoBancaria> informacoesBancarias;
+	@OneToOne
+	@JoinColumn(name="conta_id")
+	private Conta conta;
 	
 	
 	
@@ -143,6 +147,14 @@ public class Fornecedor {
 		this.status = status;
 	}
 	
+	
+	
+	public Conta getConta() {
+		return conta;
+	}
+	public void setConta(Conta conta) {
+		this.conta = conta;
+	}
 	@Override
 	public boolean equals(Object arg0) {
 		// TODO Auto-generated method stub

@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -23,7 +24,7 @@ public class Conta {
 	private BigDecimal saldo;
 	@Column(name="saldo_inicial")
 	private BigDecimal saldoInicial;
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name="fornecedor_id")
 	private Fornecedor fornecedor;
 	public Long getId() {

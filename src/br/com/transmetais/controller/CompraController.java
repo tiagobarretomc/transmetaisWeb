@@ -53,6 +53,8 @@ public class CompraController {
 				
 				dao.updateEntity(compra);
 			}else{
+				FornecedorMaterial fornecedorMaterial = fornecedorMaterialDao.findById(compra.getFornecedorMaterial().getId());
+				compra.setConta(fornecedorMaterial.getFornecedor().getConta());
 				dao.addEntity(compra);
 			}
 			
