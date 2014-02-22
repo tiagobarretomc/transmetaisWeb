@@ -25,7 +25,7 @@
 			<td>
 				<a href="${pageContext.request.contextPath}/fornecedor/${fornecedor.id}"><span title="Alterar" style="color: black;" class="glyphicon glyphicon-edit"></span></a>
 				<a href="${pageContext.request.contextPath}/fornecedorMaterial/${fornecedor.id}"><span title="Tabela de Preços" style="color: black;" class="glyphicon glyphicon-list-alt"></span></a>
-				<a href="${pageContext.request.contextPath}/compra/nova/${fornecedor.id}"><span title="Compra" style="color: black;" class="glyphicon glyphicon-usd"></span></a> 
+				<a href="${pageContext.request.contextPath}/compra/novo/${fornecedor.id}"><span title="Compra" style="color: black;" class="glyphicon glyphicon-usd"></span></a> 
 			</td>
 			<td>
 				${fornecedor.apelido}

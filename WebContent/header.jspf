@@ -71,6 +71,7 @@
             <li><a href="<c:url value='/transportador/'/>">Transportador</a></li>
             
             <li><a href="<c:url value='/material/'/>">Materiais</a></li>
+            <li><a href="<c:url value='/compra/'/>">Compras</a></li>
             
             
           </ul>

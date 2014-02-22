@@ -85,7 +85,7 @@
 					
         	</div>
         	<div class="col-md-4">Data: <br>
-        		<input type="datetime"  name="compra.data" id="data" class="required" value="${compra.data }" />
+        		<input type="datetime"  name="compra.data" id="data" class="required" value="<fmt:formatDate value="${compra.data}" type="date" pattern="dd/MM/yyyy"/>" />
 					
         	</div>
       	</div>
@@ -99,7 +99,7 @@
       		<div class="col-md-4">
       		</div>
       	</div>
-	
+		<input type="submit" value="Salvar"/>
 	</form>	
 	
 </div>

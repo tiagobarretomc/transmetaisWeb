@@ -78,6 +78,7 @@
 	<h2>Dados do Fornecedor</h2>
 	<form action="<c:url value='/fornecedor/adiciona'/>" id="formFornecedor" name="formFornecedor" method="post">
 		<input type="hidden" id="fornecedorId" name="fornecedor.id" value="${fornecedor.id}"/>
+		<input type="hidden" id="forncedor.conta.id" name="fornecedor.id" value="${forncedor.conta.id}"/>
 		
 		<div class="row">
         	<div class="col-md-4">Nome: <br><input name="fornecedor.nome" id="fornecedor.nome" value="${fornecedor.nome}" class="required" size="45"/></div>

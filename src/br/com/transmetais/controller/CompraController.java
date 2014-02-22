@@ -1,5 +1,6 @@
 package br.com.transmetais.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import br.com.caelum.vraptor.Path;
@@ -8,10 +9,14 @@ import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.Compra;
 import br.com.transmetais.bean.Fornecedor;
 import br.com.transmetais.bean.FornecedorMaterial;
+import br.com.transmetais.bean.Movimentacao;
 import br.com.transmetais.dao.CompraDAO;
+import br.com.transmetais.dao.ContaDAO;
 import br.com.transmetais.dao.FornecedorDAO;
 import br.com.transmetais.dao.FornecedorMaterialDAO;
+import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.commons.DAOException;
+import br.com.transmetais.type.TipoOperacaoEnum;
 
 @Resource
 public class CompraController {
@@ -20,23 +25,27 @@ public class CompraController {
 	private CompraDAO dao;
 	private FornecedorDAO fornecedorDao;
 	private FornecedorMaterialDAO fornecedorMaterialDao;
+	private MovimentacaoDAO movimentacaoDao;
+	private ContaDAO contaDao;
 	
-	
-	public CompraController(Result result, CompraDAO compraDao, FornecedorDAO fornecedorDao, FornecedorMaterialDAO fornecedorMaterialDao) {
+	public CompraController(Result result, CompraDAO compraDao, FornecedorDAO fornecedorDao, FornecedorMaterialDAO fornecedorMaterialDao, MovimentacaoDAO movimentacaoDao, ContaDAO contaDao) {
 		this.dao = compraDao;
 		this.fornecedorDao = fornecedorDao;
 		this.fornecedorMaterialDao = fornecedorMaterialDao;
+		this.movimentacaoDao = movimentacaoDao;
 		this.result = result;
+		this.contaDao = contaDao;
 	}
 	
 	//tela de listagem de compras
 	@Path({"/compra/","/compra","/compra/lista"})
-	public List<Compra> lista(){
+	public List<Compra> lista(Long fornecedorId, Date dataInicio, Date dataFim){
 		List<Compra> lista = null;
 		
 		try {
-			lista = dao.findAll();
-			
+			List<Fornecedor> fornecedores = fornecedorDao.findAll();
+			lista = dao.findByFilter(fornecedorId, dataInicio, dataFim);
+			result.include("fornecedores", fornecedores);
 			result.include("compras",lista);
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
@@ -50,12 +59,24 @@ public class CompraController {
 		try {
 			
 			if (compra.getId() != null && compra.getId()>0){
-				
+				//alteracao
 				dao.updateEntity(compra);
 			}else{
+				//insercao - nova compra
 				FornecedorMaterial fornecedorMaterial = fornecedorMaterialDao.findById(compra.getFornecedorMaterial().getId());
 				compra.setConta(fornecedorMaterial.getFornecedor().getConta());
 				dao.addEntity(compra);
+				
+				Movimentacao movimentacao = new Movimentacao();
+				movimentacao.setCompra(compra);
+				movimentacao.setConta(compra.getConta());
+				movimentacao.setData(new Date());
+				movimentacao.setTipoOperacao(TipoOperacaoEnum.D);
+				movimentacao.setValor(compra.getValor());
+				movimentacaoDao.addEntity(movimentacao);
+				
+				compra.getConta().setSaldo(compra.getConta().getSaldo().subtract(movimentacao.getValor()));
+				contaDao.updateEntity(compra.getConta());
 			}
 			
 		} catch (DAOException e) {
@@ -63,7 +84,7 @@ public class CompraController {
 			e.printStackTrace();
 		}
 		
-		result.redirectTo(ClienteController.class).lista();
+		result.redirectTo(CompraController.class).lista(null, null, null);
 	}
 	
 	@Path({"/compra/{compra.id}","/compra/form","/compra/novo/{compra.fornecedorMaterial.fornecedor.id}"})

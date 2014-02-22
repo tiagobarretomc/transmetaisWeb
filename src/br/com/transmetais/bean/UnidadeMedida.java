@@ -4,26 +4,22 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="material")
-public class Material {
+@Table(name="movimentacao")
+public class UnidadeMedida {
+
 	@Id 
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
+	private Integer id;
 	private String sigla;
 	private String descricao;
-	@ManyToOne
-	@JoinColumn(name="unidade_medida_id")
-	private UnidadeMedida unidadeMedida;
 	
-	public Long getId() {
+	public Integer getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	public String getSigla() {
@@ -38,7 +34,7 @@ public class Material {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-	
-	
-
+		
+		
+		
 }
