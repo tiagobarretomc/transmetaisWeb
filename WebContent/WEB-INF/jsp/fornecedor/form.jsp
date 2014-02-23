@@ -33,10 +33,11 @@
 				        url: '${pageContext.request.contextPath}/fornecedor/loadCidades?_format=json',
 				        data:	{id: $("#estado").val()},
 				 	    success: function(json){
-				 	    	//alert(json);
-				 	    	var jsonObject = eval('(' + json + ')');
+				 	    	alert(json);
+				 	    	var jsonObject = eval(json);
+				 	    	alert(jsonObject);
 				 	    	var cidades = jsonObject.list;
-				 	    	//alert(cidades); 
+				 	    	alert(cidades); 
 				 	    	
 				 	    	var html = "";  
 				 	       html += "<select name='fornecedor.cidade.id'>" ;  
