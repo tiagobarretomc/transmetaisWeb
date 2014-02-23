@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="movimentacao")
+@Table(name="unidade_medida")
 public class UnidadeMedida {
 
 	@Id 

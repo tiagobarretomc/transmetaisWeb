@@ -13,6 +13,7 @@
 		<th ></th>
 		<th >Sigla</th>
 		<th >Descrição</th>
+		<th >Unid. de Medida</th>
 		
 		
 	</tr>
@@ -29,6 +30,9 @@
 			</td>
 			<td>
 				${material.descricao} 
+			</td>
+			<td>
+				${material.unidadeMedida.sigla} 
 			</td>
 		</tr>
 		</c:forEach>

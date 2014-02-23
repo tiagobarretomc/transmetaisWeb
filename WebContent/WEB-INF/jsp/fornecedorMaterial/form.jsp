@@ -14,6 +14,13 @@
 	        
 		});
 		
+		$('#precoMaterial').priceFormat({
+            prefix: '',
+            centsSeparator: ',',
+            thousandsSeparator: '.',
+            limit: 12
+        });
+		
 	});
   
 </script>

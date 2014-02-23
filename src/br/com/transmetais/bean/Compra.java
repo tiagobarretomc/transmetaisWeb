@@ -3,6 +3,7 @@ package br.com.transmetais.bean;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,10 +27,15 @@ public class Compra {
 	private BigDecimal quantidade;
 	private BigDecimal valor;
 	private BigDecimal preco;
+	
 	@ManyToOne
 	@JoinColumn(name="conta_id")
 	private Conta conta;
 	private String observacao;
+	
+	@Column(name="num_nf")
+	private String numNf;
+	
 	public Long getId() {
 		return id;
 	}
@@ -77,6 +83,12 @@ public class Compra {
 	}
 	public void setObservacao(String observacao) {
 		this.observacao = observacao;
+	}
+	public String getNumNf() {
+		return numNf;
+	}
+	public void setNumNf(String numNf) {
+		this.numNf = numNf;
 	}
 	
 	

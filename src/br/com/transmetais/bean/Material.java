@@ -38,6 +38,12 @@ public class Material {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
+	public UnidadeMedida getUnidadeMedida() {
+		return unidadeMedida;
+	}
+	public void setUnidadeMedida(UnidadeMedida unidadeMedida) {
+		this.unidadeMedida = unidadeMedida;
+	}
 	
 	
 
