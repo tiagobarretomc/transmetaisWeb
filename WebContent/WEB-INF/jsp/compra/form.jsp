@@ -3,16 +3,58 @@
 
     $(document).ready(function(){
     	
+		$("#data").mask('99/99/9999');
+    	function float2moeda(num) {
+
+    		   x = 0;
+
+    		   if(num<0) {
+    		      num = Math.abs(num);
+    		      x = 1;
+    		   }
+    		   if(isNaN(num)) num = "0";
+    		      cents = Math.floor((num*100+0.5)%100);
+
+    		   num = Math.floor((num*100+0.5)/100).toString();
+
+    		   if(cents < 10) cents = "0" + cents;
+    		      for (var i = 0; i < Math.floor((num.length-(1+i))/3); i++)
+    		         num = num.substring(0,num.length-(4*i+3))+'.'
+    		               +num.substring(num.length-(4*i+3));
+    		      ret = num + ',' + cents;
+    		      
+    		      if (x == 1) ret = ' - ' + ret;return ret;
+
+    	}
+    	
+    	function moeda2float(moeda){
+
+    		   moeda = moeda.replace(".","");
+
+    		   moeda = moeda.replace(",",".");
+
+    		   return parseFloat(moeda);
+
+    		}
+    	function roundNumber (rnum) {
+
+    		   return Math.round(rnum*Math.pow(10,2))/Math.pow(10,2);
+
+    		}
+    	
     	$('#fornecedorMaterial').change(function(){
-	    	
+    		$("#data").mask('99/99/9999');
 	        if($(this).val()) {
 	        		$.ajax({
 			        type: 'GET',
 			        url: '${pageContext.request.contextPath}/fornecedorMaterial/obterPreco?_format=json',
 			        data:	{'fornecedorMaterial.id': $("#fornecedorMaterial").val()},
 			 	    success: function(json){
-			 	    	var preco = parseFloat(json);
-			 	    	$("#preco").attr('value',preco.toFixed(2));
+			 	    	var preco = float2moeda(parseFloat(json));
+			 	    	
+			 	    	//$("#preco").attr('value',preco.toFixed(2));
+			 	    	$("#preco").attr('value',preco);
+			 	    	
 
 					},
 				    error: function(xhr){
@@ -29,12 +71,12 @@
     		
     	 
     	$('#quantidade').change(function(){
-    		var preco = parseFloat($("#preco").val());
-    		var quantidade = parseFloat($("#quantidade").val());
+    		var preco =  moeda2float($("#preco").val());
+    		var quantidade = moeda2float($("#quantidade").val());
     		var valor = preco*quantidade;
     		
     		
-    		$("#valor").attr("value",valor.toFixed(2));
+    		$("#valor").attr("value",float2moeda(valor));
     	});
     	   
     	$('#quantidade').priceFormat({
@@ -47,7 +89,6 @@
     	
     	
     	
-		$("#data").mask('99/99/9999');
 		
 		$("#btnAdicionar").click(function(){
     		$("#formCompra").submit();
@@ -90,41 +131,27 @@
       	<div class="row">
         	<div class="col-md-4">Quantidade: <br>
         		
-				<input type="text" name="compra.quantidade" id="quantidade" value="${compra.quantidade *100}" class="required"/><span id="unidadeMedida">${compra.fornecedorMaterial.material.unidadeMedida.sigla }</span>
+				<input type="text" name="compra.quantidade" id="quantidade" value="<fmt:formatNumber value="${compra.quantidade}" minFractionDigits="2" type="number" />" class="required"/><span id="unidadeMedida">${compra.fornecedorMaterial.material.unidadeMedida.sigla }</span>
         	</div>
         	<div class="col-md-4">Valor Total: <br>
         		<input type="text" name="compra.valor" id="valor" class="required" value="<fmt:formatNumber value="${compra.valor}" minFractionDigits="2" type="number" />" readonly="readonly"/>
 					
         	</div>
         	<div class="col-md-4">Data: <br>
-        		<input type="datetime"  name="compra.data" id="data" class="required" value="<fmt:formatDate value="${compra.data}" type="date" pattern="dd/MM/yyyy"/>" />
+        		<input type="datetime"  name="compra.data" id="data"  value="<fmt:formatDate value="${compra.data}" type="date" pattern="dd/MM/yyyy"/>" />
 					
         	</div>
       	</div>
       	<div class="row">
-      		<div class="col-md-4">Observação:<br/>
-      		
-      			<textarea rows="5" cols="60" name="compra.observacao">${compra.observacao }</textarea>
-      		</div>
       		<div class="col-md-4">
+      			Num Nf-e:<br/>
+				<input type="text" name="compra.numNf" id="numNf" class="required" value="${compra.numNf}" />
+      		</div>
+      		<div class="col-md-8">Observação:<br/>
       		
-
+      			<textarea rows="5" cols="83" name="compra.observacao">${compra.observacao }</textarea>
       		</div>
-      		<div class="col-md-4">
-      			<!-- Single button -->
-				<div class="btn-group">
-				  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-				    Action <span class="caret"></span>
-				  </button>
-				  <ul class="dropdown-menu" role="menu">
-				    <li><a href="#">Action</a></li>
-				    <li><a href="#">Another action</a></li>
-				    <li><a href="#">Something else here</a></li>
-				    <li class="divider"></li>
-				    <li><a href="#">Separated link</a></li>
-				  </ul>
-				</div>
-      		</div>
+      		
       	</div>
       	<br/>
 		<button type="button" id="btnAdicionar" class="btn btn-default btn-md">
