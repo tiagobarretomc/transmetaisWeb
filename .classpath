@@ -17,5 +17,6 @@
 	<classpathentry exported="true" kind="lib" path="/repAPI-project/libs/dom4j.jar"/>
 	<classpathentry exported="true" kind="lib" path="/repAPI-project/libs/jta.jar"/>
 	<classpathentry exported="true" kind="lib" path="/repAPI-project/libs/antlr-2.7.6.jar"/>
+	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/sitemesh-3.0.0-20130909.232332-2.jar"/>
 	<classpathentry kind="output" path="WebContent/WEB-INF/classes"/>
 </classpath>

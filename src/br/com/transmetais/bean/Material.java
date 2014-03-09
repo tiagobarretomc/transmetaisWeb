@@ -20,6 +20,10 @@ public class Material {
 	@JoinColumn(name="unidade_medida_id")
 	private UnidadeMedida unidadeMedida;
 	
+	@ManyToOne
+	@JoinColumn(name="grupo_material_id")
+	private GrupoMaterial grupoMaterial;
+	
 	public Long getId() {
 		return id;
 	}
@@ -43,6 +47,12 @@ public class Material {
 	}
 	public void setUnidadeMedida(UnidadeMedida unidadeMedida) {
 		this.unidadeMedida = unidadeMedida;
+	}
+	public GrupoMaterial getGrupoMaterial() {
+		return grupoMaterial;
+	}
+	public void setGrupoMaterial(GrupoMaterial grupoMaterial) {
+		this.grupoMaterial = grupoMaterial;
 	}
 	
 	

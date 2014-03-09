@@ -11,6 +11,7 @@ import br.com.transmetais.bean.Compra;
 import br.com.transmetais.dao.CompraDAO;
 import br.com.transmetais.dao.commons.CrudDAOJPA;
 import br.com.transmetais.dao.commons.DAOException;
+import br.com.transmetais.type.TipoFreteEnum;
 
 @Component
 public class CompraDaoImpl extends CrudDAOJPA<Compra> implements CompraDAO{
@@ -30,20 +31,40 @@ public class CompraDaoImpl extends CrudDAOJPA<Compra> implements CompraDAO{
 		}
 	}
 	
-	public List<Compra> findByFilter(Long fornecedorId, Date dataInicio, Date dataFim) throws DAOException {
+	public List<Compra> findByFilter(Long fornecedorId, Date dataInicio, Date dataFim, List<TipoFreteEnum> tiposFretes, List<Long> materiaisIds) throws DAOException {
 		EntityManager manager = factory.createEntityManager(); 
+		
 		try {
-			String query = "SELECT c from " + Compra.class.getSimpleName() + " as c  inner join c.fornecedorMaterial as fm inner join fm.fornecedor f ";
+			String query = "SELECT c from " + Compra.class.getSimpleName() + " as c  inner join c.fornecedorMaterial as fm inner join fm.fornecedor f inner join fm.material m";
 			
 			String clausulaWhere = " WHERE ";
 			if (fornecedorId != null && fornecedorId >0){
 				clausulaWhere += "f.id = :fornecedorId";
 			}
-			if (dataInicio != null && dataFim !=null){
+			if (dataInicio != null){
 				if(clausulaWhere != " WHERE "){
 					clausulaWhere += " AND ";
 				}
-				clausulaWhere += " c.data BETWEEN :dataInicio AND :dataFim";
+				clausulaWhere += " c.data >= :dataInicio ";
+			}
+			if (dataFim !=null){
+				if(clausulaWhere != " WHERE "){
+					clausulaWhere += " AND ";
+				}
+				clausulaWhere += " c.data <= :dataFim";
+			}
+			if(tiposFretes != null && tiposFretes.size()>0){
+				if(clausulaWhere != " WHERE "){
+					clausulaWhere += " AND ";
+				}
+				clausulaWhere += " fm.tipoFrete in ( :tiposFretes) ";
+			}
+			
+			if(materiaisIds != null && materiaisIds.size()>0){
+				if(clausulaWhere != " WHERE "){
+					clausulaWhere += " AND ";
+				}
+				clausulaWhere += " fm.material.id in ( :materiaisIds) ";
 			}
 			
 			if (clausulaWhere != " WHERE ")
@@ -55,9 +76,23 @@ public class CompraDaoImpl extends CrudDAOJPA<Compra> implements CompraDAO{
 			if (fornecedorId != null && fornecedorId >0)
 				hqlQuery.setParameter("fornecedorId", fornecedorId);
 			
-			if (dataInicio != null && dataFim !=null){
+			if (dataInicio != null){
 				hqlQuery.setParameter("dataInicio", dataInicio);
+				
+			}
+			
+			if (dataFim !=null){
+				
 				hqlQuery.setParameter("dataFim", dataFim);
+			}
+			
+			if (tiposFretes != null && tiposFretes.size()>0){
+				
+				hqlQuery.setParameter("tiposFretes", tiposFretes);
+			}
+			if (materiaisIds != null && materiaisIds.size()>0){
+				
+				hqlQuery.setParameter("materiaisIds", materiaisIds);
 			}
 			
 			return hqlQuery.getResultList();

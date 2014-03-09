@@ -1,15 +1,16 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@page contentType="text/html; charset=UTF-8"%> 
+
 
 <html lang="pt-br">
-<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
-<%@page contentType="text/html; charset=UTF-8" %>  
+
 	<head>
 		<title>Transmetais Web</title>
 		<meta http-equiv="content-type" content="text/html; charset=utf-8" /> 
 		<meta http-equiv="content-language" content="pt-br" />
 		
     	<link href="/transmetaisWeb/css/bootstrap.css" rel="stylesheet" type="text/css">
+    	<link href="/transmetaisWeb/css/bootstrap-select.min.css" rel="stylesheet" type="text/css">
     	
     	
 		
@@ -17,6 +18,7 @@
 		
 		-->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+		 <script src="/transmetaisWeb/javascripts/bootstrap-select.min.js" type="text/javascript"></script>
 		 <script src="/transmetaisWeb/javascripts/bootstrap.js" type="text/javascript"></script>
 		  
 		<script src="/transmetaisWeb/javascripts/jquery.validate.min.js" type="text/javascript" ></script>
@@ -76,25 +78,28 @@
        
          <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="<c:url value='/fornecedor/'/>">Fornecedor</a></li>
-            <li ><a href="<c:url value='/cliente/'/>">Cliente</a></li>
-            <li><a href="<c:url value='/transportador/'/>">Transportador</a></li>
-            
-            <li><a href="<c:url value='/material/'/>">Materiais</a></li>
-            <li><a href="<c:url value='/compra/'/>">Compras</a></li>
             
             <li class="dropdown">
-	          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+	          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Cadastros <b class="caret"></b></a>
 	          <ul class="dropdown-menu">
-	            <li><a href="#">Action</a></li>
-	            <li><a href="#">Another action</a></li>
-	            <li><a href="#">Something else here</a></li>
+	            <li><a href="<c:url value='/fornecedor/'/>">Fornecedor</a></li>
+	            <li><a href="<c:url value='/cliente/'/>">Cliente</a></li>
+	            <li><a href="<c:url value='/transportador/'/>">Transportador</a></li>
 	            <li class="divider"></li>
-	            <li><a href="#">Separated link</a></li>
+	            <li><a href="<c:url value='/material/'/>">Material</a></li>
+	            <li><a href="">Unidade de Medida</a></li>
 	            <li class="divider"></li>
-	            <li><a href="#">One more separated link</a></li>
+	             <li><a href="">Centro de Custo</a></li>
+	            
 	          </ul>
 	        </li>
+            <li><a href="<c:url value='/compra/'/>">Compras</a></li>
+            <li><a href="#">Vendas</a></li>
+            <li><a href="#">Financeiro</a></li>
+            <li><a href="#">Consultas</a></li>
+            
+            
+            
             
           </ul>
         </div><!--/.nav-collapse -->

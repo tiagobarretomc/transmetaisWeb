@@ -1,4 +1,6 @@
 <%@page contentType="text/html; charset=UTF-8"%> 
+<%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <script type="text/javascript">
 
     $(document).ready(function(){
@@ -55,6 +57,16 @@
 			 	    	//$("#preco").attr('value',preco.toFixed(2));
 			 	    	$("#preco").attr('value',preco);
 			 	    	
+			 	    	
+			 	    	if($("#quantidade").val()){
+			 	    		var quantidade = moeda2float($("#quantidade").val());
+			 	    		var valor = parseFloat(json)*quantidade;
+			 	    		
+			 	    		
+			 	    		$("#valor").attr("value",float2moeda(valor));
+			 	    	}
+			 	    	
+			 	    	
 
 					},
 				    error: function(xhr){
@@ -70,7 +82,7 @@
 	    });
     		
     	 
-    	$('#quantidade').change(function(){
+    	$('#quantidade').blur(function(){
     		var preco =  moeda2float($("#preco").val());
     		var quantidade = moeda2float($("#quantidade").val());
     		var valor = preco*quantidade;
@@ -106,6 +118,7 @@
 	<h2>Dados da Compra</h2>
 	<form action="<c:url value='/compra/adicionar'/>" id="formCompra" name="formCompra" method="post">
 		<input type="hidden" id="compraId" name="compra.id" value="${compra.id}"/>
+		<input type="hidden" id="contaId" name="compra.conta.id" value="${compra.conta.id}"/>
 		
 		<div class="row">
         	<div class="col-md-4">Fornecedor: <br>
@@ -138,14 +151,14 @@
 					
         	</div>
         	<div class="col-md-4">Data: <br>
-        		<input type="datetime"  name="compra.data" id="data"  value="<fmt:formatDate value="${compra.data}" type="date" pattern="dd/MM/yyyy"/>" />
+        		<input type="datetime"  name="compra.data" id="data"  value="<fmt:formatDate value="${compra.data}" type="date" pattern="dd/MM/yyyy"/>" class="required"/>
 					
         	</div>
       	</div>
       	<div class="row">
       		<div class="col-md-4">
       			Num Nf-e:<br/>
-				<input type="text" name="compra.numNf" id="numNf" class="required" value="${compra.numNf}" />
+				<input type="text" name="compra.numNf" id="numNf" value="${compra.numNf}" />
       		</div>
       		<div class="col-md-8">Observação:<br/>
       		
