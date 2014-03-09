@@ -7,7 +7,11 @@ import java.util.List;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.transmetais.bean.GrupoMaterial;
 import br.com.transmetais.bean.Material;
+import br.com.transmetais.bean.UnidadeMedida;
+import br.com.transmetais.dao.GrupoMaterialDAO;
+import br.com.transmetais.dao.UnidadeMedidaDAO;
 import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.dao.impl.MaterialDaoImpl;
 
@@ -17,13 +21,16 @@ public class MaterialController {
 private final Result result;
 	
 	private MaterialDaoImpl dao;
-	
+	private UnidadeMedidaDAO unidadeMedidaDao;
+	private GrupoMaterialDAO grupoMaterialDao;
 	
 
-	public MaterialController(Result result, MaterialDaoImpl dao) {
+	public MaterialController(Result result, MaterialDaoImpl dao, UnidadeMedidaDAO unidadeMedidaDao, GrupoMaterialDAO grupoMaterialDao) {
 		this.result = result;
 		this.dao = dao;
-	
+		this.unidadeMedidaDao = unidadeMedidaDao;
+		this.grupoMaterialDao = grupoMaterialDao;
+		
 	}
 
 	@Path({"/material/","/material","/material/lista"})
@@ -63,20 +70,21 @@ private final Result result;
 		
 	}
 	
-	@Path({"/material/{material.id}","/material/form"})
-	public Material form(Material material){
+	@Path({"/material/{material.id}","/material/form","/material/novo"})
+	public Material form(Material material) throws DAOException{
 		
 		
 		if (material != null && material.getId() != null && material.getId()>0){
-			try {
-				material = dao.findById(material.getId());
-				
-				
-			} catch (DAOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+			material = dao.findById(material.getId());
+			
 		}
+		
+		List<UnidadeMedida> unidadesMedidas = unidadeMedidaDao.findAll();
+		result.include("unidadesMedidas",unidadesMedidas);
+		
+		List<GrupoMaterial> grupos = grupoMaterialDao.findAll();
+		result.include("grupos",grupos);
 		
 		return material;
 	}

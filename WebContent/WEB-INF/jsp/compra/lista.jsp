@@ -4,8 +4,13 @@
 <script type="text/javascript">
 
     $(document).ready(function(){
+    	
     	$("#dataInicio").mask('99/99/9999');
     	$("#dataFim").mask('99/99/9999');
+    	
+    	var options = new Array();
+    	 options['language'] = 'pt-BR';
+    	 $('.datepicker').datepicker(options);
     	
     	$("#btnFiltrar").click(function(){
     		/*
@@ -48,30 +53,39 @@
 		<form action="<c:url value='/compra/'/>" id="formCompra" name="formCompra" method="post">
 		<input type="hidden" name="_format" value="json">
 		<div class="row">
-        	<div class="col-md-4">Fornecedor:<br/>
-	        	<select id="fornecedor" name="fornecedorId" class="selectpicker" data-live-search="true">
+        	<div class="col-md-5">
+        		<label for="fornecedorId">Fornecedor:</label>
+	        	<select id="fornecedor" name="fornecedorId" class="selectpicker form-control" data-live-search="true">
 					<option value ="">Selecione</option>
 					<c:forEach var="fornecedor" items="${fornecedores}" varStatus="contador">
 						<option value ="${fornecedor.id}">${fornecedor.apelido} - ${fornecedor.nome}</option>
 					</c:forEach>	
 				</select>
-				<button type="button" id="btnAdicionar" class="btn btn-default btn-md">
-		  <span class="glyphicon glyphicon-plus-sign"></span> 
-		</button>
+				
+				
         	</div>
-        	<div class="col-md-4">Data Início: <br>
-        		<input type="datetime"  name="dataInicio" id="dataInicio" class="date" value="" />
+        	<div class="col-md-1"><br/>
+        		<button type="button" id="btnAdicionar" class="btn btn-default btn-lg">
+				  <span class="glyphicon glyphicon-plus-sign"></span> 
+				</button>
+        	</div>
+        	<div class="col-md-3">
+        	<label for="dataInicio">Data Início:</label>
+        	
+        		<input type="datetime"  name="dataInicio" id="dataInicio" class="datepicker form-control" data-date-format="dd/mm/yyyy" value="" />
 					
         	</div>
-        	<div class="col-md-4">Data Fim: <br>
-        		<input type="datetime"  name="dataFim" id="dataFim" class="date" value="" />
+        	<div class="col-md-3">
+        	<label for="dataFim">Data Fim:</label>
+        		<input type="datetime"  name="dataFim" id="dataFim" class="datepicker form-control" data-date-format="dd/mm/yyyy" value="" />
 					
         	</div>
         </div>
         <div class="row">
-        	<div class="col-md-4">Material<br/>
+        	<div class="col-md-4">
+        	<label for="material">Material:</label>
         	
-        		<select id="material" name="materiaisSelecionados" class="selectpicker" multiple>
+        		<select id="material" name="materiaisSelecionados" class="selectpicker form-control" multiple>
 					<c:set  var="grupo" value=" " scope="request"></c:set>
 					<c:set  var="vari" value="1" scope="request"></c:set>
 					<c:forEach var="material" items="${materiais}" varStatus="contador">
@@ -90,9 +104,9 @@
 				</select>
         	 
         	</div>
-        	<div class="col-md-4">Forma de Frete/Entrega:<br/>
-				
-				<select style="width: 180px;" id="cboTipoFrete" name="tiposFretes" class="selectpicker" multiple >
+        	<div class="col-md-4">
+				<label for="cboTipoFrete">Forma de Frete/Entrega:</label>
+				<select style="width: 180px;" id="cboTipoFrete" name="tiposFretes" class="selectpicker form-control" multiple >
 					
 					<c:forEach var="tipoFrete" items="${tiposFrete}">
 						<option value="${tipoFrete.name }" >${tipoFrete.descricao}</option>

@@ -23,6 +23,7 @@ public class Material {
 	@ManyToOne
 	@JoinColumn(name="grupo_material_id")
 	private GrupoMaterial grupoMaterial;
+	private String ncm;
 	
 	public Long getId() {
 		return id;
@@ -55,6 +56,12 @@ public class Material {
 		this.grupoMaterial = grupoMaterial;
 	}
 	
+	public String getNcm() {
+		return ncm;
+	}
 	
+	public void setNcm(String ncm) {
+		this.ncm = ncm;
+	}
 
 }

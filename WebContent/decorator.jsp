@@ -12,6 +12,7 @@
 		
     	<link href="/transmetaisWeb/css/bootstrap.css" rel="stylesheet" type="text/css">
     	<link href="/transmetaisWeb/css/bootstrap-select.min.css" rel="stylesheet" type="text/css">
+    	<link href="/transmetaisWeb/css/datepicker.css" rel="stylesheet" type="text/css">
     	
     	
 		
@@ -20,6 +21,7 @@
 		-->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 		 <script src="/transmetaisWeb/javascripts/bootstrap-select.min.js" type="text/javascript"></script>
+		  <script src="/transmetaisWeb/javascripts/bootstrap-datepicker.js" type="text/javascript"></script>
 		 <script src="/transmetaisWeb/javascripts/bootstrap.js" type="text/javascript"></script>
 		  
 		<script src="/transmetaisWeb/javascripts/jquery.validate.min.js" type="text/javascript" ></script>

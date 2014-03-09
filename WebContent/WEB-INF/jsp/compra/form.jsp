@@ -4,7 +4,9 @@
 <script type="text/javascript">
 
     $(document).ready(function(){
-    	
+    	$('.selectpicker').selectpicker({
+            'selectedText': 'cat'
+        });
 		$("#data").mask('99/99/9999');
     	function float2moeda(num) {
 
@@ -98,9 +100,6 @@
             limit: 12
             
         });
-    	
-    	
-    	
 		
 		$("#btnAdicionar").click(function(){
     		$("#formCompra").submit();
@@ -126,7 +125,7 @@
 				<label>${fornecedor.id} - ${fornecedor.apelido } - ${fornecedor.nome }</label>
         	</div>
         	<div class="col-md-4">Material: <br>
-        		<select id="fornecedorMaterial" name="compra.fornecedorMaterial.id" class="selectpicker,required">
+        		<select id="fornecedorMaterial" name="compra.fornecedorMaterial.id" class="selectpicker required">
 					<option value ="">Selecione</option>
 					<c:forEach var="fornecedorMaterial" items="${fornecedorMateriais}" varStatus="contador">
 					

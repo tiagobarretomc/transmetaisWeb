@@ -4,6 +4,11 @@
 <script type="text/javascript">
 
     $(document).ready(function(){
+    	
+    	$('.selectpicker').selectpicker({
+            'selectedText': 'cat'
+        });
+    	
     	if('${fornecedor.cpfCnpj}'.length<=14){
 	    		$("#cpfCnpj").mask('999.999.999-99');
     		}else{
@@ -35,20 +40,23 @@
 				        url: '${pageContext.request.contextPath}/fornecedor/loadCidades?_format=json',
 				        data:	{id: $("#estado").val()},
 				 	    success: function(json){
-				 	    	alert(json);
+				 	    	//alert(json);
 				 	    	var jsonObject = eval(json);
-				 	    	alert(jsonObject);
+				 	    	//alert(jsonObject);
 				 	    	var cidades = jsonObject.list;
-				 	    	alert(cidades); 
+				 	    	//alert(cidades); 
 				 	    	
 				 	    	var html = "";  
-				 	       html += "<select name='fornecedor.cidade.id'>" ;  
+				 	       html += "<select name='fornecedor.cidade.id' class='selectpicker form-control' data-live-search='true'>" ;  
 				 	       for(i=0;i<cidades.length;i++) {  
 				 	           html += "<option value='"+cidades[i].id +"'>"+cidades[i].nome+"</option>";                           
 				 	       }  
 				 	       html += "</select> " ;  
 				 	       var div = document.getElementById("ajaxResultDiv");  
 				 	       div.innerHTML = html; 
+				 	      $('.selectpicker').selectpicker({
+				 	            'selectedText': 'cat'
+				 	        });
 				 	        
 
 						},
@@ -79,35 +87,71 @@
     <div class="container">
     <br>
 	<h2>Dados do Fornecedor</h2>
-	<form action="<c:url value='/fornecedor/adiciona'/>" id="formFornecedor" name="formFornecedor" method="post">
+	<div class="panel panel-default">
+	<div class="panel-body">
+	<form action="<c:url value='/fornecedor/adiciona'/>" id="formFornecedor" name="formFornecedor" method="post" role="form">
 		<input type="hidden" id="fornecedorId" name="fornecedor.id" value="${fornecedor.id}"/>
 		
 		
 		<div class="row">
-        	<div class="col-md-4">Nome: <br><input name="fornecedor.nome" id="fornecedor.nome" value="${fornecedor.nome}" class="required" size="45"/></div>
-        	<div class="col-md-4">Apelido: <br><input name="fornecedor.apelido" id="fornecedor.apelido" value="${fornecedor.apelido}" class="required" size="20"/></div>
         	<div class="col-md-4">
-        		<input type="checkbox" name="fornecedor.status" value="A" ${fornecedor.status eq 'A' ? 'checked="checked"': '' }>Ativo
+        		<label for="fornecedor.nome">Nome:</label>
+        		<input name="fornecedor.nome" id="fornecedor.nome" value="${fornecedor.nome}" class="form-control required" size="45" placeholder="Nome do Fornecedor"/>
+        	</div>
+        	<div class="col-md-4">
+        	<label for="fornecedor.apelido">Contato:</label>
+        	<input name="fornecedor.apelido" id="fornecedor.apelido" value="${fornecedor.apelido}" class="form-control required" size="20" placeholder="Apelido ou Contato do fornecedor"/></div>
+        	<div class="col-md-4">
+        	
+        		<div class="checkbox">
+				    <label>
+				      <input type="checkbox" name="fornecedor.status"  value="A" ${fornecedor.status eq 'A' ? 'checked="checked"': '' }> Ativo
+				    </label>
+				  </div>
+        		
         	</div>
       	</div>
 		<div class="row">
-        	<div class="col-md-4">Tipo Documento: <br/>
-				<input type="radio" name="tipoPessoa" value="F" id="optTipoPessoaFisica"/>&nbsp;CPF&nbsp;
-				<input type="radio" name="tipoPessoa" value="J" id="optTipoPessoaJuridica"/>&nbsp;CNPJ&nbsp;</div>
-        	<div class="col-md-4">Cpf/Cnpj:<br/><input id="cpfCnpj" name="fornecedor.cpfCnpj" value = "${fornecedor.cpfCnpj }" size="20"class="required"/></div>
+        	<div class="col-md-4">
+        	<label >Tipo Documento:</label><br/>
+        		
+        		<div class="radio-inline">
+				  <label class="radio-inline">
+				    <input type="radio" name="tipoPessoa" value="F" id="optTipoPessoaFisica"/> CPF
+				  </label>
+				  
+				</div>
+				<div class="radio-inline">
+				  
+				  <label class="radio-inline">
+				    <input type="radio" name="tipoPessoa" value="J" id="optTipoPessoaJuridica"/> CNPJ
+				  </label>
+				</div>
+        		
+				
+			</div>
+        	<div class="col-md-4">
+        		<label for="fornecedor.cpfCnpj">Cpf/Cnpj:</label>
+        		<input id="cpfCnpj" name="fornecedor.cpfCnpj" value = "${fornecedor.cpfCnpj }" size="20"class="form-control required"/>
+        	</div>
+        	<div class="col-md-4">
+        	<label for="fornecedor.email">Email:</label>
+        	<input name="fornecedor.email" id="fornecedor.email" value = "${fornecedor.email }" size="45" class="form-control"/></div>
         	
       	</div>
       	
       	<div class="row">
-        	<div class="col-md-4">Email: <br><input name="fornecedor.email" value = "${fornecedor.email }" size="45"/></div>
-        	<div class="col-md-4">Telefone:<br/><input id="telefoneFixo" name="fornecedor.telefoneFixo" value = "${fornecedor.telefoneFixo}" size="20"/></div>
-        	<div class="col-md-4">Celular:<br/><input id="telefoneCelular" class="required" name="fornecedor.telefoneCelular" value="${ fornecedor.telefoneCelular}" size="20"/></div>
-      	</div>
-      	
-      	<div class="row">
-        	<div class="col-md-4">Endereço:<br><input name="fornecedor.endereco" value = "${fornecedor.endereco }" size="45"/></div>
-        	<div class="col-md-4">Estado:<br/>
-					<select id="estado" name="estado" class="required">
+        	
+        	<div class="col-md-2">
+        	<label for="fornecedor.telefoneFixo">Telefone:</label>
+        	<input id="telefoneFixo" name="fornecedor.telefoneFixo" id="fornecedor.telefoneFixo" value = "${fornecedor.telefoneFixo}" class="form-control" size="20"/></div>
+        	<div class="col-md-2">
+        	<label for="fornecedor.telefoneCelular">Celular:</label>
+        	<input id="telefoneCelular"  name="fornecedor.telefoneCelular" id="fornecedor.telefoneCelular" value="${ fornecedor.telefoneCelular}" class="form-control required" size="20"/></div>
+        	
+        	<div class="col-md-4">
+        		<label for="estado">Estado:</label>
+					<select id="estado" name="estado" class="selectpicker required form-control" data-live-search="true">
 						<option value ="">Selecione</option>
 						<c:forEach var="estado" items="${estados}" varStatus="contador">
 						
@@ -115,8 +159,10 @@
 		
 						</c:forEach>	
 					</select></div>
-        	<div class="col-md-4">Cidade:<br/><div id="ajaxResultDiv">
-					<select name="fornecedor.cidade.id" class="required" id="fornecedor.cidade.id"> 
+        	<div class="col-md-4">
+        	<label for="fornecedor.cidade.id">Cidade:</label>
+        	<div id="ajaxResultDiv">
+					<select name="fornecedor.cidade.id"  id="fornecedor.cidade.id" class="selectpicker form-control" data-live-search="true"> 
 						<option value="">Selecione</option>
 						
 						<c:forEach var="cidade" items="${fornecedor.cidade.estado.cidades}" varStatus="contador">
@@ -129,20 +175,31 @@
 					</select>
  				</div></div>
       	</div>
+      	
+      	<div class="row">
+        	<div class="col-md-8">
+        	<label for="fornecedor.endereco">Endereço:</label>
+        	<input name="fornecedor.endereco" value = "${fornecedor.endereco }" size="45" class="required form-control"/></div>
+        	
+      	</div>
       	<br/>
-		<input type="submit" value="Salvar"/>	<br/>
+		<input type="submit" value="Salvar" class="btn btn-default"/>	<br/>
 		<c:if test="${fornecedor.id ne 0}">
 		</form>
+		</div>
+		</div>
+		<div class="panel panel-default">
+	<div class="panel-body">
 		<form action="<c:url value='/informacaoBancaria/adicionar'/>" id="formInfoBancarias" name="formInfoBancarias" method="post">
 		<input type="hidden" id=informacaoBancaria.fornecedor.id name="informacaoBancaria.fornecedor.id" value="${fornecedor.id}"/>
       	<h2>Informações Bancárias</h2>
       	<div class="row">
-        	<div class="col-md-3">Banco: <br><input name="informacaoBancaria.banco"  size="35"/></div>
-        	<div class="col-md-3">Agência:<br/><input name="informacaoBancaria.agencia"  size="20" maxlength="6"/></div>
-        	<div class="col-md-3">Conta Corrente: <br/><input name="informacaoBancaria.conta"  size="20"/></div>
+        	<div class="col-md-3">Banco: <br><input name="informacaoBancaria.banco"  size="35" class="form-control"/></div>
+        	<div class="col-md-3">Agência:<br/><input name="informacaoBancaria.agencia"  size="20" maxlength="6" class="form-control"/></div>
+        	<div class="col-md-3">Conta Corrente: <br/><input name="informacaoBancaria.conta"  size="20" class="form-control"/></div>
         	<div class="col-md-3">Tipo Conta: <br/>
         		
-        		<select  id="informacaoBancaria.tipoConta" name="informacaoBancaria.tipoConta">
+        		<select  id="informacaoBancaria.tipoConta" name="informacaoBancaria.tipoConta" class="selectpicker form-control">
 					<option value="" >--Selecione--</option>
 						<option value="C" >Corrente</option>
 						<option value="P" >Poupança</option>
@@ -151,8 +208,8 @@
         	</div>
       	</div>
       	<div class="row">
-        	<div class="col-md-4">Titular: <br><input name="informacaoBancaria.titular" value = "" size="45"/></div>
-        	<div class="col-md-4">Cpf/Cnpj Titular:<br/><input name="informacaoBancaria.cpfCnpjTitular" value = "" size="20"/></div>
+        	<div class="col-md-4">Titular: <br><input name="informacaoBancaria.titular" value = "" size="45" class="form-control"/></div>
+        	<div class="col-md-4">Cpf/Cnpj Titular:<br/><input name="informacaoBancaria.cpfCnpjTitular" value = "" size="20" class="form-control"/></div>
         	<div class="col-md-4"></div>
       	</div>
       	<br/>
@@ -188,6 +245,8 @@
 		</tbody>
 	</table>
 	</form>	
+	</div>
+	</div>
 	<br/>
 	
 	<br/>
