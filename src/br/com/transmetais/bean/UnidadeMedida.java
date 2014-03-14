@@ -13,6 +13,7 @@ public class UnidadeMedida {
 	@Id 
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
+	private String codigo;
 	private String sigla;
 	private String descricao;
 	
@@ -35,6 +36,12 @@ public class UnidadeMedida {
 		this.descricao = descricao;
 	}
 		
-		
+	public String getCodigo() {
+		return codigo;
+	}
+	
+	public void setCodigo(String codigo) {
+		this.codigo = codigo;
+	}
 		
 }

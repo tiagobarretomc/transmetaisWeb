@@ -90,7 +90,7 @@
 	            <li><a href="<c:url value='/transportador/'/>">Transportador</a></li>
 	            <li class="divider"></li>
 	            <li><a href="<c:url value='/material/'/>">Material</a></li>
-	            <li><a href="">Unidade de Medida</a></li>
+	            <li><a href="<c:url value='/unidadeMedida/'/>">Unidade de Medida</a></li>
 	            <li class="divider"></li>
 	             <li><a href="">Centro de Custo</a></li>
 	            
