@@ -91,12 +91,13 @@
 	<div class="panel-body">
 	<form action="<c:url value='/fornecedor/adiciona'/>" id="formFornecedor" name="formFornecedor" method="post" role="form">
 		<input type="hidden" id="fornecedorId" name="fornecedor.id" value="${fornecedor.id}"/>
+		<input type="hidden" id="fornecedor.conta.id" name="fornecedor.conta.id" value="${fornecedor.conta.id}"/>
 		
 		
 		<div class="row">
         	<div class="col-md-4">
         		<label for="fornecedor.nome">Nome:</label>
-        		<input name="fornecedor.nome" id="fornecedor.nome" value="${fornecedor.nome}" class="form-control required" size="45" placeholder="Nome do Fornecedor"/>
+        		<input name="fornecedor.nome" id="fornecedor.nome" value="${fornecedor.nome}" class="form-control required"  placeholder="Nome do Fornecedor"/>
         	</div>
         	<div class="col-md-4">
         	<label for="fornecedor.apelido">Contato:</label>

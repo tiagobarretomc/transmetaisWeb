@@ -14,6 +14,7 @@ import br.com.transmetais.bean.FornecedorMaterial;
 import br.com.transmetais.dao.FornecedorMaterialDAO;
 import br.com.transmetais.dao.commons.CrudDAOJPA;
 import br.com.transmetais.type.StatusFornecedorMaterialEnum;
+import br.com.transmetais.type.TipoFreteEnum;
 
 @Component
 public class FornecedorMaterialDaoImpl  extends CrudDAOJPA<FornecedorMaterial> implements FornecedorMaterialDAO{
@@ -26,7 +27,7 @@ private static FornecedorMaterialDaoImpl instance = null;
 	}
 	
 	
-		public List<FornecedorMaterial> obterAtivosPorFornecedor(Fornecedor fornecedor) {
+		public List<FornecedorMaterial> obterAtivosPorFiltro(Fornecedor fornecedor, TipoFreteEnum tipoFrete) {
 			
 			EntityManager manager = factory.createEntityManager(); 
 			
@@ -37,6 +38,10 @@ private static FornecedorMaterialDaoImpl instance = null;
 			
 			crit.add(Restrictions.eq("status", StatusFornecedorMaterialEnum.ATIVO));
 			crit.add(Restrictions.eq("fornecedor", fornecedor));
+			
+			if (tipoFrete != null){
+				crit.add(Restrictions.eq("tipoFrete", tipoFrete));
+			}
 			
 			result =  crit.list();
 			

@@ -1,5 +1,7 @@
 package br.com.transmetais.controller;
 
+import static br.com.caelum.vraptor.view.Results.json;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -7,6 +9,7 @@ import java.util.List;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.caelum.vraptor.view.Results;
 import br.com.transmetais.bean.Compra;
 import br.com.transmetais.bean.Fornecedor;
 import br.com.transmetais.bean.FornecedorMaterial;
@@ -111,10 +114,6 @@ public class CompraController {
 					precoMedio = valorTotal.divide(quantidade, BigDecimal.ROUND_HALF_DOWN);
 				}
 				
-				
-				
-
-				
 				result.include("valorTotal", valorTotal);
 				result.include("quantidade", quantidade);
 				result.include("precoMedio", precoMedio);
@@ -175,8 +174,10 @@ public class CompraController {
 				e.printStackTrace();
 			}
 		}
-		
-		
+		if(compra.getItens() != null)
+			result.include("quantidadeItens", compra.getItens().size());
+		else
+			result.include("quantidadeItens", 0);
 		//quando vier já com um fornecedor selecionado da lista de fornecedores
 		if (compra != null && compra.getFornecedorMaterial() != null && compra.getFornecedorMaterial().getFornecedor() != null && 
 				compra.getFornecedorMaterial().getFornecedor().getId() != null && compra.getFornecedorMaterial().getFornecedor().getId() > 0){
@@ -184,11 +185,27 @@ public class CompraController {
 			Fornecedor fornecedor = fornecedorDao.findById(compra.getFornecedorMaterial().getFornecedor().getId());
 			result.include("fornecedor", fornecedor);
 			
-			List<FornecedorMaterial> fornecedorMateriais = fornecedorMaterialDao.obterAtivosPorFornecedor(fornecedor);
+			List<FornecedorMaterial> fornecedorMateriais = fornecedorMaterialDao.obterAtivosPorFiltro(fornecedor,null);
 			result.include("fornecedorMateriais", fornecedorMateriais);
+			result.include("tiposFrete",TipoFreteEnum.values());
+			
+			//this.result.use(Results.json()).from(fornecedorMateriais, "formulario").serialize();
 		}
 		
+		
+		
 		return compra;
+	}
+	
+	
+	public void loadJsonMaterial(TipoFreteEnum tipoFrete, Fornecedor fornecedor){
+		
+		List<FornecedorMaterial> fornecedorMateriais = fornecedorMaterialDao.obterAtivosPorFiltro(fornecedor,tipoFrete);
+		
+		result.use(json()).from(fornecedorMateriais).include("material").serialize();
+		
+		result.nothing();
+		
 	}
 
 }

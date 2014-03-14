@@ -2,6 +2,7 @@ package br.com.transmetais.bean;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,7 +11,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
 @Table(name="compra")
@@ -35,6 +42,12 @@ public class Compra {
 	
 	@Column(name="num_nf")
 	private String numNf;
+	
+	@OneToMany(mappedBy="compra")
+	@LazyCollection(LazyCollectionOption.TRUE)
+	@Fetch(FetchMode.SELECT)
+	private List<ItemCompra> itens;
+	
 	
 	public Long getId() {
 		return id;
@@ -89,6 +102,12 @@ public class Compra {
 	}
 	public void setNumNf(String numNf) {
 		this.numNf = numNf;
+	}
+	public List<ItemCompra> getItens() {
+		return itens;
+	}
+	public void setItens(List<ItemCompra> itens) {
+		this.itens = itens;
 	}
 	
 	

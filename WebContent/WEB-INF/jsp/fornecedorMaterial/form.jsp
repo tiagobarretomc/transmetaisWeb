@@ -6,6 +6,11 @@
 	
 	
 	$(document).ready(function(){
+		
+		$('.selectpicker').selectpicker({
+            'selectedText': 'cat'
+        });
+		
 		$("#btnAdicionar").click(function(){
 			
 			$("#formMateriais").submit();
@@ -29,7 +34,8 @@
     <div class="container">
     <br>
 	<h2>Tabela de Preços do Fornecedor</h2>
-	
+	<div class="panel panel-default">
+	<div class="panel-body">
 	<form action="${pageContext.request.contextPath}/fornecedorMaterial/associar" id="formMateriais" name="formMateriais" method="post">
 	<input type="hidden" id="fornecedorId" name="fornecedorMaterial.fornecedor.id" value="${fornecedor.id}"/>
 	<table style="width:  600px;">
@@ -61,21 +67,24 @@
 	<br/>
 	
 	
-	<div class="row" style="width: 600px;">
-        	<div class="col-md-4">Material:<br/>
-				<select style="width: 180px;" id="cboMaterial" name="fornecedorMaterial.material.id" class="required">
+	<div class="row" >
+        	<div class="col-md-4">
+        	<label for="cboMaterial">Material:</label>
+				<select style="width: 180px;" id="cboMaterial" name="fornecedorMaterial.material.id" class=" form-control required selectpicker">
 					<option value="" >--Selecione--</option>
 					<c:forEach var="material" items="${materiais}">
 						<option value="${material.id }" >${material.descricao}</option>
 					</c:forEach>
 				</select></div>
-        	<div class="col-md-4">Preço:<br/>
+        	<div class="col-md-4">
+        	<label for="fornecedorMaterial.valor">Preço:</label>
 				
 			
-				<input  type="text" id="precoMaterial" size="15" name="fornecedorMaterial.valor" class="required"/></div>
-        	<div class="col-md-4">Forma de Frete/Entrega:<br/>
-				
-				<select style="width: 180px;" id="cboTipoFrete" name="fornecedorMaterial.tipoFrete" class="required">
+				<input  type="text" id="precoMaterial" size="15" name="fornecedorMaterial.valor" id="fornecedorMaterial.valor" class="required form-control"/></div>
+        	<div class="col-md-4">
+        	<label for="cboTipoFrete">Forma de Frete/Entrega:</label>
+        		
+				<select style="width: 180px;" id="cboTipoFrete" name="fornecedorMaterial.tipoFrete" class="required form-control selectpicker" >
 					<option value="" >--Selecione--</option>
 					<c:forEach var="tipoFrete" items="${tiposFrete}">
 						<option value="${tipoFrete.name }" >${tipoFrete.descricao}</option>
@@ -95,7 +104,7 @@
 	
 	
           
-	<table  class="table table-bordered table-striped" style="width: 800px">
+	<table  class="table table-bordered table-striped" >
 		<thead>
 			<tr>
 				<th>Material</th>
@@ -133,6 +142,7 @@
     
     
 </form>
-		
+</div>
+</div>		
 </div>
 

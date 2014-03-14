@@ -13,20 +13,7 @@
     	 $('.datepicker').datepicker(options);
     	
     	$("#btnFiltrar").click(function(){
-    		/*
-    		$.ajax({
-    	        url: '<c:url value="/compra/loadListaCompra"/>  ',
-    	        type: 'post',
-    	        dataType: 'json',
-    	        data: $('#formCompra').serialize(),
-    	        error: function(returnval) {
-    	        	alert(returnval);
-    	        },
-    	        success: function(data) {
-    	                   alert(data);
-    	                 }
-    	    });
-    		*/
+    		
     		$("#divTabela").load( '<c:url value="/compra/loadListaCompra"/>', $('#formCompra').serialize() );
     	});
     	
