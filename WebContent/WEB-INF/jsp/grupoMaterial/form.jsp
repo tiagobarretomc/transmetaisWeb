@@ -24,7 +24,7 @@
 	<br/>
 	<div class="panel panel-default">
 	<div class="panel-body">
-	<form action="<c:url value='grupoMaterial/add'/>" id="formGrupo" name="formGrupo" method="post">
+	<form action="<c:url value='/grupoMaterial/add'/>" id="formGrupo" name="formGrupo" method="post">
 		<input type="hidden" id="grupoId" name="grupoMaterial.id" value="${grupoMaterial.id}"/>
 		
 		
@@ -39,10 +39,6 @@
         	</div>
         	
       	</div>
-		
-      	
-      	
-      	
       	
       	<br/>
 		<button type="button" id="btnAdicionar" class="btn btn-default btn-md">

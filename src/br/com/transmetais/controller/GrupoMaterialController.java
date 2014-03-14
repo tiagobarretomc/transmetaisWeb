@@ -32,7 +32,7 @@ public class GrupoMaterialController {
 	}
 	
 	
-	@Path({"/grupoMaterial/{unidade.id}","/grupoMaterial/form","/grupoMaterial/novo"})
+	@Path({"/grupoMaterial/{grupo.id}","/grupoMaterial/form","/grupoMaterial/novo"})
 	public GrupoMaterial form(GrupoMaterial grupo) throws DAOException{
 		
 		if (grupo != null && grupo.getId() != null && grupo.getId()>0){
@@ -44,23 +44,23 @@ public class GrupoMaterialController {
 		return grupo;
 	}
 	
-	public void add(GrupoMaterial grupo) throws DAOException {
+	public void add(GrupoMaterial grupoMaterial) throws DAOException {
 		
-		if (grupo.getId() != null && grupo.getId()>0){
-			dao.updateEntity(grupo);
+		if (grupoMaterial.getId() != null && grupoMaterial.getId()>0){
+			dao.updateEntity(grupoMaterial);
 		}else{
-			dao.addEntity(grupo);
+			dao.addEntity(grupoMaterial);
 		}
 			
 		result.redirectTo(GrupoMaterialController.class).lista();
 	  }
 	
 	
-	@Path("/unidadeMedida/remove/{unidade.id}")
-	public void remove(GrupoMaterial grupo) throws DAOException {
+	@Path("/grupoMaterial/remove/{grupoMaterial.id}")
+	public void remove(GrupoMaterial grupoMaterial) throws DAOException {
 		
-		if (grupo.getId() != null && grupo.getId()>0){
-			dao.removeEntity(grupo);
+		if (grupoMaterial.getId() != null && grupoMaterial.getId()>0){
+			dao.removeEntity(grupoMaterial);
 		
 		}
 		result.redirectTo(GrupoMaterialController.class).lista();

@@ -37,7 +37,7 @@
 	</tr>
 	</thead>
 	<tbody>
-		<c:forEach var="grupoMaterial" items="${grupos}" varStatus="contador">
+		<c:forEach var="grupoMaterial" items="${grupoMaterialList}" varStatus="contador">
 	
 		<tr>
 			<td>
