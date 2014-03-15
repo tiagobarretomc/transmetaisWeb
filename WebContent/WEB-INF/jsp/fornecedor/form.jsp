@@ -90,11 +90,15 @@
 	<div class="panel panel-default">
 	<div class="panel-body">
 	<form action="<c:url value='/fornecedor/adiciona'/>" id="formFornecedor" name="formFornecedor" method="post" role="form">
-		<input type="hidden" id="fornecedorId" name="fornecedor.id" value="${fornecedor.id}"/>
+		
 		<input type="hidden" id="fornecedor.conta.id" name="fornecedor.conta.id" value="${fornecedor.conta.id}"/>
 		
 		
 		<div class="row">
+			<div class="col-md-1">
+        		<label for="fornecedor.nome">Código:</label>
+        		<input name="fornecedor.id" readonly="readonly" id="fornecedor.id" value="<fmt:formatNumber minIntegerDigits="4" value="${fornecedor.id}" groupingUsed="" />" class="form-control required"  placeholder=""/>
+        	</div>
         	<div class="col-md-4">
         		<label for="fornecedor.nome">Nome:</label>
         		<input name="fornecedor.nome" id="fornecedor.nome" value="${fornecedor.nome}" class="form-control required"  placeholder="Nome do Fornecedor"/>
@@ -102,7 +106,7 @@
         	<div class="col-md-4">
         	<label for="fornecedor.apelido">Contato:</label>
         	<input name="fornecedor.apelido" id="fornecedor.apelido" value="${fornecedor.apelido}" class="form-control required" size="20" placeholder="Apelido ou Contato do fornecedor"/></div>
-        	<div class="col-md-4">
+        	<div class="col-md-1">
         	
         		<div class="checkbox">
 				    <label>
@@ -111,9 +115,7 @@
 				  </div>
         		
         	</div>
-      	</div>
-		<div class="row">
-        	<div class="col-md-4">
+        	<div class="col-md-2">
         	<label >Tipo Documento:</label><br/>
         		
         		<div class="radio-inline">
@@ -131,6 +133,9 @@
         		
 				
 			</div>
+      	</div>
+		<div class="row">
+        	
         	<div class="col-md-4">
         		<label for="fornecedor.cpfCnpj">Cpf/Cnpj:</label>
         		<input id="cpfCnpj" name="fornecedor.cpfCnpj" value = "${fornecedor.cpfCnpj }" size="20"class="form-control required"/>
@@ -138,11 +143,6 @@
         	<div class="col-md-4">
         	<label for="fornecedor.email">Email:</label>
         	<input name="fornecedor.email" id="fornecedor.email" value = "${fornecedor.email }" size="45" class="form-control"/></div>
-        	
-      	</div>
-      	
-      	<div class="row">
-        	
         	<div class="col-md-2">
         	<label for="fornecedor.telefoneFixo">Telefone:</label>
         	<input id="telefoneFixo" name="fornecedor.telefoneFixo" id="fornecedor.telefoneFixo" value = "${fornecedor.telefoneFixo}" class="form-control" size="20"/></div>
@@ -150,7 +150,24 @@
         	<label for="fornecedor.telefoneCelular">Celular:</label>
         	<input id="telefoneCelular"  name="fornecedor.telefoneCelular" id="fornecedor.telefoneCelular" value="${ fornecedor.telefoneCelular}" class="form-control required" size="20"/></div>
         	
-        	<div class="col-md-4">
+        	
+      	</div>
+      	
+      	<div class="row">
+			<div class="col-md-4">
+        		<label for="fornecedor.logradouro">Logradouro:</label>
+        		<input name="fornecedor.logradouro" id="fornecedor.logradouro" value="${fornecedor.logradouro}" class="form-control required"  maxlength="100"/>
+        	</div>
+        	<div class="col-md-1">
+        		<label for="fornecedor.numero">Número:</label>
+        		<input name="fornecedor.numero" id="fornecedor.numero" value="${fornecedor.numero}" class="form-control required"  maxlength="7"/>
+        	</div>
+        	<div class="col-md-2">
+        		<label for="fornecedor.bairro">Bairro:</label>
+        		<input name="fornecedor.bairro" id="fornecedor.bairro" value="${fornecedor.bairro}" class="form-control required"  maxlength="45"/>
+        	</div>
+        	
+        	<div class="col-md-2">
         		<label for="estado">Estado:</label>
 					<select id="estado" name="estado" class="selectpicker required form-control" data-live-search="true">
 						<option value ="">Selecione</option>
@@ -160,7 +177,7 @@
 		
 						</c:forEach>	
 					</select></div>
-        	<div class="col-md-4">
+        	<div class="col-md-3">
         	<label for="fornecedor.cidade.id">Cidade:</label>
         	<div id="ajaxResultDiv">
 					<select name="fornecedor.cidade.id"  id="fornecedor.cidade.id" class="selectpicker form-control" data-live-search="true"> 
@@ -175,7 +192,9 @@
 						
 					</select>
  				</div></div>
-      	</div>
+		</div>
+      	
+      	
       	
       	<div class="row">
         	<div class="col-md-8">

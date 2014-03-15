@@ -85,7 +85,7 @@
 		<div class="row">
         	<div class="col-md-1">
         		<label for="funcionario.id">Código:</label>
-        		<input name="funcionario.id" readonly="readonly" id="funcionario.id" value="<fmt:formatNumber minIntegerDigits="4" value="${funcionario.id}" groupingUsed="" />" class="form-control required" size="8" maxlength="4"/>
+        		<input name="funcionario.id" readonly="readonly" id="funcionario.id" value="<fmt:formatNumber minIntegerDigits="4" value="${funcionario.id}" groupingUsed="" />" class="form-control " size="8" maxlength="4"/>
         	</div>
         	
         	<div class="col-md-4">
@@ -102,7 +102,7 @@
         	</div>
         	<div class="col-md-2">
         		<label for="funcionario.nascimento">Nascimento:</label>
-        		<input name="funcionario.nascimento" id="funcionario.nascimento" value="${funcionario.nascimento}" class="form-control required datepicker" data-date-format="dd/mm/yyyy" />
+        		<input name="funcionario.nascimento" id="funcionario.nascimento" value="<fmt:formatDate value="${funcionario.nascimento }" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" data-date-format="dd/mm/yyyy" />
         	</div>
       	</div>
 		<div class="row">
@@ -166,11 +166,11 @@
       	<div class="row">
       		<div class="col-md-4">
         		<label for="funcionario.contato">Contato:</label>
-        		<input name="funcionario.contato" id="funcionario.contato" value="${funcionario.contato}" class="form-control required"  maxlength="45"/>
+        		<input name="funcionario.contato" id="funcionario.contato" value="${funcionario.contato}" class="form-control"  maxlength="45"/>
         	</div>
         	<div class="col-md-4">
         		<label for="funcionario.telefoneContato">Telefone do Contato:</label>
-        		<input name="funcionario.telefoneContato" id="funcionario.telefoneContato" value="${funcionario.telefoneContato}" class="form-control required"  maxlength="45"/>
+        		<input name="funcionario.telefoneContato" id="funcionario.telefoneContato" value="${funcionario.telefoneContato}" class="form-control"  maxlength="45"/>
         	</div>
       	</div>
       	
