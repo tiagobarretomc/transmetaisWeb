@@ -85,6 +85,9 @@
             <li class="dropdown">
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Cadastros <b class="caret"></b></a>
 	          <ul class="dropdown-menu">
+	          	<li><a href="<c:url value='/unidade/'/>">Unidades da Transmetais</a></li>
+	          	<li><a href="<c:url value='/funcionario/'/>">Funcionários</a></li>
+	          	 <li class="divider"></li>
 	            <li><a href="<c:url value='/fornecedor/'/>">Fornecedor</a></li>
 	            <li><a href="<c:url value='/cliente/'/>">Cliente</a></li>
 	            <li><a href="<c:url value='/transportador/'/>">Transportador</a></li>
