@@ -4,12 +4,12 @@
 <script type="text/javascript">
 
     $(document).ready(function(){
-    	$("#centroCusto\\.numero").mask('9999');
+    	
     	$("#btnAdicionar").click(function(){
-    		$("#formCentroCusto").submit();
+    		$("#formUnidade").submit();
     	});
     	
-        $('#formCentroCusto').validate({
+        $('#formUnidade').validate({
             
         
     	});
@@ -20,28 +20,23 @@
 
     <div class="container">
     <br>
-	<h2>Cadastro de Centro de Custo</h2>
+	<h2>Cadastro de Unidades</h2>
 	<br/>
 	<div class="panel panel-default">
 	<div class="panel-body">
-	<form action="<c:url value='/centroCusto/add'/>" id="formCentroCusto" name="formCentroCusto" method="post">
-		
+	<form action="<c:url value='/unidade/add'/>" id="formUnidade" name="formUnidade" method="post">
+		<input type="hidden" id="unidadelId" name="unidade.id" value="${unidade.id}"/>
 		
 		
 		<div class="row">
-        	<div class="col-md-1">
-        		<label for="centroCusto.id">Código:</label>
-        		<input name="centroCusto.id" readonly="readonly" id="centroCusto.id" value="<fmt:formatNumber minIntegerDigits="4" value="${centroCusto.id}" groupingUsed="" />" class="form-control " size="8" maxlength="4"/>
+        	<div class="col-md-4">
+        		<label for="material.ncm">Código:</label>
+        		<input name="unidade.codigo" id="unidade.codigo" value="${unidade.codigo}" class="form-control required" size="8" maxlength="4"/>
         	</div>
         	
-        	<div class="col-md-2">
-        		<label for="centroCusto.numero">Número:</label>
-        		<input name="centroCusto.numero" id="centroCusto.numero" value="${centroCusto.numero}" class="form-control required" size="8" maxlength="4"/>
-        	</div>
-        	
-        	<div class="col-md-9">
-        		<label for="centroCusto.descricao">Descrição:</label>
-        		<input name="centroCusto.descricao" id="centroCusto.descricao" value="${centroCusto.descricao}" class="form-control required" size="45" maxlength="45"/>
+        	<div class="col-md-4">
+        		<label for="material.descricao">Descrição:</label>
+        		<input name="unidade.descricao" id="unidade.descricao" value="${unidade.descricao}" class="form-control required" size="45" maxlength="45"/>
         	</div>
       	</div>
 		

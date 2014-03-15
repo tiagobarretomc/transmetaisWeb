@@ -36,6 +36,8 @@ public class Fornecedor {
 	
 	@Column(name="cpf_cnpj")
 	private String cpfCnpj;
+	@Column(name="inscricao_estadual")
+	private String inscricaoEstadual;
 	@Column(name="telefone_celular")
 	private String telefoneCelular;
 	@Column(name="telefone_fixo")
@@ -192,6 +194,12 @@ public class Fornecedor {
 	
 	
 	
+	public String getInscricaoEstadual() {
+		return inscricaoEstadual;
+	}
+	public void setInscricaoEstadual(String inscricaoEstadual) {
+		this.inscricaoEstadual = inscricaoEstadual;
+	}
 	public String getBairro() {
 		return bairro;
 	}

@@ -1,33 +1,26 @@
 package br.com.transmetais.bean;
 
-import java.util.List;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-
 @Entity
-@Table(name="centro_custo")
-public class CentroCusto {
+@Table(name="centro_aplicacao")
+public class CentroAplicacao {
+	
 	
 	@Id 
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
 	private String numero;
+	@ManyToOne
+	@JoinColumn(name="centro_custo_id")
+	private CentroCusto centroCusto;
 	private String descricao;
-	@OneToMany(mappedBy="centroCusto")
-	@LazyCollection(LazyCollectionOption.TRUE)
-	@Fetch(FetchMode.SELECT)
-	private List<CentroAplicacao> centrosAplicacoes;
-
 	public Integer getId() {
 		return id;
 	}
@@ -46,14 +39,13 @@ public class CentroCusto {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-	public List<CentroAplicacao> getCentrosAplicacoes() {
-		return centrosAplicacoes;
-	}
-	public void setCentrosAplicacoes(List<CentroAplicacao> centrosAplicacoes) {
-		this.centrosAplicacoes = centrosAplicacoes;
-	}
 	
-	
+	public CentroCusto getCentroCusto() {
+		return centroCusto;
+	}
+	public void setCentroCusto(CentroCusto centroCusto) {
+		this.centroCusto = centroCusto;
+	}
 	
 
 }

@@ -136,9 +136,13 @@
       	</div>
 		<div class="row">
         	
-        	<div class="col-md-4">
+        	<div class="col-md-2">
         		<label for="fornecedor.cpfCnpj">Cpf/Cnpj:</label>
         		<input id="cpfCnpj" name="fornecedor.cpfCnpj" value = "${fornecedor.cpfCnpj }" size="20"class="form-control required"/>
+        	</div>
+        	<div class="col-md-2">
+        		<label for="fornecedor.inscricaoEstadual">Insc.Estadual:</label>
+        		<input id="fornecedor.inscricaoEstadual" name="fornecedor.inscricaoEstadual" value = "${fornecedor.inscricaoEstadual }" size="20"class="form-control "/>
         	</div>
         	<div class="col-md-4">
         	<label for="fornecedor.email">Email:</label>
