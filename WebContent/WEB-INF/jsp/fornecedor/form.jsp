@@ -166,6 +166,10 @@
         		<label for="fornecedor.bairro">Bairro:</label>
         		<input name="fornecedor.bairro" id="fornecedor.bairro" value="${fornecedor.bairro}" class="form-control required"  maxlength="45"/>
         	</div>
+        	<div class="col-md-3">
+        		<label for="fornecedor.complemento">Complemento:</label>
+        		<input name="fornecedor.complemento" id="fornecedor.bairro" value="${fornecedor.complemento}" class="form-control required"  maxlength="45"/>
+        	</div>
         	
         	<div class="col-md-2">
         		<label for="estado">Estado:</label>
@@ -177,7 +181,14 @@
 		
 						</c:forEach>	
 					</select></div>
-        	<div class="col-md-3">
+        	
+		</div>
+      	
+      	
+      	
+      	<div class="row">
+      	
+      	<div class="col-md-3">
         	<label for="fornecedor.cidade.id">Cidade:</label>
         	<div id="ajaxResultDiv">
 					<select name="fornecedor.cidade.id"  id="fornecedor.cidade.id" class="selectpicker form-control" data-live-search="true"> 
@@ -192,14 +203,9 @@
 						
 					</select>
  				</div></div>
-		</div>
-      	
-      	
-      	
-      	<div class="row">
         	<div class="col-md-8">
         	<label for="fornecedor.endereco">Endereço:</label>
-        	<input name="fornecedor.endereco" value = "${fornecedor.endereco }" size="45" class="required form-control"/></div>
+        	<input name="fornecedor.endereco" value = "${fornecedor.endereco }" size="45" class=" form-control"/></div>
         	
       	</div>
       	<br/>
