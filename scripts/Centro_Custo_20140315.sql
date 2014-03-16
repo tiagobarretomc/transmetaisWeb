@@ -21,3 +21,8 @@ CREATE TABLE `centro_aplicacao` (
 
 ALTER TABLE `transmetais`.`fornecedor` 
 ADD COLUMN `inscricao_estadual` VARCHAR(20) NULL AFTER `cep`;
+
+ALTER TABLE `transmetais`.`conta` 
+ADD COLUMN `Banco` VARCHAR(100) NULL AFTER `fornecedor_id`,
+ADD COLUMN `agencia` VARCHAR(6) NULL AFTER `Banco`,
+ADD COLUMN `conta_corrente` VARCHAR(18) NULL AFTER `agencia`;
