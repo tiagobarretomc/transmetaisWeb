@@ -96,7 +96,8 @@
 	            <li><a href="<c:url value='/unidadeMedida/'/>">Unidade de Medida</a></li>
 	            <li><a href="<c:url value='/grupoMaterial/'/>">Grupo de Material</a></li>
 	            <li class="divider"></li>
-	             <li><a href="">Centro de Custo</a></li>
+	             <li><a href="<c:url value='/centroCusto/'/>">Centro de Custo</a></li>
+	             <li><a href="<c:url value='/centroAplicacao/'/>">Centro de Aplicação</a></li>
 	            
 	          </ul>
 	        </li>

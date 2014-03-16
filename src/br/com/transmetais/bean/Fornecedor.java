@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,6 +20,8 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+
+import br.com.transmetais.type.TipoFaturamentoEnum;
 
 
 
@@ -69,6 +73,9 @@ public class Fornecedor {
 	@OneToOne
 	@JoinColumn(name="conta_id")
 	private Conta conta;
+	@Enumerated(EnumType.STRING)
+	@Column(name="tipo_faturamento")
+	private TipoFaturamentoEnum tipoFaturamento;
 	
 	
 	
@@ -206,6 +213,16 @@ public class Fornecedor {
 	public void setBairro(String bairro) {
 		this.bairro = bairro;
 	}
+	
+	
+	public TipoFaturamentoEnum getTipoFaturamento() {
+		return tipoFaturamento;
+	}
+	
+	public void setTipoFaturamento(TipoFaturamentoEnum tipoFaturamento) {
+		this.tipoFaturamento = tipoFaturamento;
+	}
+	
 	@Override
 	public boolean equals(Object arg0) {
 		// TODO Auto-generated method stub

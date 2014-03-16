@@ -7,8 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -23,13 +21,11 @@ public class Conta {
 	private BigDecimal saldo;
 	@Column(name="saldo_inicial")
 	private BigDecimal saldoInicial;
-	@OneToOne
-	@JoinColumn(name="fornecedor_id")
-	private Fornecedor fornecedor;
-	@JoinColumn(name="cliente_id")
-	private Cliente cliente;
+	
+	
 	private String banco;
 	private String agencia;
+	@Column(name="conta_corrente")
 	private String contaCorrente;
 	
 	
@@ -63,18 +59,7 @@ public class Conta {
 	public void setSaldoInicial(BigDecimal saldoInicial) {
 		this.saldoInicial = saldoInicial;
 	}
-	public Fornecedor getFornecedor() {
-		return fornecedor;
-	}
-	public void setFornecedor(Fornecedor fornecedor) {
-		this.fornecedor = fornecedor;
-	}
-	public Cliente getCliente() {
-		return cliente;
-	}
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
-	}
+	
 	public String getBanco() {
 		return banco;
 	}
