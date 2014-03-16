@@ -25,4 +25,24 @@ ADD COLUMN `inscricao_estadual` VARCHAR(20) NULL AFTER `cep`;
 ALTER TABLE `transmetais`.`conta` 
 ADD COLUMN `Banco` VARCHAR(100) NULL AFTER `fornecedor_id`,
 ADD COLUMN `agencia` VARCHAR(6) NULL AFTER `Banco`,
-ADD COLUMN `conta_corrente` VARCHAR(18) NULL AFTER `agencia`;
+ADD COLUMN `conta_corrente` VARCHAR(18) NULL AFTER `agencia`
+ADD COLUMN `cliente_id` BIGINT(20) NULL AFTER `conta_corrente`;
+
+
+ALTER TABLE `transmetais`.`conta` 
+ADD INDEX `fk_conta_cliente_idx` (`cliente_id` ASC),
+ADD INDEX `fk_conta_fornecedor_idx` (`fornecedor_id` ASC);
+ALTER TABLE `transmetais`.`conta` 
+ADD CONSTRAINT `fk_conta_cliente`
+  FOREIGN KEY (`cliente_id`)
+  REFERENCES `transmetais`.`cliente` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION,
+ADD CONSTRAINT `fk_conta_fornecedor`
+  FOREIGN KEY (`fornecedor_id`)
+  REFERENCES `transmetais`.`fornecedor` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+
+

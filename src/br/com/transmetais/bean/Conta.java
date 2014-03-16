@@ -8,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -27,6 +26,13 @@ public class Conta {
 	@OneToOne
 	@JoinColumn(name="fornecedor_id")
 	private Fornecedor fornecedor;
+	@JoinColumn(name="cliente_id")
+	private Cliente cliente;
+	private String banco;
+	private String agencia;
+	private String contaCorrente;
+	
+	
 	public Long getId() {
 		return id;
 	}
@@ -62,6 +68,30 @@ public class Conta {
 	}
 	public void setFornecedor(Fornecedor fornecedor) {
 		this.fornecedor = fornecedor;
+	}
+	public Cliente getCliente() {
+		return cliente;
+	}
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
+	public String getBanco() {
+		return banco;
+	}
+	public void setBanco(String banco) {
+		this.banco = banco;
+	}
+	public String getAgencia() {
+		return agencia;
+	}
+	public void setAgencia(String agencia) {
+		this.agencia = agencia;
+	}
+	public String getContaCorrente() {
+		return contaCorrente;
+	}
+	public void setContaCorrente(String contaCorrente) {
+		this.contaCorrente = contaCorrente;
 	}
 	
 	
