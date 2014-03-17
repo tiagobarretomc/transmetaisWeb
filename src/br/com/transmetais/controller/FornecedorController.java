@@ -19,6 +19,7 @@ import br.com.transmetais.dao.EstadoDAO;
 import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.dao.impl.FornecedorDaoImpl;
 import br.com.transmetais.dao.impl.MaterialDaoImpl;
+import br.com.transmetais.type.TipoFaturamentoEnum;
 
 @Resource
 public class FornecedorController {
@@ -66,24 +67,50 @@ public class FornecedorController {
 			fornecedor.setCidade(cidade);
 			if (fornecedor.getId() != null && fornecedor.getId()>0){
 				//Aleterar Fornecedor
+				
+				if(fornecedor.getTipoFaturamento() == TipoFaturamentoEnum.ADIANT){
+					Fornecedor fornecedorAnterior = dao.findById(fornecedor.getId());
+					if (fornecedorAnterior.getTipoFaturamento() == null || fornecedorAnterior.getTipoFaturamento() != TipoFaturamentoEnum.ADIANT){
+						if (fornecedorAnterior.getConta() == null){
+							Conta conta = new Conta();
+							conta.setDescricao(fornecedor.getApelido() + " - " + fornecedor.getNome());
+							
+							conta.setBancaria(false);
+							conta.setSaldo(new BigDecimal(0));
+							conta.setSaldoInicial(new BigDecimal(0));
+							contaDao.addEntity(conta);
+							
+							//Setando a Conta ao fornecedor por se tratar de uma relacao 1x1
+							fornecedor.setConta(conta);
+						}else{
+							fornecedor.setConta(fornecedorAnterior.getConta());
+						}
+					}
+				}
+				
+				
 				dao.updateEntity(fornecedor);
 				
 			}else{
 				//Adicionar o fornecedor
 				dao.addEntity(fornecedor);
 				
-				//Criando a Conta do Fornecedor
-				Conta conta = new Conta();
-				conta.setDescricao(fornecedor.getApelido());
-				conta.setFornecedor(fornecedor);
-				conta.setBancaria(false);
-				conta.setSaldo(new BigDecimal(0));
-				conta.setSaldoInicial(new BigDecimal(0));
-				contaDao.addEntity(conta);
-				
-				//Setando a Conta ao fornecedor por se tratar de uma relacao 1x1
-				fornecedor.setConta(conta);
-				dao.updateEntity(fornecedor);
+				//Se tipo Faturamento for ADIANT significa que este fornecedor trabalha com adiantamentos rotativos.
+				if(fornecedor.getTipoFaturamento() == TipoFaturamentoEnum.ADIANT){
+					
+					//Criando a Conta do Fornecedor
+					Conta conta = new Conta();
+					conta.setDescricao(fornecedor.getApelido());
+					//conta.setFornecedor(fornecedor);
+					conta.setBancaria(false);
+					conta.setSaldo(new BigDecimal(0));
+					conta.setSaldoInicial(new BigDecimal(0));
+					contaDao.addEntity(conta);
+					
+					//Setando a Conta ao fornecedor por se tratar de uma relacao 1x1
+					fornecedor.setConta(conta);
+					dao.updateEntity(fornecedor);
+				}
 			}
 			
 		} catch (DAOException e) {
@@ -98,7 +125,6 @@ public class FornecedorController {
 	@Path({"/fornecedor/{fornecedor.id}","/fornecedor/form","/fornecedor/novo"})
 	public Fornecedor form(Fornecedor fornecedor){
 		
-		
 		if (fornecedor != null && fornecedor.getId() != null && fornecedor.getId()>0){
 			try {
 				fornecedor = dao.findById(fornecedor.getId());
@@ -109,8 +135,10 @@ public class FornecedorController {
 				e.printStackTrace();
 			}
 		}
+		
 		List<Material> materiais = null;
 		List<Estado> estados = null;
+		
 		try {
 			materiais = materialDao.findAll();
 			estados = estadoDAO.findAll();
@@ -118,6 +146,8 @@ public class FornecedorController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		result.include("tiposFaturamentos", TipoFaturamentoEnum.values());
 		result.include("materiais", materiais);
 		result.include("estados", estados);
 		return fornecedor;

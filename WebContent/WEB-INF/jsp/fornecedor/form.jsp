@@ -9,6 +9,23 @@
             'selectedText': 'cat'
         });
     	
+    	
+    	if('${fornecedor.tipoFaturamento}'=='ADIANT'){
+			$("#divSaldo").show();
+		}else{
+			$("#divSaldo").hide();
+		}
+    	
+    	$("#fornecedor\\.tipoFaturamento").change(function(){
+    		if($(this).val()=='ADIANT'){
+    			$("#divSaldo").show();
+    		}else{
+    			$("#divSaldo").hide();
+    		}
+    	});
+    	
+    	$("#fornecedor\\.cep").mask('99999-999');
+    	
     	if('${fornecedor.cpfCnpj}'.length<=14){
 	    		$("#cpfCnpj").mask('999.999.999-99');
     		}else{
@@ -31,6 +48,8 @@
     		$('#optTipoPessoaJuridica').click(function(){
     			$("#cpfCnpj").mask('99.999.999/9999-99');
     		});
+    		
+    		
     		
     	    $('#estado').change(function(){
     	    	
@@ -136,9 +155,13 @@
       	</div>
 		<div class="row">
         	
-        	<div class="col-md-4">
+        	<div class="col-md-2">
         		<label for="fornecedor.cpfCnpj">Cpf/Cnpj:</label>
         		<input id="cpfCnpj" name="fornecedor.cpfCnpj" value = "${fornecedor.cpfCnpj }" size="20"class="form-control required"/>
+        	</div>
+        	<div class="col-md-2">
+        		<label for="fornecedor.inscricaoEstadual">Insc.Estadual:</label>
+        		<input id="fornecedor.inscricaoEstadual" name="fornecedor.inscricaoEstadual" value = "${fornecedor.inscricaoEstadual }" size="20"class="form-control "/>
         	</div>
         	<div class="col-md-4">
         	<label for="fornecedor.email">Email:</label>
@@ -168,10 +191,21 @@
         	</div>
         	<div class="col-md-3">
         		<label for="fornecedor.complemento">Complemento:</label>
-        		<input name="fornecedor.complemento" id="fornecedor.bairro" value="${fornecedor.complemento}" class="form-control required"  maxlength="45"/>
+        		<input name="fornecedor.complemento" id="fornecedor.bairro" value="${fornecedor.complemento}" class="form-control "  maxlength="45"/>
         	</div>
         	
         	<div class="col-md-2">
+        		<label for="fornecedor.cep">Cep:</label>
+        		<input name="fornecedor.cep" id="fornecedor.cep" value="${fornecedor.cep}" class="form-control "  maxlength="10"/>
+        	</div>
+        	
+		</div>
+      	
+      	
+      	
+      	<div class="row">
+      	
+      	<div class="col-md-3">
         		<label for="estado">Estado:</label>
 					<select id="estado" name="estado" class="selectpicker required form-control" data-live-search="true">
 						<option value ="">Selecione</option>
@@ -181,14 +215,8 @@
 		
 						</c:forEach>	
 					</select></div>
-        	
-		</div>
       	
-      	
-      	
-      	<div class="row">
-      	
-      	<div class="col-md-3">
+      	<div class="col-md-4">
         	<label for="fornecedor.cidade.id">Cidade:</label>
         	<div id="ajaxResultDiv">
 					<select name="fornecedor.cidade.id"  id="fornecedor.cidade.id" class="selectpicker form-control" data-live-search="true"> 
@@ -203,17 +231,33 @@
 						
 					</select>
  				</div></div>
-        	<div class="col-md-8">
+ 			<div class="col-md-3">
+				<label for="fornecedor.tipoFaturamento">Tipo Faturamento:</label>
+				<select  id="fornecedor.tipoFaturamento" name="fornecedor.tipoFaturamento" class="selectpicker form-control"  >
+					<option value="" >Selecione</option>
+					<c:forEach var="tipo" items="${tiposFaturamentos}">
+						<option value="${tipo.name }" ${fornecedor.tipoFaturamento.name eq tipo.name ? 'selected' : ''}>${tipo.descricao}</option>
+					</c:forEach>
+				</select>
+			</div>
+			<div id="divSaldo" class="col-md-2">
+        		<label for="fornecedor.conta.saldo">Saldo:</label>
+        		<input readonly="readonly" name="saldo" id="fornecedor.conta.saldo" value="<fmt:formatNumber value="${fornecedor.conta.saldo}" minFractionDigits="2" type="currency"/>" class="form-control " />
+        	</div>
+			</div>
+			<div class="row">
+        	<div class="col-md-4">
         	<label for="fornecedor.endereco">Endereço:</label>
         	<input name="fornecedor.endereco" value = "${fornecedor.endereco }" size="45" class=" form-control"/></div>
         	
       	</div>
       	<br/>
 		<input type="submit" value="Salvar" class="btn btn-default"/>	<br/>
-		<c:if test="${fornecedor.id ne 0}">
+		
 		</form>
 		</div>
 		</div>
+		<c:if test="${not empty fornecedor.id }">
 		<div class="panel panel-default">
 	<div class="panel-body">
 		<form action="<c:url value='/informacaoBancaria/adicionar'/>" id="formInfoBancarias" name="formInfoBancarias" method="post">
