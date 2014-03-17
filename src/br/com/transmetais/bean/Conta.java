@@ -1,6 +1,7 @@
 package br.com.transmetais.bean;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,6 +28,8 @@ public class Conta {
 	private String agencia;
 	@Column(name="conta_corrente")
 	private String contaCorrente;
+	@Column(name="data_saldo_inicial")
+	private Date dataSaldoInicial;
 	
 	
 	public Long getId() {
@@ -78,6 +81,14 @@ public class Conta {
 	public void setContaCorrente(String contaCorrente) {
 		this.contaCorrente = contaCorrente;
 	}
+	public Date getDataSaldoInicial() {
+		return dataSaldoInicial;
+	}
+	public void setDataSaldoInicial(Date dataSaldoInicial) {
+		this.dataSaldoInicial = dataSaldoInicial;
+	}
+	
+	
 	
 	
 
