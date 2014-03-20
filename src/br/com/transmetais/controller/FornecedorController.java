@@ -161,7 +161,6 @@ public class FornecedorController {
 			estadoSelecionado = estadoDAO.findById(id);
 		}
 		
-		
 		result.use(json()).from(estadoSelecionado.getCidades()).serialize();
 		
 		result.nothing();

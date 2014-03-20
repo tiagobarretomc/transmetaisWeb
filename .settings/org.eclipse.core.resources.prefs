@@ -1,5 +1,4 @@
 eclipse.preferences.version=1
-encoding//WebContent/WEB-INF/header.jsp=UTF-8
 encoding//WebContent/WEB-INF/jsp/cliente/form.jsp=UTF-8
 encoding//WebContent/WEB-INF/jsp/cliente/lista.jsp=UTF-8
 encoding//WebContent/WEB-INF/jsp/fornecedor/form.jsp=UTF-8
@@ -7,7 +6,6 @@ encoding//WebContent/WEB-INF/jsp/fornecedor/lista.jsp=UTF-8
 encoding//WebContent/WEB-INF/jsp/fornecedorMaterial/form.jsp=UTF-8
 encoding//WebContent/WEB-INF/jsp/material/lista.jsp=UTF-8
 encoding//WebContent/WEB-INF/jsp/material/lista_jquerydatatable.jsp=UTF-8
-encoding//WebContent/WEB-INF/teste.html=UTF-8
 encoding//WebContent/javascripts/jquery.ui.datagrid.min.js=UTF-8
 encoding//src/br/com/transmetais/controller/FornecedorController.java=UTF-8
 encoding/<project>=UTF-8
