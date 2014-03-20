@@ -20,7 +20,7 @@ import br.com.transmetais.type.TipoOperacaoEnum;
 
 @Entity
 @Table(name="movimentacao")
-//@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Movimentacao {
 	@Id 
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

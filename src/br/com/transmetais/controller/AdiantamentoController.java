@@ -94,7 +94,7 @@ public class AdiantamentoController {
 					adiantamento.setSituacao(SituacaoAdiantamentoEnum.A);
 					
 					//Registro de Movimentacao de ENtrada na conta do fornecedor
-					Movimentacao movimentacao = new Movimentacao();
+					MovimentacaoAdiantamento movimentacao = new MovimentacaoAdiantamento();
 					movimentacao.setConta(adiantOrig.getFornecedor().getConta());
 					movimentacao.setData(adiantamento.getDataPagamento());
 					//um valor está sendo creditado na conta do fornecedor
@@ -103,7 +103,7 @@ public class AdiantamentoController {
 					
 					
 					//Registro de Movimentacao de Saída de uma conta da Empresa
-					Movimentacao movementacaoDebito = new Movimentacao();
+					MovimentacaoAdiantamento movementacaoDebito = new MovimentacaoAdiantamento();
 					movementacaoDebito.setConta(adiantOrig.getFornecedor().getConta());
 					movementacaoDebito.setData(adiantamento.getDataPagamento());
 					//um valor está sendo creditado na conta do fornecedor

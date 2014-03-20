@@ -5,10 +5,7 @@
 
     $(document).ready(function(){
     	
-    	$('.selectpicker').selectpicker({
-            'selectedText': 'cat'
-        });
-    	
+    	$('.selectpicker').selectpicker();
     	
     	if('${fornecedor.tipoFaturamento}'=='ADIANT'){
 			$("#divSaldo").show();
@@ -73,9 +70,7 @@
 				 	       html += "</select> " ;  
 				 	       var div = document.getElementById("ajaxResultDiv");  
 				 	       div.innerHTML = html; 
-				 	      $('.selectpicker').selectpicker({
-				 	            'selectedText': 'cat'
-				 	        });
+				 	      $('.selectpicker').selectpicker();
 				 	        
 
 						},
@@ -97,7 +92,14 @@
     	$("#telefoneCelular").mask("(99) 9999-9999");
     	
         $('#formFornecedor').validate({
-            
+        	ignore: ':not(select:hidden, input:visible, textarea:visible)',
+            errorPlacement: function (error, element) {
+                if ($(element).is('select')) {
+                    element.next().after(error); // special placement for select elements
+                } else {
+                    error.insertAfter(element);  // default placement for everything else
+                }
+            }
         
     	});
     });
@@ -219,7 +221,7 @@
       	<div class="col-md-4">
         	<label for="fornecedor.cidade.id">Cidade:</label>
         	<div id="ajaxResultDiv">
-					<select name="fornecedor.cidade.id"  id="fornecedor.cidade.id" class="selectpicker form-control" data-live-search="true"> 
+					<select name="fornecedor.cidade.id"  id="cidade" class="selectpicker form-control required" data-msg-required="Campo obrigatório" data-live-search="true"> 
 						<option value="">Selecione</option>
 						
 						<c:forEach var="cidade" items="${fornecedor.cidade.estado.cidades}" varStatus="contador">
@@ -228,12 +230,12 @@
 		
 						</c:forEach>
 						
-						
+						Z
 					</select>
  				</div></div>
  			<div class="col-md-3">
 				<label for="fornecedor.tipoFaturamento">Tipo Faturamento:</label>
-				<select  id="fornecedor.tipoFaturamento" name="fornecedor.tipoFaturamento" data-msg-required="Campo obrigatório." class="selectpicker required form-control"  >
+				<select  id="fornecedor.tipoFaturamento" name="fornecedor.tipoFaturamento" class="selectpicker required form-control"  >
 					<option value="" >Selecione</option>
 					<c:forEach var="tipo" items="${tiposFaturamentos}">
 						<option value="${tipo.name }" ${fornecedor.tipoFaturamento.name eq tipo.name ? 'selected' : ''}>${tipo.descricao}</option>

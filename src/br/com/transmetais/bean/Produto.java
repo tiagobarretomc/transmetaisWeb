@@ -1,5 +1,7 @@
 package br.com.transmetais.bean;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -35,7 +37,7 @@ public class Produto {
 			@JoinColumn(name = "regra_tributacao_id", nullable = false, updatable = false) }, 
 			inverseJoinColumns = { @JoinColumn(name = "produto_id", 
 					nullable = false, updatable = false) })
-	private Set<RegraTributacao> regrasTributacao;
+	private List<RegraTributacao> regrasTributacao = new ArrayList<RegraTributacao>();
 	
 	private String ncm;
 	
@@ -75,6 +77,12 @@ public class Produto {
 	}
 	public void setGrupoMaterial(GrupoMaterial grupoMaterial) {
 		this.grupoMaterial = grupoMaterial;
+	}
+	public List<RegraTributacao> getRegrasTributacao() {
+		return regrasTributacao;
+	}
+	public void setRegrasTributacao(List<RegraTributacao> regrasTributacao) {
+		this.regrasTributacao = regrasTributacao;
 	}
 
 }

@@ -5,32 +5,51 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="regra_tributacao")
 public class RegraTributacao {
+	
 	@Id 
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	@Column(name="tipo_operacao_cd")
-	private Integer codTipoOperacao;
-	@Column(name="cfop_cd")
-	private Integer codCfop;
-	@Column(name="situacao_tributaria_cd")
-	private Integer codSituacaoTributaria;
-	@Column(name="origem_mercadoria_cd")
-	private Integer codOrigemMercadoria;
-	@Column(name="base_calculo_tributacao_cd")
-	private Integer codBaseCalculo;
-	@Column(name="base_calculo_tributacao_st_cd")
-	private Integer codBaseCalculoST;
+	
+	@ManyToOne
+	@JoinColumn(name="tipo_operacao_cd")
+	private TipoOperacao tipoOperacao;
+	
+	@ManyToOne
+	@JoinColumn(name="cfop_cd")
+	private Cfop codCfop;
+	
+	@ManyToOne
+	@JoinColumn(name="situacao_tributaria_cd")
+	private SituacaoTributaria situacaoTributaria;
+	
+	@ManyToOne
+	@JoinColumn(name="origem_mercadoria_cd")
+	private OrigemMercadoria origemMercadoria;
+	
+	@ManyToOne
+	@JoinColumn(name="base_calculo_tributacao_cd")
+	private BaseDeCalculo baseCalculo;
+	
+	@ManyToOne
+	@JoinColumn(name="base_calculo_tributacao_st_cd")
+	private BaseDeCalculoST baseCalculoST;
+	
 	@Column(name="aliquota")
 	private Double  aliquota;
+	
 	@Column(name="credito")
 	private Double credito;
+	
 	@Column(name="aliquota_st")
 	private Double aliquotaST;
+	
 	@Column(name="credito_st")
 	private Double creditoST;
 	
@@ -40,41 +59,42 @@ public class RegraTributacao {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public Integer getCodTipoOperacao() {
-		return codTipoOperacao;
+	
+	public TipoOperacao getTipoOperacao() {
+		return tipoOperacao;
 	}
-	public void setCodTipoOperacao(Integer codTipoOperacao) {
-		this.codTipoOperacao = codTipoOperacao;
+	public void setTipoOperacao(TipoOperacao tipoOperacao) {
+		this.tipoOperacao = tipoOperacao;
 	}
-	public Integer getCodCfop() {
+	public Cfop getCodCfop() {
 		return codCfop;
 	}
-	public void setCodCfop(Integer codCfop) {
+	public void setCodCfop(Cfop codCfop) {
 		this.codCfop = codCfop;
 	}
-	public Integer getCodSituacaoTributaria() {
-		return codSituacaoTributaria;
+	public SituacaoTributaria getSituacaoTributaria() {
+		return situacaoTributaria;
 	}
-	public void setCodSituacaoTributaria(Integer codSituacaoTributaria) {
-		this.codSituacaoTributaria = codSituacaoTributaria;
+	public void setSituacaoTributaria(SituacaoTributaria situacaoTributaria) {
+		this.situacaoTributaria = situacaoTributaria;
 	}
-	public Integer getCodOrigemMercadoria() {
-		return codOrigemMercadoria;
+	public OrigemMercadoria getOrigemMercadoria() {
+		return origemMercadoria;
 	}
-	public void setCodOrigemMercadoria(Integer codOrigemMercadoria) {
-		this.codOrigemMercadoria = codOrigemMercadoria;
+	public void setOrigemMercadoria(OrigemMercadoria origemMercadoria) {
+		this.origemMercadoria = origemMercadoria;
 	}
-	public Integer getCodBaseCalculo() {
-		return codBaseCalculo;
+	public BaseDeCalculo getBaseCalculo() {
+		return baseCalculo;
 	}
-	public void setCodBaseCalculo(Integer codBaseCalculo) {
-		this.codBaseCalculo = codBaseCalculo;
+	public void setBaseCalculo(BaseDeCalculo baseCalculo) {
+		this.baseCalculo = baseCalculo;
 	}
-	public Integer getCodBaseCalculoST() {
-		return codBaseCalculoST;
+	public BaseDeCalculoST getBaseCalculoST() {
+		return baseCalculoST;
 	}
-	public void setCodBaseCalculoST(Integer codBaseCalculoST) {
-		this.codBaseCalculoST = codBaseCalculoST;
+	public void setBaseCalculoST(BaseDeCalculoST baseCalculoST) {
+		this.baseCalculoST = baseCalculoST;
 	}
 	public Double getAliquota() {
 		return aliquota;
