@@ -19,26 +19,33 @@
     		$("#formProduto").submit();
     	});
     	
-        $('#formProduto').validate({
-            
-        
-    	});
-        
         $('.selectpicker').selectpicker({
-            //'selectedText': 'cat'
         });
-        
+        $(".percent").priceFormat({
+            prefix: '',
+            centsSeparator: ',',
+            thousandsSeparator: '.',
+            limit: 5
+            
+        });
+        $(".valor").priceFormat({
+            prefix: '',
+            centsSeparator: ',',
+            thousandsSeparator: '.',
+            limit: 12
+            
+        });
         $("#btnAdicionarRegra").click(function(){
-    		var strLinha = '<tr><td><select id="tipoOperacao_' + qtdRegras + '" name="produto.regrasTributacao[' + qtdRegras + '].codTipoOperacao" class= "selectpicker required form-control"><option value ="">Selecione</option></select></td>';
-    		strLinha += '<td><select id="origemMercadoria_' + qtdRegras + '" name="produto.regrasTributacao[' + qtdRegras + '].codOrigemMercadoria" class= "selectpicker required form-control"><option value ="">Selecione</option></select></td>';
-    		strLinha += '<td><select id="situacaoTributaria_' + qtdRegras + '" name="produto.regrasTributacao[' + qtdRegras + '].codSituacaoTributaria" class= "selectpicker required form-control"><option value ="">Selecione</option></select></td>';
-    		strLinha += '<td><select id="cfop_' + qtdRegras + '" name="produto.regrasTributacao[' + qtdRegras + '].codCfop" class= "selectpicker required form-control"><option value ="">Selecione</option></select></td>';
-    		strLinha += '<td><select id="baseCalculo_' + qtdRegras + '" name="produto.regrasTributacao[' + qtdRegras + '].codBaseCalculo" class= "selectpicker required form-control"><option value ="">Selecione</option></select>';
-    		strLinha += '<br/><select id="baseCalculoST_' + qtdRegras + '" name="produto.regrasTributacao[' + qtdRegras + '].codBaseCalculoST" class= "selectpicker required form-control"><option value ="">Selecione</option></select></td>';
-    		strLinha += '<td><input type="text" name="produto.regrasTributacao[' + qtdRegras + '].aliquota" id="aliquota_' + qtdRegras + '" class="selectpicker required form-control" value="" readonly="readonly"/>';
-    		strLinha += '<br/><input type="text" name="produto.regrasTributacao[' + qtdRegras + '].aliquotaST" id="aliquotaST_' + qtdRegras + '" class="selectpicker required form-control" value="" readonly="readonly"/></td>';
-    		strLinha += '<td><input type="text" name="produto.regrasTributacao[' + qtdRegras + '].credito" id="credito_' + qtdRegras + '" class="selectpicker required form-control" value="" readonly="readonly"/>';
-    		strLinha += '<br/><input type="text" name="produto.regrasTributacao[' + qtdRegras + '].creditoST" id="creditoST_' + qtdRegras + '" class="selectpicker required form-control" value="" readonly="readonly"/></td>';
+    		var strLinha = '<tr><td style="max-width:130px"><select id="tipoOperacao_' + qtdRegras + '" name="produto.regrasTributacao[' + qtdRegras + '].codTipoOperacao" class="selectpicker required form-control" data-live-search="true"><option value ="">Selecione</option></select></td>';
+    		strLinha += '<td style="max-width:130px"><select id="origemMercadoria_' + qtdRegras + '" name="produto.regrasTributacao[' + qtdRegras + '].codOrigemMercadoria" class="selectpicker required form-control" data-live-search="true"><option value ="">Selecione</option></select></td>';
+    		strLinha += '<td style="max-width:130px"><select id="situacaoTributaria_' + qtdRegras + '" name="produto.regrasTributacao[' + qtdRegras + '].codSituacaoTributaria" class="selectpicker required form-control" data-live-search="true"><option value ="">Selecione</option></select></td>';
+    		strLinha += '<td style="max-width:130px"><select id="cfop_' + qtdRegras + '" name="produto.regrasTributacao[' + qtdRegras + '].codCfop" class="selectpicker required form-control" data-live-search="true"><option value ="" >Selecione</option></select></td>';
+    		strLinha += '<td style="max-width:130px"><select id="baseCalculo_' + qtdRegras + '" name="produto.regrasTributacao[' + qtdRegras + '].codBaseCalculo" class= "selectpicker required form-control" data-live-search="true"><option value ="">Selecione</option></select>';
+    		strLinha += '<br/><select id="baseCalculoST_' + qtdRegras + '" name="produto.regrasTributacao[' + qtdRegras + '].codBaseCalculoST" class= "selectpicker form-control" data-live-search="true"><option value ="">Selecione</option></select></td>';
+    		strLinha += '<td style="min-width:50px;max-width:80px"><input type="text" name="produto.regrasTributacao[' + qtdRegras + '].aliquota" id="aliquota_' + qtdRegras + '" class="percent required form-control" value=""/>';
+    		strLinha += '<br/><input type="text" name="produto.regrasTributacao[' + qtdRegras + '].aliquotaST" id="aliquotaST_' + qtdRegras + '" class="percent form-control" value=""/></td>';
+    		strLinha += '<td style="min-width:120px;max-width:100px"><input type="text" name="produto.regrasTributacao[' + qtdRegras + '].credito" id="credito_' + qtdRegras + '" class="valor required form-control" value=""/>';
+    		strLinha += '<br/><input type="text" name="produto.regrasTributacao[' + qtdRegras + '].creditoST" id="creditoST_' + qtdRegras + '" class="valor form-control" value=""/></td>';
     		
     		strLinha += '</tr>';
     		$('#tabelaRegras > tbody:last').append(strLinha);
@@ -52,11 +59,21 @@
     		
     		qtdRegras++;
     	});
-		
+        $('#formProduto').validate({
+        	ignore: ':not(select:hidden, input:visible, textarea:visible)',
+            errorPlacement: function (error, element) {
+                if ($(element).is('select')) {
+                    element.next().after(error); // special placement for select elements
+                } else {
+                    error.insertAfter(element);  // default placement for everything else
+                }
+            }
+        
+    	});
+
     });
  
     function carregarCombo(obj, list){
-    	
     	$.each(list, function(i){
 			
 			
@@ -67,8 +84,21 @@
 		
 	    
 		});
-    	
     	$(obj).selectpicker({
+        });
+    	$(".percent").priceFormat({
+            prefix: '',
+            centsSeparator: ',',
+            thousandsSeparator: '.',
+            limit: 5
+            
+        });
+        $(".valor").priceFormat({
+            prefix: '',
+            centsSeparator: ',',
+            thousandsSeparator: '.',
+            limit: 12
+            
         });
     };
 
@@ -133,7 +163,7 @@
         	
       	</div>
       	<br/>
-      	<div class="panel panel-default">
+      	<div class="panel panel-default" >
 			<div class="panel-body">
 				<h4>Regras de Tributação</h4>
 				<button type="button" id="btnAdicionarRegra" class="btn btn-default btn-md">
@@ -162,7 +192,7 @@
 				<c:if test="${not empty produto.id}">
 					<c:forEach var="regraTributacao" items="${produto.regrasTributacao}" varStatus="contador">
 					<tr>
-						<td>
+						<td style="max-width:15%">
 							<select id="tipoOperacao_${contador}" name="produto.regrasTributacao[${contador}].codTipoOperacao" class="required form-control">
 								<option value ="">Selecione</option>
 								<c:forEach var="tipoOperacao" items="${tipoOperacaoList}" varStatus="contador">
@@ -172,7 +202,7 @@
 								</c:forEach>	
 							</select>
 						</td>
-						<td>
+						<td style="max-width:15%">
 							<select id="origemMercadoria_${contador}" name="produto.regrasTributacao[${contador}].codOrigemMercadoria" class="required form-control">
 								<option value ="">Selecione</option>
 								<c:forEach var="origemMercadoria" items="${origemMercadoriaList}" varStatus="contador">
@@ -183,7 +213,7 @@
 							</select>
 							
 						</td>
-						<td>
+						<td style="max-width:15%">
 							<select id="situacaoTributaria_${contador}" name="produto.regrasTributacao[${contador}].codSituacaoTributaria" class="required form-control">
 								<option value ="">Selecione</option>
 								<c:forEach var="situacaoTributaria" items="${situacaoTributariaList}" varStatus="contador">
@@ -193,7 +223,7 @@
 								</c:forEach>	
 							</select>
 						</td>
-						<td>
+						<td style="max-width:15%">
 							<select id="cfop_${contador}" name="produto.regrasTributacao[${contador}].codCfop" class="required form-control">
 								<option value ="">Selecione</option>
 								<c:forEach var="cfop" items="${cfopList}" varStatus="contador">
@@ -203,7 +233,7 @@
 								</c:forEach>	
 							</select>
 						</td>
-						<td>
+						<td style="max-width:15%">
 							<select id="baseCalculo_${contador}" name="produto.regrasTributacao[${contador}].codBaseCalculo" class="required form-control">
 								<option value ="">Selecione</option>
 								<c:forEach var="baseCalculo" items="${baseCalculoList}" varStatus="contador">

@@ -77,7 +77,7 @@
 	  	form { padding: 10px; }
 	   .required.error { border: 1px solid #b94a48!important; background-color: #fee!important; }
 	   .error {
-	   		color: #fee!important;
+	   		color: #F2DADA!important;
 	   }
 		</style>
 	</head>
