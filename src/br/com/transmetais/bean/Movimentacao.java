@@ -10,6 +10,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -18,25 +20,23 @@ import br.com.transmetais.type.TipoOperacaoEnum;
 
 @Entity
 @Table(name="movimentacao")
+//@Inheritance(strategy = InheritanceType.JOINED)
 public class Movimentacao {
 	@Id 
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Integer id;
-	private Date data;
+	protected Integer id;
+	protected Date data;
 	@Enumerated(EnumType.STRING)
 	@Column(name="tipo_operacao")
-	private TipoOperacaoEnum tipoOperacao;
+	protected TipoOperacaoEnum tipoOperacao;
 	@ManyToOne
 	@JoinColumn(name="conta_id")
-	private Conta conta;
-	@ManyToOne
-	@JoinColumn(name="venda_id")
-	private Venda venda;
-	@ManyToOne
-	@JoinColumn(name="compra_id")
-	private Compra compra;
+	protected Conta conta;
 	
-	private BigDecimal valor;
+	
+	protected BigDecimal valor;
+	protected BigDecimal valorPrevisto;
+	protected Date dataPagamento;
 	
 	public Integer getId() {
 		return id;
@@ -62,18 +62,7 @@ public class Movimentacao {
 	public void setConta(Conta conta) {
 		this.conta = conta;
 	}
-	public Venda getVenda() {
-		return venda;
-	}
-	public void setVenda(Venda venda) {
-		this.venda = venda;
-	}
-	public Compra getCompra() {
-		return compra;
-	}
-	public void setCompra(Compra compra) {
-		this.compra = compra;
-	}
+	
 	public BigDecimal getValor() {
 		return valor;
 	}

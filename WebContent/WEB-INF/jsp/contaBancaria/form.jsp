@@ -13,31 +13,37 @@
 		$("#btnAdicionar").click(function() {
 			$("#formConta").submit();
 		});
+		
+		$("#conta\\.bancaria").click(function(){
+			
+			
+			if($(this).is(':checked')){
+				
+				$("#divDadosBancarios").show();
+				
+			}else{
+				$("#divDadosBancarios").hide();
+				
+			}
+		});
 
 		$('#formConta').validate({
 
 		});
 
-		$('.selectpicker').selectpicker({
-		//'selectedText': 'cat'
-		});
+		
 
 		$("#conta\\.saldoInicial").priceFormat({
 			prefix : '',
 			centsSeparator : ',',
 			thousandsSeparator : '.',
+			allowNegative: true,
 			limit : 12
 
 		});
 		
-		if(${conta.bancaria}){
-			
-			$("#divDadosBancarios").show();
-			
-		}else{
-			$("#divDadosBancarios").hide();
-			
-		}
+		
+		
 
 	});
 </script>
@@ -63,7 +69,7 @@
 
 					<div class="col-md-2">
 						<label for="conta.bancaria">Conta Bancária:</label> <input
-							type="checkbox" name="conta.bancaria" id="conta.bancaria"
+							type="checkbox" readonly="readonly" name="conta.bancaria" id="conta.bancaria"
 							${conta.bancaria  ? 'checked="checked"': '' }
 							class="form-control" maxlength="100" />
 					</div>
@@ -72,11 +78,11 @@
 						<label for="conta.descricao">Descrição:</label> 
 						<input name="conta.descricao"  id="conta.descricao"
 							value="${conta.descricao }"
-							class="form-control " maxlength="100" />
+							class="form-control required" maxlength="100" />
 					</div>
 
 				</div>
-				<div class="row" id="divDadosBancarios">
+				<div  class="row" id="divDadosBancarios" ${conta.bancaria ? 'style="display: block;"' : 'style="display: none;"'}>
 					<div class="col-md-4">
 						<label for="conta.banco">Banco:</label> <input name="conta.banco"
 							id="conta.banco" value="${conta.banco}" class="form-control "
@@ -101,17 +107,17 @@
 				
 				<div class="row">
 					<div class="col-md-3">
-						<label for="conta.saldoInicial">Saldo Inicial:</label> <input
+						<label for="conta.saldoInicial">Saldo Inicial:</label> <input ${ empty conta.id ? '' : 'readonly="readonly"' }
 							name="conta.saldoInicial" id="conta.saldoInicial"
 							value="<fmt:formatNumber value="${conta.saldoInicial}" minFractionDigits="2" type="number" />"
 							class="form-control " maxlength="18" />
 					</div>
 					<div class="col-md-2">
 						<label for="conta.dataSaldoInicial">Dt. Saldo Inicial:</label> 
-						<input name="conta.dataSaldoInicial" id="conta.dataSaldoInicial"value="<fmt:formatDate value="${conta.dataSaldoInicial }" type="date" pattern="dd/MM/yyyy"/>" class="datepicker form-control" data-date-format="dd/mm/yyyy" />
+						<input name="conta.dataSaldoInicial" ${ empty conta.id ? '' : 'readonly="readonly"' } id="conta.dataSaldoInicial"value="<fmt:formatDate value="${conta.dataSaldoInicial }" type="date" pattern="dd/MM/yyyy"/>" class="datepicker form-control" data-date-format="dd/mm/yyyy" />
 					</div>
 					<div class="col-md-3">
-						<label for="conta.saldo">Saldo Atual:</label> <input
+						<label for="conta.saldo">Saldo Atual:</label> <input 
 							name="conta.saldo" id="conta.saldoInicial" readonly="readonly"
 							value="<fmt:formatNumber value="${conta.saldo}" minFractionDigits="2" type="number" />"
 							class="form-control " maxlength="18" />
@@ -122,7 +128,7 @@
 
 
 				<br />
-				<button type="button" id="btnAdicionar"
+				<button type="button" id="btnAdicionar" 
 					class="btn btn-default btn-md">
 					<span class="glyphicon glyphicon-floppy-disk"></span> Salvar
 				</button>

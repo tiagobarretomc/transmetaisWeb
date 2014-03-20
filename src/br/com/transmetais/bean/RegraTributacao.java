@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="material")
+@Table(name="regra_tributacao")
 public class RegraTributacao {
 	@Id 
 	@GeneratedValue(strategy=GenerationType.IDENTITY)

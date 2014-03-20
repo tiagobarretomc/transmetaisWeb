@@ -74,6 +74,21 @@
         	<div class="col-md-4">
         	</div>
         	
+        	<div class="col-md-4">
+        	<label for="material.conta.id">Conta:</label>
+        		<select id="material.contaContabil.id" name="material.contaContabil.id" class="selectpicker required form-control" >
+						<option value ="">Selecione</option>
+						<c:forEach var="conta" items="${contas}" varStatus="contador">
+						
+							<option value ="${conta.id}" ${material.contaContabil.id eq conta.id ? 'selected' : ''}>${conta.descricao}</option>
+		
+						</c:forEach>	
+					</select>
+        	</div>
+				
+        	<div class="col-md-4">
+        	</div>
+        	
       	</div>
       	
       	

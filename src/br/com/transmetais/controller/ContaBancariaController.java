@@ -1,5 +1,6 @@
 package br.com.transmetais.controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import br.com.caelum.vraptor.Path;
@@ -8,8 +9,10 @@ import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.Conta;
 import br.com.transmetais.bean.Estado;
 import br.com.transmetais.bean.Funcionario;
+import br.com.transmetais.bean.Movimentacao;
 import br.com.transmetais.dao.ContaDAO;
 import br.com.transmetais.dao.commons.DAOException;
+import br.com.transmetais.type.TipoOperacaoEnum;
 
 @Resource
 public class ContaBancariaController {
@@ -52,11 +55,33 @@ public class ContaBancariaController {
 	@Path({"/contaBancaria/add"})
 	public void add(Conta conta) throws DAOException {
 		try {
+			
+			if(conta.getBancaria() == null){
+				conta.setBancaria(Boolean.FALSE);
+			}
+			
 			if (conta.getId() != null && conta.getId()>0){
 				dao.updateEntity(conta);
 			}else{
 				//Adicionar Movimentacao com o valor do saldo inicial e setar o saldo = saldo inicial
+				conta.setSaldo(conta.getSaldoInicial());
 				dao.addEntity(conta);
+				
+				if(conta.getSaldo().compareTo(new BigDecimal(0)) != 0){
+					
+					Movimentacao movimentacao = new Movimentacao();
+					movimentacao.setConta(conta);
+					movimentacao.setData(conta.getDataSaldoInicial());
+					TipoOperacaoEnum tipoOperacao = null;
+					if(conta.getSaldo().compareTo(new BigDecimal(0)) < 0){
+						tipoOperacao = TipoOperacaoEnum.D;
+					}else if(conta.getSaldo().compareTo(new BigDecimal(0)) > 0){
+						tipoOperacao = TipoOperacaoEnum.C;
+					}
+					movimentacao.setTipoOperacao(tipoOperacao);
+					movimentacao.setValor(conta.getSaldoInicial());
+					
+				}
 			}
 			
 		} catch (DAOException e) {

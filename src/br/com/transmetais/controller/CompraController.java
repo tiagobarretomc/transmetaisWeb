@@ -15,6 +15,7 @@ import br.com.transmetais.bean.Fornecedor;
 import br.com.transmetais.bean.FornecedorMaterial;
 import br.com.transmetais.bean.Material;
 import br.com.transmetais.bean.Movimentacao;
+import br.com.transmetais.bean.MovimentacaoCompra;
 import br.com.transmetais.dao.CompraDAO;
 import br.com.transmetais.dao.ContaDAO;
 import br.com.transmetais.dao.FornecedorDAO;
@@ -142,7 +143,7 @@ public class CompraController {
 				dao.addEntity(compra);
 				
 				Movimentacao movimentacao = new Movimentacao();
-				movimentacao.setCompra(compra);
+				//movimentacao.setCompra(compra);
 				movimentacao.setConta(compra.getConta());
 				movimentacao.setData(new Date());
 				movimentacao.setTipoOperacao(TipoOperacaoEnum.D);

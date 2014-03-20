@@ -100,6 +100,7 @@
 	             <li><a href="<c:url value='/centroCusto/'/>">Centro de Custo</a></li>
 	             <li><a href="<c:url value='/centroAplicacao/'/>">Centro de Aplicação</a></li>
 	             <li><a href="<c:url value='/contaBancaria/'/>">Contas Bancárias</a></li>
+	             <li><a href="<c:url value='/contaContabil/'/>">Contas Contábeis</a></li>
 	            
 	          </ul>
 	        </li>

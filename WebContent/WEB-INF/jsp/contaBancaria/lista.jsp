@@ -7,7 +7,7 @@
     	
     	
     	$("#btnAdicionar").click(function(){
-    		document.location.href = "${pageContext.request.contextPath}/funcionario/novo";
+    		document.location.href = "${pageContext.request.contextPath}/contaBancaria/novo";
     	});
     	
     	
