@@ -4,8 +4,12 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +23,8 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
+import br.com.transmetais.type.TipoFreteEnum;
+
 @Entity
 @Table(name="compra")
 public class Compra {
@@ -31,6 +37,11 @@ public class Compra {
 	@ManyToOne
 	@JoinColumn(name="fornecedor_material_id")
 	private FornecedorMaterial fornecedorMaterial;
+	
+	@ManyToOne
+	@JoinColumn(name="fornecedor_id")
+	private Fornecedor fornecedor;
+	
 	private BigDecimal quantidade;
 	private BigDecimal valor;
 	private BigDecimal preco;
@@ -43,10 +54,12 @@ public class Compra {
 	@Column(name="num_nf")
 	private String numNf;
 	
-	@OneToMany(mappedBy="compra")
-	@LazyCollection(LazyCollectionOption.TRUE)
-	@Fetch(FetchMode.SELECT)
+	@OneToMany(mappedBy="compra", fetch = FetchType.LAZY, cascade = CascadeType.ALL,orphanRemoval=true)
 	private List<ItemCompra> itens;
+	
+	@Column(name="tipo_frete")
+	@Enumerated(EnumType.STRING)
+	private TipoFreteEnum tipoFrete;
 	
 	
 	public Long getId() {
@@ -108,6 +121,18 @@ public class Compra {
 	}
 	public void setItens(List<ItemCompra> itens) {
 		this.itens = itens;
+	}
+	public Fornecedor getFornecedor() {
+		return fornecedor;
+	}
+	public void setFornecedor(Fornecedor fornecedor) {
+		this.fornecedor = fornecedor;
+	}
+	public TipoFreteEnum getTipoFrete() {
+		return tipoFrete;
+	}
+	public void setTipoFrete(TipoFreteEnum tipoFrete) {
+		this.tipoFrete = tipoFrete;
 	}
 	
 	

@@ -10,5 +10,6 @@ import br.com.transmetais.type.TipoFreteEnum;
 public interface FornecedorMaterialDAO  extends CrudDAO<FornecedorMaterial>{
 	
 	public List<FornecedorMaterial> obterAtivosPorFiltro(Fornecedor fornecedor, TipoFreteEnum tipoFrete);
+	public FornecedorMaterial obterAtivoPorFornecedorAndMaterial(FornecedorMaterial fornecedorMaterial);
 
 }

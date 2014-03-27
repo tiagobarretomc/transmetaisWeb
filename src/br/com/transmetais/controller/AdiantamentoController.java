@@ -8,9 +8,9 @@ import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.Adiantamento;
 import br.com.transmetais.bean.Conta;
-import br.com.transmetais.bean.Movimentacao;
 import br.com.transmetais.bean.MovimentacaoAdiantamento;
 import br.com.transmetais.dao.AdiantamentoDAO;
+import br.com.transmetais.dao.ContaDAO;
 import br.com.transmetais.dao.FornecedorDAO;
 import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.commons.DAOException;
@@ -24,15 +24,17 @@ public class AdiantamentoController {
 	private AdiantamentoDAO dao;
 	private FornecedorDAO fornecedorDao;
 	private MovimentacaoDAO movimentacaoDao;
+	private ContaDAO contaDao;
 	
 	private final Result result;
 	
 	
-	public AdiantamentoController(Result result, AdiantamentoDAO dao, FornecedorDAO fornecedorDao, MovimentacaoDAO movimentacaoDao) {
+	public AdiantamentoController(Result result, AdiantamentoDAO dao, FornecedorDAO fornecedorDao, MovimentacaoDAO movimentacaoDao, ContaDAO contaDao) {
 		this.result = result;
 		this.dao = dao;
 		this.fornecedorDao = fornecedorDao;
 		this.movimentacaoDao = movimentacaoDao;
+		this.contaDao = contaDao;
 		
 		
 	}
@@ -59,6 +61,23 @@ public class AdiantamentoController {
 		
 		result.include("fornecedores", fornecedorDao.findAll());
 		result.include("tiposPagamentos", FormaPagamentoEnum.values());
+	
+		return adiantamento;
+	}
+	
+	@Path({"/adiantamento/aprovar/{adiantamento.id}"})
+	public Adiantamento aprovar (Adiantamento adiantamento) throws DAOException{
+		
+		
+		if (adiantamento != null && adiantamento.getId() != null && adiantamento.getId()>0){
+			
+			adiantamento = dao.findById(adiantamento.getId());
+			
+		}
+		
+		//result.include("fornecedores", fornecedorDao.findAll());
+		result.include("tiposPagamentos", FormaPagamentoEnum.values());
+		result.include("contas",contaDao.obterContasFinanceiras());
 	
 		return adiantamento;
 	}
@@ -91,7 +110,11 @@ public class AdiantamentoController {
 				if (adiantOrig.getSituacao() == SituacaoAdiantamentoEnum.A){
 					
 					
-					adiantamento.setSituacao(SituacaoAdiantamentoEnum.A);
+					adiantOrig.setSituacao(SituacaoAdiantamentoEnum.P);
+					adiantOrig.setDataPagamento(adiantamento.getDataPagamento());
+					adiantOrig.setTipoPagamento(adiantamento.getTipoPagamento());
+					
+					dao.updateEntity(adiantOrig);
 					
 					//Registro de Movimentacao de ENtrada na conta do fornecedor
 					MovimentacaoAdiantamento movimentacao = new MovimentacaoAdiantamento();
@@ -100,18 +123,29 @@ public class AdiantamentoController {
 					//um valor está sendo creditado na conta do fornecedor
 					movimentacao.setTipoOperacao(TipoOperacaoEnum.C);
 					movimentacao.setValor(adiantamento.getValor());
+					movimentacao.setValorPrevisto(adiantamento.getValor());
+					movimentacao.setAdiantamento(adiantOrig);
 					
+					
+					movimentacaoDao.addEntity(movimentacao);
+					
+					adiantOrig.getFornecedor().getConta().setSaldo(adiantOrig.getFornecedor().getConta().getSaldo().add(adiantamento.getValor()));
+					
+					contaDao.updateEntity(adiantOrig.getFornecedor().getConta());
 					
 					//Registro de Movimentacao de Saída de uma conta da Empresa
 					MovimentacaoAdiantamento movementacaoDebito = new MovimentacaoAdiantamento();
-					movementacaoDebito.setConta(adiantOrig.getFornecedor().getConta());
+					movementacaoDebito.setConta(contaOrigem);
 					movementacaoDebito.setData(adiantamento.getDataPagamento());
 					//um valor está sendo creditado na conta do fornecedor
 					movementacaoDebito.setTipoOperacao(TipoOperacaoEnum.D);
 					movementacaoDebito.setValor(adiantamento.getValor());
-						
+					movementacaoDebito.setAdiantamento(adiantOrig);	
+					movimentacaoDao.addEntity(movementacaoDebito);
 					
-					
+					contaOrigem = contaDao.findById(contaOrigem.getId());
+					contaOrigem.setSaldo(contaOrigem.getSaldo().subtract(movementacaoDebito.getValor()));
+					contaDao.updateEntity(contaOrigem);
 					
 				}
 				
@@ -131,12 +165,18 @@ public class AdiantamentoController {
 		try {
 			if (adiantamento.getId() != null && adiantamento.getId()>0){
 				//Adiantamento só poderá ser alterado enquanto a situação for em aberto
-				if (adiantamento.getSituacao() == SituacaoAdiantamentoEnum.A) 
+				if (adiantamento.getSituacao() == SituacaoAdiantamentoEnum.A) {
+					adiantamento = dao.findById(adiantamento.getId());
+					adiantamento.setSituacao(SituacaoAdiantamentoEnum.C);
+					adiantamento.setData(new Date());
+					
 					dao.updateEntity(adiantamento);
-			}else{
-				adiantamento.setDataInclusao(new Date());
-				adiantamento.setSituacao(SituacaoAdiantamentoEnum.A);
-				dao.addEntity(adiantamento);
+				}
+				
+//			}else{
+//				adiantamento.setDataInclusao(new Date());
+//				adiantamento.setSituacao(SituacaoAdiantamentoEnum.A);
+//				dao.addEntity(adiantamento);
 			}
 			
 		} catch (DAOException e) {

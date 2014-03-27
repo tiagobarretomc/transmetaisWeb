@@ -6,17 +6,17 @@
     $(document).ready(function(){
     	
     
-    	$("#funcionario\\.dataInclusao").mask("99/99/9999");
+    	$("#adiantamento\\.data").mask("99/99/9999");
     	
     	var options = new Array();
 	   	 options['language'] = 'pt-BR';
 	   	 $('.datepicker').datepicker(options);
     	
     	$("#btnAdicionar").click(function(){
-    		$("#formFuncionario").submit();
+    		$("#formAdiantamento").submit();
     	});
     	
-        $('#formFuncionario').validate({
+        $('#formAdiantamento').validate({
             
         
     	});
@@ -25,6 +25,13 @@
 	            //'selectedText': 'cat'
 	        });
         
+        $("#adiantamento\\.valor").priceFormat({
+            prefix: '',
+            centsSeparator: ',',
+            thousandsSeparator: '.',
+            limit: 12
+            
+        });
         
     	
     	
@@ -37,7 +44,7 @@
 	<br/>
 	<div class="panel panel-default">
 	<div class="panel-body">
-	<form action="<c:url value='/funcionario/add'/>" id="formFuncionario" name="formFuncionario" method="post">
+	<form action="<c:url value='/adiantamento/add'/>" id="formAdiantamento" name="formAdiantamento" method="post">
 		
 		
 		
@@ -59,17 +66,12 @@
 				
         	</div>
         	<div class="col-md-3">
-        		<label for="adiantamento.tipoPagamento">Tipo Pagamento:</label>
-        		<select id="adiantamento.tipoPagamento" name="adiantamento.tipoPagamento" class="selectpicker form-control" data-live-search="true">
-					<option value ="" >Selecione</option>
-					<c:forEach var="tipo" items="${tiposPagamentos}" varStatus="contador">
-						<option value ="${tipo.name}" ${adiantamento.tipoPagamento eq tipo ? 'selected' : ''}>${tipo.descricao}</option>
-					</c:forEach>	
-				</select>
+        		<label for="adiantamento.tipoPagamento">Valor:</label>
+        		<input name="adiantamento.valor" id="adiantamento.valor" value="<fmt:formatNumber value="${adiantamento.valor}" minFractionDigits="2" type="number" />" class="form-control required" />
         	</div>
         	<div class="col-md-2">
-        		<label for="adiantamento.valor">Valor:</label>
-        		<input name="adiantamento.valor" id="adiantamento.valor" value="${adiantamento.valor}" class="form-control required" />
+        		<label for="adiantamento.data">Data:</label>
+        		<input name="adiantamento.data" id="adiantamento.data" value="<fmt:formatDate value="${adiantamento.data}" type="date" pattern="dd/MM/yyyy"/>" class="form-control required" />
         	</div>
         	
       	</div>

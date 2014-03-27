@@ -39,5 +39,35 @@ ADD COLUMN `data_pagamento` DATETIME NULL AFTER `valor_previsto`,
 ADD COLUMN `situacao` VARCHAR(1) NULL AFTER `data_pagamento`;
 
 
+ALTER TABLE `transmetais`.`adiantamento` 
+ADD COLUMN `data` DATETIME NULL AFTER `data_pagamento`;
+
+ALTER TABLE `transmetais`.`adiantamento` 
+DROP FOREIGN KEY `fk_adiantamento_movimentacao`;
+ALTER TABLE `transmetais`.`adiantamento` 
+DROP COLUMN `movimentacao_id`,
+CHANGE COLUMN `tipo_pagamento` `tipo_pagamento` VARCHAR(1) CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci' NULL ,
+CHANGE COLUMN `data` `data` DATETIME NOT NULL ,
+DROP INDEX `fk_adiantamento_movimentacao_idx` ;
+
+
+
+ALTER TABLE `transmetais`.`movimentacao_adiantamento` 
+DROP FOREIGN KEY `fk_movimentacao_adiantamento_adiantamento`;
+
+
+ALTER TABLE `transmetais`.`adiantamento` 
+CHANGE COLUMN `id` `id` BIGINT(20) NOT NULL AUTO_INCREMENT ;
+
+
+ALTER TABLE `transmetais`.`movimentacao_adiantamento` 
+ADD CONSTRAINT `fk_movimento_adiantamento_adiantamento`
+  FOREIGN KEY (`adiantamento_id`)
+  REFERENCES `transmetais`.`adiantamento` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+
+
+
 
 

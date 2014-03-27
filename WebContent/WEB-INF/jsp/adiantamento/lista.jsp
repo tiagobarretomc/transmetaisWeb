@@ -39,27 +39,28 @@
 	</tr>
 	</thead>
 	<tbody>
-		<c:forEach var="funcionario" items="${AdiantamentoList}" varStatus="contador">
+		<c:forEach var="adiantamento" items="${adiantamentoList}" varStatus="contador">
 	
 		<tr>
 			<td>
-				<a href="<c:url value='/adiantamento/'/>${adiantamento.id}"><span title="Alterar"  class="glyphicon glyphicon-edit"></span></a>
-				<a href="<c:url value='/adiantamento/remove/'/>${adiantamento.id}"><span title="Excluir" class="glyphicon glyphicon-remove"></span></a> 
+				<c:if test="${adiantamento.situacao.name eq 'A' }">
+					<a href="${pageContext.request.contextPath}/adiantamento/${adiantamento.id}"><span title="Alterar"  class="glyphicon glyphicon-edit"></span></a>
+					<a href="${pageContext.request.contextPath}/adiantamento/cancelar/${adiantamento.id}"><span title="Cancelar" class="glyphicon glyphicon-remove"></span></a> 
+					<a  href="${pageContext.request.contextPath}/adiantamento/aprovar/${adiantamento.id}"><span title="Ativar" class="glyphicon glyphicon-ok"></span></a>
+				</c:if>
 			</td>
+			
 			<td>
-				<fmt:formatNumber minIntegerDigits="4" value="${adiantamento.id}" groupingUsed="" />
-			</td>
-			<td>
-				${adiantamento.data} 
+				<fmt:formatDate value="${adiantamento.data}" type="date" pattern="dd/MM/yyyy"/>
 			</td>
 			<td>
 				${adiantamento.fornecedor.nome} 
 			</td>
 			<td>
-				${adiantamento.valor} 
+				<fmt:formatNumber value="${adiantamento.valor}" minFractionDigits="2" type="number" />
 			</td>
 			<td>
-				${adiantamento.situacao} 
+				${adiantamento.situacao.descricao} 
 			</td>
 			
 		</tr>

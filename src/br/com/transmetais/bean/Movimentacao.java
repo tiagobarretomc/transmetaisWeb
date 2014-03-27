@@ -35,7 +35,9 @@ public class Movimentacao {
 	
 	
 	protected BigDecimal valor;
+	@Column(name="valor_previsto")
 	protected BigDecimal valorPrevisto;
+	@Column(name="data_pagamento")
 	protected Date dataPagamento;
 	
 	public Integer getId() {
@@ -69,6 +71,19 @@ public class Movimentacao {
 	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
+	public BigDecimal getValorPrevisto() {
+		return valorPrevisto;
+	}
+	public void setValorPrevisto(BigDecimal valorPrevisto) {
+		this.valorPrevisto = valorPrevisto;
+	}
+	public Date getDataPagamento() {
+		return dataPagamento;
+	}
+	public void setDataPagamento(Date dataPagamento) {
+		this.dataPagamento = dataPagamento;
+	}
 
+	
 	
 }

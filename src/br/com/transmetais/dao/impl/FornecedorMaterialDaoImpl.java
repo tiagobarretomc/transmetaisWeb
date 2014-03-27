@@ -50,6 +50,29 @@ private static FornecedorMaterialDaoImpl instance = null;
 			return result;
 			
 		}
+		
+		public FornecedorMaterial obterAtivoPorFornecedorAndMaterial(FornecedorMaterial fornecedorMaterial) {
+			
+			EntityManager manager = factory.createEntityManager(); 
+			
+			
+			Session session = (Session) manager.getDelegate();
+			Criteria crit = session.createCriteria(FornecedorMaterial.class);
+			FornecedorMaterial result = null;
+			
+			crit.add(Restrictions.eq("status", StatusFornecedorMaterialEnum.ATIVO));
+			crit.add(Restrictions.eq("fornecedor", fornecedorMaterial.getFornecedor()));
+			crit.add(Restrictions.eq("material", fornecedorMaterial.getMaterial()));
+			crit.add(Restrictions.eq("tipoFrete", fornecedorMaterial.getTipoFrete()));
+			
+			
+			result =  (FornecedorMaterial)crit.uniqueResult();
+			
+			
+			
+			return result;
+			
+		}
 	
 	
 }

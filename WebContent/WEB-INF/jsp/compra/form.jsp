@@ -15,10 +15,10 @@
     	
 
     	$("#btnAdicionarItem").click(function(){
-    		var strLinha = '<tr><td><select id="fornecedorMaterial_' + qtdItens + '" name="compra.itemCompra[' + qtdItens + '].material.id" class= "required form-control"><option value ="">Selecione</option></select></td>';
-    		strLinha += '<td><input type="text" name="compra.itemCompra[' + qtdItens + '].quantidade" id="quantidade_' + qtdItens + '" value="" class="required form-control"/></td>';
-    		strLinha += '<td><input type="text" name="compra.itemCompra[' + qtdItens + '].preco" id="preco_' + qtdItens + '" value="" class="form-control	" readonly="readonly"></td>';
-    		strLinha += '<td><input type="text" name="compra.itemCompra[' + qtdItens + '].valor" id="valor_' + qtdItens + '" class="required form-control" value="" readonly="readonly"/></td>';
+    		var strLinha = '<tr><td><select id="fornecedorMaterial_' + qtdItens + '" name="compra.itens[' + qtdItens + '].material.id" class= "required form-control"><option value ="">Selecione</option></select></td>';
+    		strLinha += '<td><input type="text" name="compra.itens[' + qtdItens + '].quantidade" id="quantidade_' + qtdItens + '" value="" class="required form-control"/></td>';
+    		strLinha += '<td><input type="text" name="compra.itens[' + qtdItens + '].preco" id="preco_' + qtdItens + '" value="" class="form-control	" readonly="readonly"></td>';
+    		strLinha += '<td><input type="text" name="compra.itens[' + qtdItens + '].valor" id="valor_' + qtdItens + '" class="required form-control" value="" readonly="readonly"/></td>';
     		strLinha += '</tr>';
     		$('#tabelaItens > tbody:last').append(strLinha);
     		
@@ -26,7 +26,7 @@
 				
 				
 					$('#fornecedorMaterial_' + qtdItens).append($("<option></option>")
-		                    .attr("value",materiais.list[i].id)
+		                    .attr("value",materiais.list[i].material.id)
 		                    .text(materiais.list[i].material.descricao));
 	    		
 				
@@ -40,7 +40,7 @@
     	        		$.ajax({
     			        type: 'GET',
     			        url: '${pageContext.request.contextPath}/fornecedorMaterial/obterPreco?_format=json',
-    			        data:	{'fornecedorMaterial.id': $(this).val()},
+    			        data:	{'fornecedorMaterial.material.id': $(this).val(), 'fornecedorMaterial.fornecedor.id' : $("#fornecedor").val(), 'fornecedorMaterial.tipoFrete': $("#cboTipoFrete").val()},
     			 	    success: function(json){
     			 	    	var preco = float2moeda(parseFloat(json));
     			 	    	
@@ -90,7 +90,7 @@
         			valorTotalItens +=moeda2float($("#valor_"+i).val());
         			
         		}
-        		$("#divValorTotal").html("R$ " + float2moeda(valorTotalItens));
+        		$("#compra\\.valor").attr("value",float2moeda(valorTotalItens));
         		
         	});
         	   
@@ -172,7 +172,7 @@
 	    			$.each(json.list, function(i){
 	    				
 	    					$('#fornecedorMaterial_' + j).append($("<option></option>")
-				                    .attr("value",json.list[i].id)
+				                    .attr("value",json.list[i].material.id)
 				                    .text(json.list[i].material.descricao));
 	    				
 	    			});
@@ -192,7 +192,8 @@
 	        		$.ajax({
 			        type: 'GET',
 			        url: '${pageContext.request.contextPath}/fornecedorMaterial/obterPreco?_format=json',
-			        data:	{'fornecedorMaterial.id': $(this).val()},
+			        data:	{'fornecedorMaterial.material.id': $(this).val(), 'fornecedorMaterial.fornecedor.id' : $("#fornecedor").val(), 'fornecedorMaterial.tipoFrete': $("#cboTipoFrete").val()},
+			        //data:	{'fornecedorMaterial.id': $(this).val()},
 			 	    success: function(json){
 			 	    	var preco = float2moeda(parseFloat(json));
 			 	    	
@@ -244,7 +245,7 @@
     			valorTotalItens +=moeda2float($("#valor_"+k).val());
     			
     		}
-    		$("#divValorTotal").html("R$ " + float2moeda(valorTotalItens));
+    		$("#compra\\.valor").attr("value",float2moeda(valorTotalItens));
     	});
     	   
     	$("input[id^='quantidade_']").priceFormat({
@@ -272,10 +273,10 @@
 	<div class="panel panel-default">
 	<div class="panel-body">
 	<h3>Dados da Compra</h3>
-	<form action="<c:url value='/compra/adicionar'/>" id="formCompra" name="formCompra" method="post">
+	<form action="<c:url value='/compra/salvar'/>" id="formCompra" name="formCompra" method="post">
 		<input type="hidden" id="compraId" name="compra.id" value="${compra.id}"/>
 		<input type="hidden" id="contaId" name="compra.conta.id" value="${compra.conta.id}"/>
-		<input type="hidden" id="fornecedor" value="${fornecedor.id}"/>
+		<input type="hidden" id="fornecedor" name="compra.fornecedor.id" value="${fornecedor.id}"/>
 		
 		<div class="row">
         	<div class="col-md-4">Fornecedor: <br>
@@ -293,7 +294,7 @@
       		</div>
       		<div class="col-md-4">
 				<label for="cboTipoFrete">Forma de Frete/Entrega:</label>
-				<select style="width: 180px;" id="cboTipoFrete" name="tiposFretes" class="selectpicker form-control" >
+				<select style="width: 180px;" id="cboTipoFrete" name="compra.tipoFrete" class="selectpicker form-control" >
 					<option value="" >Selecione</option>
 					<c:forEach var="tipoFrete" items="${tiposFrete}">
 						<option value="${tipoFrete.name }" >${tipoFrete.descricao}</option>
@@ -343,20 +344,20 @@
 				<c:if test="${empty compra.id}">
 				<tr>
 					<td>
-						<select id="fornecedorMaterial_0" name="compra.itemCompra[0].Material.id" class= "required form-control">
+						<select id="fornecedorMaterial_0" name="compra.itens[0].material.id" class= "required form-control">
 							<option value ="">Selecione</option>
 							
 						</select>
 					</td>
 					<td>
-						<input type="text" name="compra.itemCompra[0].quantidade" id="quantidade_0" value="<fmt:formatNumber value="${compra.quantidade}" minFractionDigits="2" type="number" />" class="required form-control"/>
+						<input type="text" name="compra.itens[0].quantidade" id="quantidade_0" value="<fmt:formatNumber value="${compra.quantidade}" minFractionDigits="2" type="number" />" class="required form-control"/>
 						
 					</td>
 					<td>
-						<input type="text" name="compra.itemCompra[0].preco" id="preco_0" value="<fmt:formatNumber value="${compra.preco}" minFractionDigits="2" type="number"/>" class="form-control	" readonly="readonly">
+						<input type="text" name="compra.itens[0].preco" id="preco_0" value="<fmt:formatNumber value="${compra.preco}" minFractionDigits="2" type="number"/>" class="form-control	" readonly="readonly">
 					</td>
 					<td>
-						<input type="text" name="compra.itemCompra[0].valor" id="valor_0" class="required form-control" value="<fmt:formatNumber value="${compra.valor}" minFractionDigits="2" type="number" />" readonly="readonly"/>
+						<input type="text" name="compra.itens[0].valor" id="valor_0" class="required form-control" value="<fmt:formatNumber value="${compra.valor}" minFractionDigits="2" type="number" />" readonly="readonly"/>
 					</td>
 					
 				</tr>
@@ -366,7 +367,7 @@
 					<c:forEach var="compra" items="${compras}" varStatus="contador">
 					<tr>
 						<td>
-							<select id="fornecedorMaterial_${contador}" name="compra.itemCompra[${contador}].Material.id" class="required form-control">
+							<select id="fornecedorMaterial_${contador}" name="compra.itens[${contador}].material.id" class="required form-control">
 								<option value ="">Selecione</option>
 								<c:forEach var="fornecedorMaterial" items="${fornecedorMateriais}" varStatus="contador">
 								
@@ -376,14 +377,14 @@
 							</select>
 						</td>
 						<td>
-							<input type="text" name="compra.itemCompra[${contador}].quantidade" id="quantidade_${contador}" value="<fmt:formatNumber value="${compra.quantidade}" minFractionDigits="2" type="number" />" class="required form-control"/>
+							<input type="text" name="compra.itens[${contador}].quantidade" id="quantidade_${contador}" value="<fmt:formatNumber value="${compra.quantidade}" minFractionDigits="2" type="number" />" class="required form-control"/>
 							
 						</td>
 						<td>
-							<input type="text" name="compra.itemCompra[${contador}].preco" id="preco_${contador}" value="<fmt:formatNumber value="${compra.preco}" minFractionDigits="2" type="number"/>" class="form-control	" readonly="readonly">
+							<input type="text" name="compra.itens[${contador}].preco" id="preco_${contador}" value="<fmt:formatNumber value="${compra.preco}" minFractionDigits="2" type="number"/>" class="form-control	" readonly="readonly">
 						</td>
 						<td>
-							<input type="text" name="compra.itemCompra[${contador}].valor" id="valor_${contador}" class="required form-control" value="<fmt:formatNumber value="${compra.valor}" minFractionDigits="2" type="number" />" readonly="readonly"/>
+							<input type="text" name="compra.itens[${contador}].valor" id="valor_${contador}" class="required form-control" value="<fmt:formatNumber value="${compra.valor}" minFractionDigits="2" type="number" />" readonly="readonly"/>
 						</td>
 						
 					</tr>
@@ -395,8 +396,12 @@
 			<div class="panel panel-default">
 		  	<div class="panel-body">
 			<div class="row">
-				<div class="col-md-12">
-				<b>Valor Total:</b><div id="divValorTotal"><fmt:formatNumber value="${valorTotal}" minFractionDigits="2" type="currency"/></div></div>
+				<div class="col-md-4">
+					<label for="divValorTotal">Valor Total:</label>
+					
+					<input type="text" name="compra.valor" id="compra.valor" class="required form-control" value="<fmt:formatNumber value="${compra.valor}" minFractionDigits="2" type="number" />" readonly="readonly"/>
+				
+				</div>
 				
 			
 			</div>

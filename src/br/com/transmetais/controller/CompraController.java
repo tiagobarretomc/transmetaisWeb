@@ -9,12 +9,11 @@ import java.util.List;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
-import br.com.caelum.vraptor.view.Results;
 import br.com.transmetais.bean.Compra;
 import br.com.transmetais.bean.Fornecedor;
 import br.com.transmetais.bean.FornecedorMaterial;
+import br.com.transmetais.bean.ItemCompra;
 import br.com.transmetais.bean.Material;
-import br.com.transmetais.bean.Movimentacao;
 import br.com.transmetais.bean.MovimentacaoCompra;
 import br.com.transmetais.dao.CompraDAO;
 import br.com.transmetais.dao.ContaDAO;
@@ -61,8 +60,11 @@ public class CompraController {
 			BigDecimal valorTotal = new BigDecimal(0);
 			BigDecimal quantidade = new BigDecimal(0);
 			for (Compra compra : lista) {
-				valorTotal = valorTotal.add( compra.getValor());
-				quantidade = quantidade.add( compra.getQuantidade());
+				for(ItemCompra item : compra.getItens()){
+					valorTotal = valorTotal.add( item.getValor());
+					quantidade = quantidade.add( item.getQuantidade());
+					
+				}
 			}
 			
 			BigDecimal precoMedio =  new BigDecimal(0);
@@ -104,9 +106,13 @@ public class CompraController {
 				BigDecimal valorTotal = new BigDecimal(0);
 				BigDecimal quantidade = new BigDecimal(0);
 				for (Compra compra : lista) {
-					valorTotal = valorTotal.add( compra.getValor());
-					quantidade = quantidade.add( compra.getQuantidade());
+					for(ItemCompra item : compra.getItens()){
+						valorTotal = valorTotal.add( item.getValor());
+						quantidade = quantidade.add( item.getQuantidade());
+						
+					}
 				}
+				
 				
 				BigDecimal precoMedio =  new BigDecimal(0);
 				
@@ -128,26 +134,33 @@ public class CompraController {
 			return lista;
 		}
 	
-	public void adicionar(Compra compra) {
+	public void salvar(Compra compra) {
 		try {
 			
+			compra.setConta(null);
+			for (ItemCompra item : compra.getItens()) {
+				item.setCompra(compra);
+				
+			}
 			if (compra.getId() != null && compra.getId()>0){
 				//alteracao
-				compra.setConta(contaDao.findById(compra.getConta().getId()));
+				//compra.setConta(contaDao.findById(compra.getConta().getId()));
 				dao.updateEntity(compra);
 				
 			}else{
 				//insercao - nova compra
-				FornecedorMaterial fornecedorMaterial = fornecedorMaterialDao.findById(compra.getFornecedorMaterial().getId());
-				compra.setConta(fornecedorMaterial.getFornecedor().getConta());
+				//FornecedorMaterial fornecedorMaterial = fornecedorMaterialDao.findById(compra.getFornecedorMaterial().getId());
+				//compra.setConta(fornecedorMaterial.getFornecedor().getConta());
+				
 				dao.addEntity(compra);
 				
-				Movimentacao movimentacao = new Movimentacao();
-				//movimentacao.setCompra(compra);
+				MovimentacaoCompra movimentacao = new MovimentacaoCompra();
+				movimentacao.setCompra(compra);
 				movimentacao.setConta(compra.getConta());
 				movimentacao.setData(new Date());
 				movimentacao.setTipoOperacao(TipoOperacaoEnum.D);
 				movimentacao.setValor(compra.getValor());
+				
 				movimentacaoDao.addEntity(movimentacao);
 				
 				compra.getConta().setSaldo(compra.getConta().getSaldo().subtract(movimentacao.getValor()));

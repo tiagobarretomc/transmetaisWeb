@@ -38,9 +38,8 @@ public class Adiantamento {
 	@ManyToOne
 	@JoinColumn(name="fornecedor_id")
 	private Fornecedor fornecedor;
-	@ManyToOne
-	@JoinColumn(name="movimentacao_id")
-	private Movimentacao movimentacao;
+	private Date data;
+	
 	public Long getId() {
 		return id;
 	}
@@ -83,12 +82,13 @@ public class Adiantamento {
 	public void setFornecedor(Fornecedor fornecedor) {
 		this.fornecedor = fornecedor;
 	}
-	public Movimentacao getMovimentacao() {
-		return movimentacao;
+	public Date getData() {
+		return data;
 	}
-	public void setMovimentacao(Movimentacao movimentacao) {
-		this.movimentacao = movimentacao;
+	public void setData(Date data) {
+		this.data = data;
 	}
+	
 	
 
 }
