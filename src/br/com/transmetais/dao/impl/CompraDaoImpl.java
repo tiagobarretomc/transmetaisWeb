@@ -12,6 +12,7 @@ import br.com.transmetais.bean.ItemCompra;
 import br.com.transmetais.dao.CompraDAO;
 import br.com.transmetais.dao.commons.CrudDAOJPA;
 import br.com.transmetais.dao.commons.DAOException;
+import br.com.transmetais.type.StatusCompraEnum;
 import br.com.transmetais.type.TipoFreteEnum;
 
 @Component
@@ -32,7 +33,7 @@ public class CompraDaoImpl extends CrudDAOJPA<Compra> implements CompraDAO{
 		}
 	}
 	
-	public List<Compra> findByFilter(Long fornecedorId, Date dataInicio, Date dataFim, List<TipoFreteEnum> tiposFretes, List<Long> materiaisIds) throws DAOException {
+	public List<Compra> findByFilter(Long fornecedorId, Date dataInicio, Date dataFim, List<TipoFreteEnum> tiposFretes, List<Long> materiaisIds,List<StatusCompraEnum> statusCompraLista) throws DAOException {
 		EntityManager manager = factory.createEntityManager(); 
 		
 		try {
@@ -68,6 +69,13 @@ public class CompraDaoImpl extends CrudDAOJPA<Compra> implements CompraDAO{
 				clausulaWhere += " it.material.id in ( :materiaisIds) ";
 			}
 			
+			if(statusCompraLista != null && statusCompraLista.size()>0){
+				if(clausulaWhere != " WHERE "){
+					clausulaWhere += " AND ";
+				}
+				clausulaWhere += " c.status in ( :statusCompraLista) ";
+			}
+			
 			if (clausulaWhere != " WHERE ")
 				query += clausulaWhere;
 			
@@ -94,6 +102,10 @@ public class CompraDaoImpl extends CrudDAOJPA<Compra> implements CompraDAO{
 			if (materiaisIds != null && materiaisIds.size()>0){
 				
 				hqlQuery.setParameter("materiaisIds", materiaisIds);
+			}
+			if (statusCompraLista != null && statusCompraLista.size()>0){
+				
+				hqlQuery.setParameter("statusCompraLista", statusCompraLista);
 			}
 			return hqlQuery.getResultList();
 		} catch (Exception e) {

@@ -101,7 +101,16 @@
 					</c:forEach>
 				</select>
 				</div>
-        	<div class="col-md-4"></div>
+        	<div class="col-md-4">
+        		<label for="compra.status">Status Compra:</label>
+				<select style="width: 180px;" id="compra.status" name="statusCompas" class="selectpicker form-control" multiple >
+					
+					<c:forEach var="status" items="${statusList}">
+						<option value="${status.name }" >${status.descricao}</option>
+					</c:forEach>
+				</select>
+				
+        	</div>
         </div>
         <br/>
         <button id="btnFiltrar" type="button" class="btn btn-default btn-sm">
@@ -122,6 +131,7 @@
 		<th >Fornecedor</th>
 		<th >Tipo Frete</th>
 		<th>Total</th>
+		<th>Status</th>
 		<th>Material</th>
 		<th>Quantidade</th>
 		<th>Valor</th>
@@ -136,7 +146,7 @@
 			
 			
 				<td rowspan="${fn:length(compra.itens)}">
-					<a href="${pageContext.request.contextPath}/compra/${compra.id}"><span title="Alterar" style="color: black;" class="glyphicon glyphicon-edit"></span></a>
+					<a href="${pageContext.request.contextPath}/compra/${compra.id}"><span title="Detalhar" style="color: black;" class="glyphicon glyphicon-search"></span></a>
 					 
 				</td>
 				<td rowspan="${fn:length(compra.itens)}">
@@ -155,6 +165,10 @@
 						
 						<fmt:formatNumber value="${compra.valor}" minFractionDigits="2" type="currency"/>
 					</td>
+					
+				<td rowspan="${fn:length(compra.itens)}">
+					${compra.status.descricao}
+				</td>
 				
 				<c:forEach var="item" items="${compra.itens}" varStatus="cont" >
 					<c:if test="${cont.count gt '1'}">

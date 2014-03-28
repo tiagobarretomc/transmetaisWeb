@@ -23,6 +23,7 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
+import br.com.transmetais.type.StatusCompraEnum;
 import br.com.transmetais.type.TipoFreteEnum;
 
 @Entity
@@ -60,6 +61,10 @@ public class Compra {
 	@Column(name="tipo_frete")
 	@Enumerated(EnumType.STRING)
 	private TipoFreteEnum tipoFrete;
+	
+	@Column(name="status")
+	@Enumerated(EnumType.STRING)
+	private StatusCompraEnum status;
 	
 	
 	public Long getId() {
@@ -133,6 +138,12 @@ public class Compra {
 	}
 	public void setTipoFrete(TipoFreteEnum tipoFrete) {
 		this.tipoFrete = tipoFrete;
+	}
+	public StatusCompraEnum getStatus() {
+		return status;
+	}
+	public void setStatus(StatusCompraEnum status) {
+		this.status = status;
 	}
 	
 	

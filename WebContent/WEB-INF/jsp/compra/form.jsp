@@ -285,19 +285,19 @@
         	</div>
         	<div class="col-md-2">Data: <br>
         		<c:set var="now" value="<%=new java.util.Date()%>" />
-        		<input type="datetime"  name="compra.data" id="data"  value="<fmt:formatDate value="${compra.data == null ? now : compra.data }" type="date" pattern="dd/MM/yyyy"/>" class="required form-control datepicker" data-date-format="dd/mm/yyyy" />
+        		<input type="datetime"  name="compra.data" id="data"  value="<fmt:formatDate value="${compra.data == null ? now : compra.data }" type="date" pattern="dd/MM/yyyy"/>" class="required form-control datepicker" data-date-format="dd/mm/yyyy" ${not empty compra.id ? 'disabled="disabled"' : ''}/>
 					
         	</div>
         	<div class="col-md-2">
       			Num Nf-e:<br/>
-				<input type="text" name="compra.numNf" id="numNf" value="${compra.numNf}" class="form-control"/>
+				<input type="text" name="compra.numNf" id="numNf" value="${compra.numNf}" class="form-control" ${not empty compra.id ? 'disabled="disabled"' : ''}/>
       		</div>
       		<div class="col-md-4">
 				<label for="cboTipoFrete">Forma de Frete/Entrega:</label>
-				<select style="width: 180px;" id="cboTipoFrete" name="compra.tipoFrete" class="selectpicker form-control" >
+				<select style="width: 180px;" id="cboTipoFrete" name="compra.tipoFrete" class="selectpicker form-control" ${not empty compra.id ? 'disabled="disabled"' : ''}>
 					<option value="" >Selecione</option>
 					<c:forEach var="tipoFrete" items="${tiposFrete}">
-						<option value="${tipoFrete.name }" >${tipoFrete.descricao}</option>
+						<option value="${tipoFrete.name }" ${compra.tipoFrete eq tipoFrete ? 'selected' : ''}>${tipoFrete.descricao}</option>
 					</c:forEach>
 				</select>
 				</div>
@@ -309,7 +309,7 @@
       		
       		<div class="col-md-8">Observação:<br/>
       		
-      			<textarea rows="5" cols="83" name="compra.observacao" class="form-control">${compra.observacao }</textarea>
+      			<textarea rows="5" cols="83" name="compra.observacao" class="form-control" ${not empty compra.id ? 'disabled="disabled"' : ''}>${compra.observacao }</textarea>
       		</div>
       		
       	</div>
@@ -364,27 +364,27 @@
 				</c:if>
 				
 				<c:if test="${not empty compra.id}">
-					<c:forEach var="compra" items="${compras}" varStatus="contador">
+					<c:forEach var="item" items="${compra.itens}" varStatus="contador">
 					<tr>
 						<td>
-							<select id="fornecedorMaterial_${contador}" name="compra.itens[${contador}].material.id" class="required form-control">
+							<select id="fornecedorMaterial_${contador}" name="compra.itens[${contador}].material.id" class="required form-control" disabled="disabled">
 								<option value ="">Selecione</option>
 								<c:forEach var="fornecedorMaterial" items="${fornecedorMateriais}" varStatus="contador">
 								
-									<option value ="${fornecedorMaterial.id}" ${compra.fornecedorMaterial.id eq fornecedorMaterial.id ? 'selected' : ''}>${fornecedorMaterial.material.descricao} - ${fornecedorMaterial.tipoFrete.descricao}</option>
+									<option value ="${fornecedorMaterial.material.id}" ${item.material.id eq fornecedorMaterial.material.id ? 'selected' : ''}>${fornecedorMaterial.material.descricao}</option>
 				
 								</c:forEach>	
 							</select>
 						</td>
 						<td>
-							<input type="text" name="compra.itens[${contador}].quantidade" id="quantidade_${contador}" value="<fmt:formatNumber value="${compra.quantidade}" minFractionDigits="2" type="number" />" class="required form-control"/>
+							<input type="text" name="compra.itens[${contador}].quantidade" id="quantidade_${contador}" value="<fmt:formatNumber value="${item.quantidade}" minFractionDigits="2" type="number" />" class="required form-control" readonly="readonly"/>
 							
 						</td>
 						<td>
-							<input type="text" name="compra.itens[${contador}].preco" id="preco_${contador}" value="<fmt:formatNumber value="${compra.preco}" minFractionDigits="2" type="number"/>" class="form-control	" readonly="readonly">
+							<input type="text" name="compra.itens[${contador}].preco" id="preco_${contador}" value="<fmt:formatNumber value="${item.preco}" minFractionDigits="2" type="number"/>" class="form-control	" readonly="readonly">
 						</td>
 						<td>
-							<input type="text" name="compra.itens[${contador}].valor" id="valor_${contador}" class="required form-control" value="<fmt:formatNumber value="${compra.valor}" minFractionDigits="2" type="number" />" readonly="readonly"/>
+							<input type="text" name="compra.itens[${contador}].valor" id="valor_${contador}" class="required form-control" value="<fmt:formatNumber value="${item.valor}" minFractionDigits="2" type="number" />" readonly="readonly"/>
 						</td>
 						
 					</tr>
@@ -410,10 +410,18 @@
 			</div>
 			</div>
 		</div>
-      	
-		<button type="button" id="btnAdicionar" class="btn btn-default btn-md">
-		  <span class="glyphicon glyphicon-floppy-disk"></span> Salvar
-		</button>
+      	<div class="row">
+			<div class="col-md-1">
+				<button type="button" id="btnAdicionar" class="btn btn-default btn-md"  ${not empty compra.id ? 'disabled="disabled"' : ''}>
+				  <span class="glyphicon glyphicon-floppy-disk"></span> Salvar
+				</button>
+			</div>
+			<div class="col-md-1">
+				<button type="button" id="btnCancelar" class="btn btn-default btn-md"  ${not empty compra.id and compra.status.name eq 'A' ? '' : 'disabled="disabled"'}>
+				  <span class="glyphicon glyphicon-remove"></span> Cancelar
+				</button>
+			</div>
+		</div>
 	</form>	
 	</div>
 	</div>

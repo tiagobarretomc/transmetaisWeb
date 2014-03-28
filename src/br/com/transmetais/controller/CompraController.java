@@ -22,6 +22,7 @@ import br.com.transmetais.dao.FornecedorMaterialDAO;
 import br.com.transmetais.dao.MaterialDAO;
 import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.commons.DAOException;
+import br.com.transmetais.type.StatusCompraEnum;
 import br.com.transmetais.type.TipoFreteEnum;
 import br.com.transmetais.type.TipoOperacaoEnum;
 
@@ -49,14 +50,14 @@ public class CompraController {
 	
 	//tela de listagem de compras
 	@Path({"/compra/","/compra","/compra/lista"})
-	public List<Compra> lista(Long fornecedorId, Date dataInicio, Date dataFim, List<TipoFreteEnum> tiposFretes, List<Long> materiaisSelecionados){
+	public List<Compra> lista(Long fornecedorId, Date dataInicio, Date dataFim, List<TipoFreteEnum> tiposFretes, List<Long> materiaisSelecionados, List<StatusCompraEnum> statusCompas){
 		List<Compra> lista = null;
 		
 		try {
 			List<Fornecedor> fornecedores = fornecedorDao.findAll();
 			List<Material> materiais = materialDao.findAll();
 			
-			lista = dao.findByFilter(fornecedorId, dataInicio, dataFim, tiposFretes, materiaisSelecionados);
+			lista = dao.findByFilter(fornecedorId, dataInicio, dataFim, tiposFretes, materiaisSelecionados, statusCompas);
 			BigDecimal valorTotal = new BigDecimal(0);
 			BigDecimal quantidade = new BigDecimal(0);
 			for (Compra compra : lista) {
@@ -78,6 +79,7 @@ public class CompraController {
 			result.include("fornecedores", fornecedores);
 			result.include("materiais", materiais);
 			result.include("tiposFrete",TipoFreteEnum.values());
+			result.include("statusList",StatusCompraEnum.values());
 			
 			result.include("valorTotal", valorTotal);
 			result.include("quantidade", quantidade);
@@ -96,13 +98,13 @@ public class CompraController {
 	}
 	
 	
-		public List<Compra> loadListaCompra(Long fornecedorId, Date dataInicio, Date dataFim, List<TipoFreteEnum> tiposFretes, List<Long> materiaisSelecionados){
+		public List<Compra> loadListaCompra(Long fornecedorId, Date dataInicio, Date dataFim, List<TipoFreteEnum> tiposFretes, List<Long> materiaisSelecionados, List<StatusCompraEnum> statusCompas){
 			List<Compra> lista = null;
 			
 			try {
 				
 				
-				lista = dao.findByFilter(fornecedorId, dataInicio, dataFim, tiposFretes, materiaisSelecionados);
+				lista = dao.findByFilter(fornecedorId, dataInicio, dataFim, tiposFretes, materiaisSelecionados, statusCompas);
 				BigDecimal valorTotal = new BigDecimal(0);
 				BigDecimal quantidade = new BigDecimal(0);
 				for (Compra compra : lista) {
@@ -151,7 +153,7 @@ public class CompraController {
 				//insercao - nova compra
 				//FornecedorMaterial fornecedorMaterial = fornecedorMaterialDao.findById(compra.getFornecedorMaterial().getId());
 				//compra.setConta(fornecedorMaterial.getFornecedor().getConta());
-				
+				compra.setStatus(StatusCompraEnum.A);
 				dao.addEntity(compra);
 				
 				MovimentacaoCompra movimentacao = new MovimentacaoCompra();
@@ -163,8 +165,8 @@ public class CompraController {
 				
 				movimentacaoDao.addEntity(movimentacao);
 				
-				compra.getConta().setSaldo(compra.getConta().getSaldo().subtract(movimentacao.getValor()));
-				contaDao.updateEntity(compra.getConta());
+				//compra.getConta().setSaldo(compra.getConta().getSaldo().subtract(movimentacao.getValor()));
+				//contaDao.updateEntity(compra.getConta());
 			}
 			
 		} catch (DAOException e) {
@@ -172,10 +174,10 @@ public class CompraController {
 			e.printStackTrace();
 		}
 		
-		result.redirectTo(CompraController.class).lista(null, null, null, null, null);
+		result.redirectTo(CompraController.class).lista(null, null, null, null, null, null);
 	}
 	
-	@Path({"/compra/{compra.id}","/compra/form","/compra/novo/{compra.fornecedorMaterial.fornecedor.id}"})
+	@Path({"/compra/{compra.id}","/compra/form","/compra/novo/{compra.fornecedor.id}"})
 	public Compra form(Compra compra) throws DAOException{
 		
 		if (compra != null && compra.getId() != null && compra.getId()>0){
@@ -187,19 +189,24 @@ public class CompraController {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		}else{
+			compra.setFornecedor(fornecedorDao.findById(compra.getFornecedor().getId()));
 		}
+		
 		if(compra.getItens() != null)
 			result.include("quantidadeItens", compra.getItens().size());
 		else
 			result.include("quantidadeItens", 0);
+		
+		
 		//quando vier já com um fornecedor selecionado da lista de fornecedores
-		if (compra != null && compra.getFornecedorMaterial() != null && compra.getFornecedorMaterial().getFornecedor() != null && 
-				compra.getFornecedorMaterial().getFornecedor().getId() != null && compra.getFornecedorMaterial().getFornecedor().getId() > 0){
+		if (compra != null && compra.getFornecedor() != null  && 
+				compra.getFornecedor().getId() != null && compra.getFornecedor().getId() > 0){
 			
-			Fornecedor fornecedor = fornecedorDao.findById(compra.getFornecedorMaterial().getFornecedor().getId());
-			result.include("fornecedor", fornecedor);
+			//Fornecedor fornecedor = fornecedorDao.findById(compra.getFornecedorMaterial().getFornecedor().getId());
+			result.include("fornecedor", compra.getFornecedor());
 			
-			List<FornecedorMaterial> fornecedorMateriais = fornecedorMaterialDao.obterAtivosPorFiltro(fornecedor,null);
+			List<FornecedorMaterial> fornecedorMateriais = fornecedorMaterialDao.obterAtivosPorFiltro(compra.getFornecedor(),compra.getTipoFrete());
 			result.include("fornecedorMateriais", fornecedorMateriais);
 			result.include("tiposFrete",TipoFreteEnum.values());
 			
