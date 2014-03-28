@@ -16,6 +16,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import br.com.transmetais.type.StatusMovimentacaoEnum;
 import br.com.transmetais.type.TipoOperacaoEnum;
 
 @Entity
@@ -39,6 +40,9 @@ public class Movimentacao {
 	protected BigDecimal valorPrevisto;
 	@Column(name="data_pagamento")
 	protected Date dataPagamento;
+	@Column(name="status")
+	@Enumerated(EnumType.STRING)
+	protected StatusMovimentacaoEnum status;
 	
 	public Integer getId() {
 		return id;
@@ -82,6 +86,12 @@ public class Movimentacao {
 	}
 	public void setDataPagamento(Date dataPagamento) {
 		this.dataPagamento = dataPagamento;
+	}
+	public StatusMovimentacaoEnum getStatus() {
+		return status;
+	}
+	public void setStatus(StatusMovimentacaoEnum status) {
+		this.status = status;
 	}
 
 	

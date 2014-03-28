@@ -100,3 +100,4 @@ ADD CONSTRAINT `fk_movimentacao_compra_movimentacao`
 CHANGE COLUMN `situacao` `status` VARCHAR(1) CHARACTER SET 'utf8' COLLATE 'utf8_unicode_ci' NULL DEFAULT NULL ;
 
 
+

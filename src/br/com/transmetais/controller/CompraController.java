@@ -23,6 +23,7 @@ import br.com.transmetais.dao.MaterialDAO;
 import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.type.StatusCompraEnum;
+import br.com.transmetais.type.StatusMovimentacaoEnum;
 import br.com.transmetais.type.TipoFreteEnum;
 import br.com.transmetais.type.TipoOperacaoEnum;
 
@@ -162,6 +163,7 @@ public class CompraController {
 				movimentacao.setData(new Date());
 				movimentacao.setTipoOperacao(TipoOperacaoEnum.D);
 				movimentacao.setValor(compra.getValor());
+				movimentacao.setStatus(StatusMovimentacaoEnum.A);
 				
 				movimentacaoDao.addEntity(movimentacao);
 				
