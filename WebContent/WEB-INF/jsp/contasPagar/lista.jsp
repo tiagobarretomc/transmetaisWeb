@@ -6,6 +6,18 @@
 
     $(document).ready(function(){
     	
+    	function exibir(movimentacaoId){
+    		alert(movimentacaoId);
+    		
+    		
+    	}
+    	
+    	jQuery(".btnDetalhe").on("click",function(event){
+    		var indiceCampo = $(this).attr('id').split("_")[1];
+    		$("#divResultado").load( '<c:url value="/contasPagar/"/>' + indiceCampo, {'_format':'json'});
+    		$('#myModal').modal('show');
+    	});
+    	
     	$("#dataInicio").mask('99/99/9999');
     	$("#dataFim").mask('99/99/9999');
     	
@@ -15,19 +27,12 @@
     	
     	$("#btnFiltrar").click(function(){
     		
-    		$("#divTabela").load( '<c:url value="/compra/loadListaCompra"/>', $('#formCompra').serialize() );
+    		$("#divTabela").load( '<c:url value="/contasPagar/loadListaMovimentacao"/>', $('#formCompra').serialize() );
     	});
     	
-    	$("#btnAdicionar").click(function(){
-    		if ($("#fornecedor").val())
-    			document.location.href = "${pageContext.request.contextPath}/compra/novo/" + $("#fornecedor").val();
-    		else
-    			$("#divError").css('display', 'block');
-    	});
     	
-    	$('.selectpicker').selectpicker({
-            //'selectedText': 'cat'
-        });
+    	
+    	
     });
  </script>
  
@@ -41,22 +46,7 @@
 		<form action="<c:url value='/compra/'/>" id="formCompra" name="formCompra" method="post">
 		<input type="hidden" name="_format" value="json">
 		<div class="row">
-        	<div class="col-md-5">
-        		<label for="fornecedorId">Fornecedor:</label>
-	        	<select id="fornecedor" name="fornecedorId" class="selectpicker form-control" data-live-search="true">
-					<option value ="">Selecione</option>
-					<c:forEach var="fornecedor" items="${fornecedores}" varStatus="contador">
-						<option value ="${fornecedor.id}">${fornecedor.apelido} - ${fornecedor.nome}</option>
-					</c:forEach>	
-				</select>
-				
-				
-        	</div>
-        	<div class="col-md-1"><br/>
-        		<button type="button" id="btnAdicionar" class="btn btn-default btn-lg">
-				  <span class="glyphicon glyphicon-plus-sign"></span> 
-				</button>
-        	</div>
+        	
         	<div class="col-md-3">
         	<label for="dataInicio">Data Início:</label>
         	
@@ -80,7 +70,7 @@
 		
 		
 		<div id="divTabela">
-		<table width="1024px" class="table table-bordered table-striped">
+		<table class="table table-bordered table-striped">
 		
 		<thead>
 	<tr>
@@ -89,64 +79,65 @@
 		<th >Descrição</th>
 		<th >Valor</th>
 		<th>Status</th>
-		<th>Data Pagamento</th>
-		<th>Valor</th>
+		<th>Dt Pagamento</th>
+		<th>Conta</th>
+		
 		
 	</tr>
 	</thead>
 	<tbody>
 	<c:set var="varCont" value="1" />
-		<c:forEach var="compra" items="${compras}" varStatus="contador">
+		<c:forEach var="movimentacao" items="${movimentacaoList}" varStatus="contador">
 	
 		<tr>
 			
 			
-				<td rowspan="${fn:length(compra.itens)}">
-					<a href="${pageContext.request.contextPath}/compra/${compra.id}"><span title="Detalhar" style="color: black;" class="glyphicon glyphicon-search"></span></a>
+				<td >
+				<%--
+					<a href="${pageContext.request.contextPath}/contasPagar/${movimentacao.id}"><span title="Detalhar" style="color: black;" class="glyphicon glyphicon-ok-sign"></span></a>
+					
+				 --%>
+				
+				<button class="btn btn-default btn-xs btnDetalhe" id="btnDetalhe_${movimentacao.id}" type="button" >
+					<span class="glyphicon glyphicon-ok-sign"></span>
+					
+					</button>
+				</td>
+				<td>
+					<fmt:formatDate value="${movimentacao.data}" type="date" pattern="dd/MM/yyyy"/>
+					
+				</td>
+				<td>
+					
+						<c:if test="${movimentacao.class.name  == 'br.com.transmetais.bean.MovimentacaoCompra'}">
+							<b>Compra <fmt:formatNumber minIntegerDigits="4" value="${movimentacao.compra.id}" groupingUsed="" /></b> Fornecedor: ${movimentacao.compra.fornecedor.apelido } - ${movimentacao.compra.fornecedor.nome }
+						</c:if>
+						<c:if test="${movimentacao.class.name  == 'br.com.transmetais.bean.MovimentacaoAdiantamento'}">
+							<b>Adiantamento <fmt:formatNumber minIntegerDigits="4" value="${movimentacao.adiantamento.id}" groupingUsed="" /></b> Fornecedor: ${movimentacao.adiantamento.fornecedor.apelido } - ${movimentacao.adiantamento.fornecedor.nome }
+						</c:if>
 					 
 				</td>
-				<td rowspan="${fn:length(compra.itens)}">
-					<fmt:formatDate value="${compra.data}" type="date" pattern="dd/MM/yyyy"/>
-					
-				</td>
-				<td rowspan="${fn:length(compra.itens)}">
-					${compra.fornecedor.apelido} - ${compra.fornecedor.nome} 
-				</td>
 				
 				
-				<td rowspan="${fn:length(compra.itens)}">
-					${compra.tipoFrete}
-				</td>
-				<td rowspan="${fn:length(compra.itens)}">
-						
-						<fmt:formatNumber value="${compra.valor}" minFractionDigits="2" type="currency"/>
+				
+				<td>
+						<c:set var="valor" value="0"/>
+						<fmt:formatNumber value="${movimentacao.tipoOperacao.name eq 'D' ? movimentacao.valor * -1 :  movimentacao.valor}" minFractionDigits="2" type="currency"/>
 					</td>
 					
-				<td rowspan="${fn:length(compra.itens)}">
-					${compra.status.descricao}
+				<td >
+					${movimentacao.status.descricao}
 				</td>
 				
-				<c:forEach var="item" items="${compra.itens}" varStatus="cont" >
-					<c:if test="${cont.count gt '1'}">
-						</tr>
-						
-						<tr>
-					</c:if>
-					<td>
-						${item.material.sigla} 
-					</td>
-					<td >
-						
-						<fmt:formatNumber value="${item.quantidade}" minFractionDigits="2" type="number"/>
-					</td>
-					<td>
-						
-						<fmt:formatNumber value="${item.valor}" minFractionDigits="2" type="currency"/>
-					</td>
-				</c:forEach>
-				
+				<td>
+					<fmt:formatDate value="${movimentacao.dataPagamento}" type="date" pattern="dd/MM/yyyy"/>
+					
+				</td>
+				<td >
+					${movimentacao.conta.descricao}
+				</td>
 			
-		</tr>
+			</tr>
 		</c:forEach>
 	</tbody>
 	</table>
@@ -156,10 +147,31 @@
 	<div class="row">
 		<div class="col-md-4"><b>Valor Total:</b> <fmt:formatNumber value="${valorTotal}" minFractionDigits="2" type="currency"/></div>
 		<div class="col-md-4"><b>Quantidade Total:</b> <fmt:formatNumber value="${quantidade}" minFractionDigits="2" type="number"/></div>
-		<div class="col-md-4">Preço Médio: <fmt:formatNumber value="${precoMedio}" minFractionDigits="2" type="currency"/></div>
+		<div class="col-md-4">Preço Médio: <fmt:formatNumber value="${ precoMedio}" minFractionDigits="2" type="currency"/></div>
 	
 	</div>
 	</div>
 	</div>
 	</div>
 	</div>
+	<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+  Launch demo modal
+</button>
+	 <!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Confirmação de Pagamento</h4>
+      </div>
+      <div class="modal-body" id="divResultado">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>

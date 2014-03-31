@@ -1,33 +1,17 @@
 package br.com.transmetais.controller;
 
-import static br.com.caelum.vraptor.view.Results.json;
-
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
-import br.com.transmetais.bean.Compra;
-import br.com.transmetais.bean.Fornecedor;
-import br.com.transmetais.bean.FornecedorMaterial;
-import br.com.transmetais.bean.ItemCompra;
-import br.com.transmetais.bean.Material;
 import br.com.transmetais.bean.Movimentacao;
-import br.com.transmetais.bean.MovimentacaoCompra;
 import br.com.transmetais.dao.CompraDAO;
 import br.com.transmetais.dao.ContaDAO;
 import br.com.transmetais.dao.FornecedorDAO;
-import br.com.transmetais.dao.FornecedorMaterialDAO;
-import br.com.transmetais.dao.MaterialDAO;
 import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.commons.DAOException;
-import br.com.transmetais.dao.impl.FornecedorDaoImpl;
-import br.com.transmetais.type.StatusCompraEnum;
-import br.com.transmetais.type.StatusMovimentacaoEnum;
-import br.com.transmetais.type.TipoFreteEnum;
-import br.com.transmetais.type.TipoOperacaoEnum;
 
 @Resource
 public class ContasPagarController {
@@ -35,19 +19,21 @@ public class ContasPagarController {
 	private final Result result;
 	private CompraDAO compraDao;
 	private FornecedorDAO fornecedorDao;
+	private ContaDAO contaDao;
 	
 	private MovimentacaoDAO dao;
 	
 	
-	public ContasPagarController(Result result,CompraDAO compraDao, MovimentacaoDAO dao, FornecedorDAO fornecedorDao ) {
+	public ContasPagarController(Result result,CompraDAO compraDao, MovimentacaoDAO dao, FornecedorDAO fornecedorDao, ContaDAO contaDao ) {
 		this.dao = dao;
 		this.compraDao = compraDao;
 		this.result = result;
 		this.fornecedorDao = fornecedorDao;
+		this.contaDao = contaDao;
 	}
 	
 	//tela de listagem de compras
-	@Path({"/compra/","/compra","/compra/lista"})
+	@Path({"/contasPagar/","/contasPagar","/contasPagar/lista"})
 	public List<Movimentacao> lista(Date dataInicio, Date dataFim){
 		List<Movimentacao> lista = null;
 		
@@ -140,12 +126,14 @@ public class ContasPagarController {
 		result.redirectTo(ContasPagarController.class).lista(null, null);
 	}
 	
-	@Path({"/compra/{compra.id}","/compra/form","/compra/novo/{compra.fornecedor.id}"})
+	@Path({"/contasPagar/{movimentacao.id}"})
 	public Movimentacao form(Movimentacao movimentacao) throws DAOException{
 		
 		
 		movimentacao = dao.findById(movimentacao.getId());
 				//System.out.println(fornecedor.getInformacoesBancarias());
+		
+		result.include("contas",contaDao.obterContasFinanceiras());
 		
 		return movimentacao;
 	}

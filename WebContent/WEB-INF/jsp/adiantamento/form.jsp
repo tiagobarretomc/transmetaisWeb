@@ -16,6 +16,10 @@
     		$("#formAdiantamento").submit();
     	});
     	
+    	$("#btnVoltar").click(function(){
+    		 history.go(-1);
+    	});
+    	
         $('#formAdiantamento').validate({
             
         
@@ -80,9 +84,22 @@
       	
       	
       	<br/>
-		<button type="button" id="btnAdicionar" class="btn btn-default btn-md">
-		  <span class="glyphicon glyphicon-floppy-disk"></span> Salvar
-		</button>
+      	<div class="row">
+	      	<div class="col-md-2">
+				<button type="button" id="btnAdicionar" class="btn btn-default btn-md form-control">
+				  <span class="glyphicon glyphicon-floppy-disk"></span> Salvar
+				</button>
+	      	</div>
+	      	<div class="col-md-8">
+				
+	      	</div>
+	      	
+	      	<div class="col-md-2" style="">
+				<button type="button" id="btnVoltar" class="btn btn-default btn-md form-control">
+				  <span class="glyphicon glyphicon-arrow-left"></span> Voltar
+				</button>
+	      	</div>
+      	</div>
 		</form>
 </div>
 </div>

@@ -44,6 +44,8 @@ public class Movimentacao {
 	@Enumerated(EnumType.STRING)
 	protected StatusMovimentacaoEnum status;
 	
+	protected String descricao;
+	
 	public Integer getId() {
 		return id;
 	}
@@ -92,6 +94,12 @@ public class Movimentacao {
 	}
 	public void setStatus(StatusMovimentacaoEnum status) {
 		this.status = status;
+	}
+	public String getDescricao() {
+		return descricao;
+	}
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 
 	

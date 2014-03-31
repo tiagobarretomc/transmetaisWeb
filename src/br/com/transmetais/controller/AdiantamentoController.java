@@ -16,6 +16,7 @@ import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.type.FormaPagamentoEnum;
 import br.com.transmetais.type.SituacaoAdiantamentoEnum;
+import br.com.transmetais.type.StatusMovimentacaoEnum;
 import br.com.transmetais.type.TipoOperacaoEnum;
 
 @Resource
@@ -125,6 +126,7 @@ public class AdiantamentoController {
 					movimentacao.setValor(adiantamento.getValor());
 					movimentacao.setValorPrevisto(adiantamento.getValor());
 					movimentacao.setAdiantamento(adiantOrig);
+					movimentacao.setStatus(StatusMovimentacaoEnum.A);
 					
 					
 					movimentacaoDao.addEntity(movimentacao);
@@ -141,11 +143,13 @@ public class AdiantamentoController {
 					movementacaoDebito.setTipoOperacao(TipoOperacaoEnum.D);
 					movementacaoDebito.setValor(adiantamento.getValor());
 					movementacaoDebito.setAdiantamento(adiantOrig);	
+					movementacaoDebito.setStatus(StatusMovimentacaoEnum.A);
+					
 					movimentacaoDao.addEntity(movementacaoDebito);
 					
-					contaOrigem = contaDao.findById(contaOrigem.getId());
-					contaOrigem.setSaldo(contaOrigem.getSaldo().subtract(movementacaoDebito.getValor()));
-					contaDao.updateEntity(contaOrigem);
+					//contaOrigem = contaDao.findById(contaOrigem.getId());
+					//contaOrigem.setSaldo(contaOrigem.getSaldo().subtract(movementacaoDebito.getValor()));
+					//contaDao.updateEntity(contaOrigem);
 					
 				}
 				
@@ -160,43 +164,26 @@ public class AdiantamentoController {
 		result.redirectTo(AdiantamentoController.class).lista();
 	  }
 	
-	
+	@Path({"/adiantamento/cancelar/{adiantamento.id}"}) 
 	public void cancelar(Adiantamento adiantamento) throws DAOException {
-		try {
-			if (adiantamento.getId() != null && adiantamento.getId()>0){
-				//Adiantamento só poderá ser alterado enquanto a situação for em aberto
-				if (adiantamento.getSituacao() == SituacaoAdiantamentoEnum.A) {
-					adiantamento = dao.findById(adiantamento.getId());
-					adiantamento.setSituacao(SituacaoAdiantamentoEnum.C);
-					adiantamento.setData(new Date());
-					
-					dao.updateEntity(adiantamento);
-				}
-				
-//			}else{
-//				adiantamento.setDataInclusao(new Date());
-//				adiantamento.setSituacao(SituacaoAdiantamentoEnum.A);
-//				dao.addEntity(adiantamento);
-			}
-			
-		} catch (DAOException e) {
-			
-			e.printStackTrace();
-		}
-		
-		result.redirectTo(AdiantamentoController.class).lista();
-	  }
-	
-	
-	@Path("/adiantamento/cancelar/{adiantamento.id}")
-	public void remove(Adiantamento adiantamento) throws DAOException {
 		
 		if (adiantamento.getId() != null && adiantamento.getId()>0){
+			
 			adiantamento = dao.findById(adiantamento.getId());
-			adiantamento.setSituacao(SituacaoAdiantamentoEnum.C);
-		
+			
+			//Adiantamento só poderá ser alterado enquanto a situação for em aberto
+			if (adiantamento.getSituacao() == SituacaoAdiantamentoEnum.A) {
+				adiantamento = dao.findById(adiantamento.getId());
+				adiantamento.setSituacao(SituacaoAdiantamentoEnum.C);
+				adiantamento.setData(new Date());
+				
+				dao.updateEntity(adiantamento);
+			}			
 		}
-		result.redirectTo(AdiantamentoController.class).lista();
+			result.redirectTo(AdiantamentoController.class).lista();
 	  }
+	
+	
+	
 
 }

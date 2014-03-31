@@ -106,6 +106,7 @@
 		<button type="button" id="btnAdicionar" class="btn btn-default btn-md">
 		  <span class="glyphicon glyphicon-floppy-disk"></span> Confirmar
 		</button>
+		
 		</form>
 </div>
 </div>
