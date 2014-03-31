@@ -10,6 +10,7 @@ import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.GrupoMaterial;
 import br.com.transmetais.bean.Material;
 import br.com.transmetais.bean.UnidadeMedida;
+import br.com.transmetais.dao.ContaContabilDAO;
 import br.com.transmetais.dao.GrupoMaterialDAO;
 import br.com.transmetais.dao.UnidadeMedidaDAO;
 import br.com.transmetais.dao.commons.DAOException;
@@ -23,13 +24,15 @@ private final Result result;
 	private MaterialDaoImpl dao;
 	private UnidadeMedidaDAO unidadeMedidaDao;
 	private GrupoMaterialDAO grupoMaterialDao;
+	private ContaContabilDAO contaContabilDao;
 	
 
-	public MaterialController(Result result, MaterialDaoImpl dao, UnidadeMedidaDAO unidadeMedidaDao, GrupoMaterialDAO grupoMaterialDao) {
+	public MaterialController(Result result, MaterialDaoImpl dao, UnidadeMedidaDAO unidadeMedidaDao, GrupoMaterialDAO grupoMaterialDao, ContaContabilDAO contaContabilDao) {
 		this.result = result;
 		this.dao = dao;
 		this.unidadeMedidaDao = unidadeMedidaDao;
 		this.grupoMaterialDao = grupoMaterialDao;
+		this.contaContabilDao = contaContabilDao;
 		
 	}
 
@@ -86,11 +89,15 @@ private final Result result;
 		List<GrupoMaterial> grupos = grupoMaterialDao.findAll();
 		result.include("grupos",grupos);
 		
+		result.include("contas", contaContabilDao.findAll());
+		
 		return material;
 	}
 	
 	public void adiciona(Material material) {
 		try {
+			if(material.getContaContabil() != null && material.getContaContabil().getId() == null)
+				material.setContaContabil(null);
 			if (material.getId() != null && material.getId()>0){
 				dao.updateEntity(material);
 			}else{

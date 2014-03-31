@@ -1,0 +1,189 @@
+package br.com.transmetais.controller;
+
+import java.util.Date;
+import java.util.List;
+
+import br.com.caelum.vraptor.Path;
+import br.com.caelum.vraptor.Resource;
+import br.com.caelum.vraptor.Result;
+import br.com.transmetais.bean.Adiantamento;
+import br.com.transmetais.bean.Conta;
+import br.com.transmetais.bean.MovimentacaoAdiantamento;
+import br.com.transmetais.dao.AdiantamentoDAO;
+import br.com.transmetais.dao.ContaDAO;
+import br.com.transmetais.dao.FornecedorDAO;
+import br.com.transmetais.dao.MovimentacaoDAO;
+import br.com.transmetais.dao.commons.DAOException;
+import br.com.transmetais.type.FormaPagamentoEnum;
+import br.com.transmetais.type.SituacaoAdiantamentoEnum;
+import br.com.transmetais.type.StatusMovimentacaoEnum;
+import br.com.transmetais.type.TipoOperacaoEnum;
+
+@Resource
+public class AdiantamentoController {
+	
+	private AdiantamentoDAO dao;
+	private FornecedorDAO fornecedorDao;
+	private MovimentacaoDAO movimentacaoDao;
+	private ContaDAO contaDao;
+	
+	private final Result result;
+	
+	
+	public AdiantamentoController(Result result, AdiantamentoDAO dao, FornecedorDAO fornecedorDao, MovimentacaoDAO movimentacaoDao, ContaDAO contaDao) {
+		this.result = result;
+		this.dao = dao;
+		this.fornecedorDao = fornecedorDao;
+		this.movimentacaoDao = movimentacaoDao;
+		this.contaDao = contaDao;
+		
+		
+	}
+	
+	@Path({"/adiantamento/","/adiantamento","/adiantamento/lista"})
+	public List<Adiantamento> lista() throws DAOException{
+		List<Adiantamento> lista = null;
+		
+		lista = dao.findAll();
+		
+		return lista;
+	}
+	
+	
+	@Path({"/adiantamento/{adiantamento.id}","/adiantamento/form","/adiantamento/novo"})
+	public Adiantamento form(Adiantamento adiantamento) throws DAOException{
+		
+		
+		if (adiantamento != null && adiantamento.getId() != null && adiantamento.getId()>0){
+			
+			adiantamento = dao.findById(adiantamento.getId());
+			
+		}
+		
+		result.include("fornecedores", fornecedorDao.findAll());
+		result.include("tiposPagamentos", FormaPagamentoEnum.values());
+	
+		return adiantamento;
+	}
+	
+	@Path({"/adiantamento/aprovar/{adiantamento.id}"})
+	public Adiantamento aprovar (Adiantamento adiantamento) throws DAOException{
+		
+		
+		if (adiantamento != null && adiantamento.getId() != null && adiantamento.getId()>0){
+			
+			adiantamento = dao.findById(adiantamento.getId());
+			
+		}
+		
+		//result.include("fornecedores", fornecedorDao.findAll());
+		result.include("tiposPagamentos", FormaPagamentoEnum.values());
+		result.include("contas",contaDao.obterContasFinanceiras());
+	
+		return adiantamento;
+	}
+	
+	public void add(Adiantamento adiantamento) throws DAOException {
+		try {
+			if (adiantamento.getId() != null && adiantamento.getId()>0){
+				//Adiantamento só poderá ser alterado enquanto a situação for em aberto
+				if (adiantamento.getSituacao() == SituacaoAdiantamentoEnum.A) 
+					dao.updateEntity(adiantamento);
+			}else{
+				adiantamento.setDataInclusao(new Date());
+				adiantamento.setSituacao(SituacaoAdiantamentoEnum.A);
+				dao.addEntity(adiantamento);
+			}
+			
+		} catch (DAOException e) {
+			
+			e.printStackTrace();
+		}
+		
+		result.redirectTo(AdiantamentoController.class).lista();
+	  }
+	
+	public void confirmar(Adiantamento adiantamento, Conta contaOrigem) throws DAOException {
+		try {
+			if (adiantamento.getId() != null && adiantamento.getId()>0){
+				Adiantamento adiantOrig = dao.findById(adiantamento.getId());
+				//Adiantamento só poderá ser alterado enquanto a situação for em aberto
+				if (adiantOrig.getSituacao() == SituacaoAdiantamentoEnum.A){
+					
+					
+					adiantOrig.setSituacao(SituacaoAdiantamentoEnum.P);
+					adiantOrig.setDataPagamento(adiantamento.getDataPagamento());
+					adiantOrig.setTipoPagamento(adiantamento.getTipoPagamento());
+					
+					dao.updateEntity(adiantOrig);
+					
+					//Registro de Movimentacao de ENtrada na conta do fornecedor
+					MovimentacaoAdiantamento movimentacao = new MovimentacaoAdiantamento();
+					movimentacao.setConta(adiantOrig.getFornecedor().getConta());
+					movimentacao.setData(adiantamento.getDataPagamento());
+					//um valor está sendo creditado na conta do fornecedor
+					movimentacao.setTipoOperacao(TipoOperacaoEnum.C);
+					movimentacao.setValor(adiantamento.getValor());
+					movimentacao.setValorPrevisto(adiantamento.getValor());
+					movimentacao.setAdiantamento(adiantOrig);
+					movimentacao.setStatus(StatusMovimentacaoEnum.A);
+					
+					
+					movimentacaoDao.addEntity(movimentacao);
+					
+					adiantOrig.getFornecedor().getConta().setSaldo(adiantOrig.getFornecedor().getConta().getSaldo().add(adiantamento.getValor()));
+					
+					contaDao.updateEntity(adiantOrig.getFornecedor().getConta());
+					
+					//Registro de Movimentacao de Saída de uma conta da Empresa
+					MovimentacaoAdiantamento movementacaoDebito = new MovimentacaoAdiantamento();
+					movementacaoDebito.setConta(contaOrigem);
+					movementacaoDebito.setData(adiantamento.getDataPagamento());
+					//um valor está sendo creditado na conta do fornecedor
+					movementacaoDebito.setTipoOperacao(TipoOperacaoEnum.D);
+					movementacaoDebito.setValor(adiantamento.getValor());
+					movementacaoDebito.setAdiantamento(adiantOrig);	
+					movementacaoDebito.setStatus(StatusMovimentacaoEnum.A);
+					
+					movimentacaoDao.addEntity(movementacaoDebito);
+					
+					//contaOrigem = contaDao.findById(contaOrigem.getId());
+					//contaOrigem.setSaldo(contaOrigem.getSaldo().subtract(movementacaoDebito.getValor()));
+					//contaDao.updateEntity(contaOrigem);
+					
+				}
+				
+			
+			}
+			
+		} catch (DAOException e) {
+			
+			e.printStackTrace();
+		}
+		
+		result.redirectTo(AdiantamentoController.class).lista();
+	  }
+	
+	@Path({"/adiantamento/cancelar/{adiantamento.id}"}) 
+	public void cancelar(Adiantamento adiantamento) throws DAOException {
+		
+		if (adiantamento.getId() != null && adiantamento.getId()>0){
+			
+			adiantamento = dao.findById(adiantamento.getId());
+			
+			//Adiantamento só poderá ser alterado enquanto a situação for em aberto
+			if (adiantamento.getSituacao() == SituacaoAdiantamentoEnum.A) {
+				adiantamento = dao.findById(adiantamento.getId());
+				adiantamento.setSituacao(SituacaoAdiantamentoEnum.C);
+				adiantamento.setData(new Date());
+				
+				dao.updateEntity(adiantamento);
+			}			
+		}
+			result.redirectTo(AdiantamentoController.class).lista();
+	  }
+	
+	
+	
+
+}

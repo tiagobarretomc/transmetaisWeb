@@ -164,13 +164,30 @@ form {
 									<li class="divider"></li>
 									<li><a href="<c:url value='/centroCusto/'/>">Centro de
 											Custo</a></li>
-									<li><a href="<c:url value='/centroAplicacao/'/>">Centro
-											de Aplicação</a></li>
+	             <li><a href="<c:url value='/contaBancaria/'/>">Contas Bancárias</a></li>
+	             <li><a href="<c:url value='/contaContabil/'/>">Contas Contábeis</a></li>
 
 								</ul></li>
-							<li><a href="<c:url value='/compra/'/>">Compras</a></li>
+            <li class="dropdown">
+	          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Compras <b class="caret"></b></a>
+	          <ul class="dropdown-menu">
+	          	 <li><a href="<c:url value='/compra/'/>">Compra de Metais Ferrosos e Não Ferrosos</a></li>
+	          	<li><a href="<c:url value='/adiantamento/'/>">Adiantamento a Fornecedores</a></li>
+	          	
+	            
+	          </ul>
+	        </li>
+            
 							<li><a href="#">Vendas</a></li>
-							<li><a href="#">Financeiro</a></li>
+            <li><a href="#"></a></li>
+            
+            <li class="dropdown">
+	          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Financeiro <b class="caret"></b></a>
+	          <ul class="dropdown-menu">
+	          	 <li><a href="<c:url value='/contasPagar/'/>">Contas a Pagar</a></li>
+	          	<li><a href="<c:url value='/contasReceber/'/>">Contas a Receber</a></li>
+	          </ul>
+	        </li>
 							<li><a href="#">Consultas</a></li>
 
 

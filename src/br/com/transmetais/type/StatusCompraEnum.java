@@ -1,12 +1,12 @@
 package br.com.transmetais.type;
 
-public enum SituacaoAdiantamentoEnum {
+public enum StatusCompraEnum {
 	
-	A("Aberto"), P("Aprovado"), C("Cancelado");
+	A("Aberto"), P("Pago"), C("Cancelado");
 	
 	private String descricao;
-	SituacaoAdiantamentoEnum tipo;
-	private SituacaoAdiantamentoEnum(String descricao) {
+	StatusCompraEnum tipo;
+	private StatusCompraEnum(String descricao) {
 		this.setDescricao(descricao);
 		
 	}

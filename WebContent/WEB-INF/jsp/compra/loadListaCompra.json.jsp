@@ -1,6 +1,7 @@
 <%@page contentType="text/html; charset=UTF-8"%> 
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
 
 		<table width="1024px" class="table table-bordered table-striped">
@@ -10,10 +11,11 @@
 		<th ></th>
 		<th >Data</th>
 		<th >Fornecedor</th>
-		<th>Material</th>
 		<th >Tipo Frete</th>
+		<th>Total</th>
+		<th>Material</th>
 		<th>Quantidade</th>
-		<th>Valor Total</th>
+		<th>Valor</th>
 		
 	</tr>
 	</thead>
@@ -22,32 +24,49 @@
 		<c:forEach var="compra" items="${compras}" varStatus="contador">
 	
 		<tr>
-			<td>
-				<a href="${pageContext.request.contextPath}/compra/${compra.id}"><span title="Alterar" style="color: black;" class="glyphicon glyphicon-edit"></span></a>
-				 
-			</td>
-			<td>
-				<fmt:formatDate value="${compra.data}" type="date" pattern="dd/MM/yyyy"/>
-				
-			</td>
-			<td>
-				${compra.fornecedorMaterial.fornecedor.apelido} - ${compra.fornecedorMaterial.fornecedor.nome} 
-			</td>
-			<td>
-				${compra.fornecedorMaterial.material.descricao} 
-			</td>
 			
-			<td>
-				${compra.fornecedorMaterial.tipoFrete.descricao}
-			</td>
-			<td >
+			
+				<td rowspan="${fn:length(compra.itens)}">
+					<a href="${pageContext.request.contextPath}/compra/${compra.id}"><span title="Alterar" style="color: black;" class="glyphicon glyphicon-edit"></span></a>
+					 
+				</td>
+				<td rowspan="${fn:length(compra.itens)}">
+					<fmt:formatDate value="${compra.data}" type="date" pattern="dd/MM/yyyy"/>
+					
+				</td>
+				<td rowspan="${fn:length(compra.itens)}">
+					${compra.fornecedor.apelido} - ${compra.fornecedor.nome} 
+				</td>
 				
-				<fmt:formatNumber value="${compra.quantidade}" minFractionDigits="2" type="number"/>
-			</td>
-			<td>
 				
-				<fmt:formatNumber value="${compra.valor}" minFractionDigits="2" type="currency"/>
-			</td>
+				<td rowspan="${fn:length(compra.itens)}">
+					${compra.tipoFrete}
+				</td>
+				<td rowspan="${fn:length(compra.itens)}">
+						
+						<fmt:formatNumber value="${compra.valor}" minFractionDigits="2" type="currency"/>
+					</td>
+				
+				<c:forEach var="item" items="${compra.itens}" varStatus="cont" >
+					<c:if test="${cont.count gt '1'}">
+						</tr>
+						
+						<tr>
+					</c:if>
+					<td>
+						${item.material.sigla} 
+					</td>
+					<td >
+						
+						<fmt:formatNumber value="${item.quantidade}" minFractionDigits="2" type="number"/>
+					</td>
+					<td>
+						
+						<fmt:formatNumber value="${item.valor}" minFractionDigits="2" type="currency"/>
+					</td>
+				</c:forEach>
+				
+			
 		</tr>
 		</c:forEach>
 	</tbody>

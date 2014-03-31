@@ -235,7 +235,7 @@
  				</div></div>
  			<div class="col-md-3">
 				<label for="fornecedor.tipoFaturamento">Tipo Faturamento:</label>
-				<select  id="tipoFaturamento" name="fornecedor.tipoFaturamento" class="selectpicker form-control required"  >
+				<select  id="fornecedor.tipoFaturamento" name="fornecedor.tipoFaturamento" class="selectpicker required form-control"  >
 					<option value="" >Selecione</option>
 					<c:forEach var="tipo" items="${tiposFaturamentos}">
 						<option value="${tipo.name }" ${fornecedor.tipoFaturamento.name eq tipo.name ? 'selected' : ''}>${tipo.descricao}</option>

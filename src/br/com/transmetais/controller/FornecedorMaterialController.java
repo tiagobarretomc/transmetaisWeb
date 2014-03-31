@@ -64,7 +64,7 @@ public class FornecedorMaterialController {
 	}
 	
 	public void obterPreco(FornecedorMaterial fornecedorMaterial) throws DAOException{
-		fornecedorMaterial = dao.findById(fornecedorMaterial.getId());
+		fornecedorMaterial = dao.obterAtivoPorFornecedorAndMaterial(fornecedorMaterial);
 		
 		//result.include();
 		result.use(Results.http()).body(fornecedorMaterial.getValor().toString());
