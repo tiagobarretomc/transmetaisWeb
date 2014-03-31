@@ -37,7 +37,7 @@
 	</tr>
 	</thead>
 	<tbody>
-		<c:forEach var="produto" items="${produtos}" varStatus="contador">
+		<c:forEach var="produto" items="${beanList}" varStatus="contador">
 	
 		<tr>
 			<td>

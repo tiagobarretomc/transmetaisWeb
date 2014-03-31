@@ -31,7 +31,7 @@ public abstract class ComboDaoImpl<T> implements ComboDAO<T>{
 	public List<T> retrieveCombo() throws DAOException{
 		EntityManager manager = factory.createEntityManager(); 
 		try {
-			String query = "select new br.com.transmetais.bean.Combo(codigo, descricao) from " + classEntity.getSimpleName();
+			String query = "select new br.com.transmetais.bean.Combo(id, CONCAT(codigo,CONCAT(' - ',descricao))) from " + classEntity.getSimpleName();
 			return manager.createQuery(query).getResultList();
 		} catch (Exception e) {
 		    throw new DAOException(e);

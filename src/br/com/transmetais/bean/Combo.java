@@ -8,6 +8,7 @@ public class Combo<T> {
 		this.codigo = codigo;
 		this.descricao = descricao;
 	}
+	
 
 	public T getCodigo() {
 		return codigo;
@@ -24,6 +25,5 @@ public class Combo<T> {
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
 	}
-	
 	
 }

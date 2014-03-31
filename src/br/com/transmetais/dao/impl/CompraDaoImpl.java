@@ -14,7 +14,7 @@ import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.type.TipoFreteEnum;
 
 @Component
-public abstract class CompraDaoImpl extends CrudDAOJPA<Compra> implements CompraDAO{
+public class CompraDaoImpl extends CrudDAOJPA<Compra> implements CompraDAO{
 	
 	@Override
 	public List<Compra> findAll() throws DAOException {

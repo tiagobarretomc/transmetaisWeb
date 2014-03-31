@@ -8,6 +8,7 @@ import javax.persistence.Table;
 @Table(name="situacao_tributaria")
 public class SituacaoTributaria {
 	@Id
+	private Long id;
 	private Integer codigo;
 	private String descricao;
 	public Integer getCodigo() {
@@ -21,5 +22,11 @@ public class SituacaoTributaria {
 	}
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
 	}
 }

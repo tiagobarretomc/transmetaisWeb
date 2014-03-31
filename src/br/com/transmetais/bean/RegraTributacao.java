@@ -18,27 +18,27 @@ public class RegraTributacao {
 	private Long id;
 	
 	@ManyToOne
-	@JoinColumn(name="tipo_operacao_cd")
+	@JoinColumn(name="tipo_operacao_id")
 	private TipoOperacao tipoOperacao;
 	
 	@ManyToOne
-	@JoinColumn(name="cfop_cd")
-	private Cfop codCfop;
+	@JoinColumn(name="cfop_id")
+	private Cfop cfop;
 	
 	@ManyToOne
-	@JoinColumn(name="situacao_tributaria_cd")
+	@JoinColumn(name="situacao_tributaria_id")
 	private SituacaoTributaria situacaoTributaria;
 	
 	@ManyToOne
-	@JoinColumn(name="origem_mercadoria_cd")
+	@JoinColumn(name="origem_mercadoria_id")
 	private OrigemMercadoria origemMercadoria;
 	
 	@ManyToOne
-	@JoinColumn(name="base_calculo_tributacao_cd")
+	@JoinColumn(name="base_calculo_tributacao_id")
 	private BaseDeCalculo baseCalculo;
 	
 	@ManyToOne
-	@JoinColumn(name="base_calculo_tributacao_st_cd")
+	@JoinColumn(name="base_calculo_tributacao_st_id")
 	private BaseDeCalculoST baseCalculoST;
 	
 	@Column(name="aliquota")
@@ -66,11 +66,11 @@ public class RegraTributacao {
 	public void setTipoOperacao(TipoOperacao tipoOperacao) {
 		this.tipoOperacao = tipoOperacao;
 	}
-	public Cfop getCodCfop() {
-		return codCfop;
+	public Cfop getCfop() {
+		return cfop;
 	}
-	public void setCodCfop(Cfop codCfop) {
-		this.codCfop = codCfop;
+	public void setCfop(Cfop cfop) {
+		this.cfop = cfop;
 	}
 	public SituacaoTributaria getSituacaoTributaria() {
 		return situacaoTributaria;

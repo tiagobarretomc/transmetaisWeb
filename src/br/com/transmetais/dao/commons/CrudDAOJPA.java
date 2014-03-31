@@ -94,7 +94,7 @@ public class CrudDAOJPA<T> implements CrudDAO<T> {
             manager.persist(entity);
             manager.getTransaction().commit();
         } catch (Exception e) {
-            manager.getTransaction().rollback();
+//            manager.getTransaction().rollback();
             throw new DAOException(e);
         } finally {
         	if (manager != null) {

@@ -2,7 +2,6 @@ package br.com.transmetais.bean;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -15,6 +14,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
 
 
 @Entity
@@ -32,13 +32,12 @@ public class Produto {
 	@JoinColumn(name="grupo_material_id")
 	private GrupoMaterial grupoMaterial;
 	
-	@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
 	@JoinTable(name = "regra_tributacao_produto", joinColumns = { 
-			@JoinColumn(name = "regra_tributacao_id", nullable = false, updatable = false) }, 
-			inverseJoinColumns = { @JoinColumn(name = "produto_id", 
+			@JoinColumn(name = "produto_id", nullable = false, updatable = false) }, 
+			inverseJoinColumns = { @JoinColumn(name = "regra_tributacao_id", 
 					nullable = false, updatable = false) })
 	private List<RegraTributacao> regrasTributacao = new ArrayList<RegraTributacao>();
-	
 	private String ncm;
 	
 	public Long getId() {

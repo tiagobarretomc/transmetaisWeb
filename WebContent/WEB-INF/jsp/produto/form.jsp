@@ -12,12 +12,13 @@
 	var cfopList = ${cfopList};
 	var baseCalculoList = ${baseDeCalculoList};
 	var baseCalculoSTList = ${baseDeCalculoSTList};
-    var qtdRegras = ${fn:length(produto.regrasTributacao)};
+	var regrasTributacao = ${regras};
+    var qtdRegras = ${fn:length(regras)};
     $(document).ready(function(){
-    	
-    	$("#btnAdicionar").click(function(){
-    		$("#formProduto").submit();
-    	});
+    	<c:if test="${not empty errors}">
+    		var msg;
+    		bootbox.alert('${errors}');
+    	</c:if>
     	
         $('.selectpicker').selectpicker({
         });
@@ -36,16 +37,16 @@
             
         });
         $("#btnAdicionarRegra").click(function(){
-    		var strLinha = '<tr><td style="max-width:130px"><select id="tipoOperacao_' + qtdRegras + '" name="produto.regrasTributacao[' + qtdRegras + '].codTipoOperacao" class="selectpicker required form-control" data-live-search="true"><option value ="">Selecione</option></select></td>';
-    		strLinha += '<td style="max-width:130px"><select id="origemMercadoria_' + qtdRegras + '" name="produto.regrasTributacao[' + qtdRegras + '].codOrigemMercadoria" class="selectpicker required form-control" data-live-search="true"><option value ="">Selecione</option></select></td>';
-    		strLinha += '<td style="max-width:130px"><select id="situacaoTributaria_' + qtdRegras + '" name="produto.regrasTributacao[' + qtdRegras + '].codSituacaoTributaria" class="selectpicker required form-control" data-live-search="true"><option value ="">Selecione</option></select></td>';
-    		strLinha += '<td style="max-width:130px"><select id="cfop_' + qtdRegras + '" name="produto.regrasTributacao[' + qtdRegras + '].codCfop" class="selectpicker required form-control" data-live-search="true"><option value ="" >Selecione</option></select></td>';
-    		strLinha += '<td style="max-width:130px"><select id="baseCalculo_' + qtdRegras + '" name="produto.regrasTributacao[' + qtdRegras + '].codBaseCalculo" class= "selectpicker required form-control" data-live-search="true"><option value ="">Selecione</option></select>';
-    		strLinha += '<br/><select id="baseCalculoST_' + qtdRegras + '" name="produto.regrasTributacao[' + qtdRegras + '].codBaseCalculoST" class= "selectpicker form-control" data-live-search="true"><option value ="">Selecione</option></select></td>';
-    		strLinha += '<td style="min-width:50px;max-width:80px"><input type="text" name="produto.regrasTributacao[' + qtdRegras + '].aliquota" id="aliquota_' + qtdRegras + '" class="percent required form-control" value=""/>';
-    		strLinha += '<br/><input type="text" name="produto.regrasTributacao[' + qtdRegras + '].aliquotaST" id="aliquotaST_' + qtdRegras + '" class="percent form-control" value=""/></td>';
-    		strLinha += '<td style="min-width:120px;max-width:100px"><input type="text" name="produto.regrasTributacao[' + qtdRegras + '].credito" id="credito_' + qtdRegras + '" class="valor required form-control" value=""/>';
-    		strLinha += '<br/><input type="text" name="produto.regrasTributacao[' + qtdRegras + '].creditoST" id="creditoST_' + qtdRegras + '" class="valor form-control" value=""/></td>';
+    		var strLinha = '<tr><td style="max-width:130px"><select id="tipoOperacao_' + qtdRegras + '" name="bean.regrasTributacao[' + qtdRegras + '].tipoOperacao.id" class="selectpicker required form-control" data-live-search="true"></select></td>';
+    		strLinha += '<td style="max-width:130px"><select id="origemMercadoria_' + qtdRegras + '" name="bean.regrasTributacao[' + qtdRegras + '].origemMercadoria.id" class="selectpicker required form-control" data-live-search="true"></select></td>';
+    		strLinha += '<td style="max-width:130px"><select id="situacaoTributaria_' + qtdRegras + '" name="bean.regrasTributacao[' + qtdRegras + '].situacaoTributaria.id" class="selectpicker required form-control" data-live-search="true"></select></td>';
+    		strLinha += '<td style="max-width:130px"><select id="cfop_' + qtdRegras + '" name="bean.regrasTributacao[' + qtdRegras + '].cfop.id" class="selectpicker required form-control" data-live-search="true"></select></td>';
+    		strLinha += '<td style="max-width:130px"><select id="baseCalculo_' + qtdRegras + '" name="bean.regrasTributacao[' + qtdRegras + '].baseCalculo.id" class= "selectpicker required form-control" data-live-search="true"></select>';
+    		strLinha += '<br/><select id="baseCalculoST_' + qtdRegras + '" name="bean.regrasTributacao[' + qtdRegras + '].baseCalculoST.id" class= "selectpicker form-control" data-live-search="true"></select></td>';
+    		strLinha += '<td style="min-width:50px;max-width:80px"><input type="text" name="bean.regrasTributacao[' + qtdRegras + '].aliquota" id="aliquota_' + qtdRegras + '" class="percent required form-control" value=""/>';
+    		strLinha += '<br/><input type="text" name="bean.regrasTributacao[' + qtdRegras + '].aliquotaST" id="aliquotaST_' + qtdRegras + '" class="percent form-control" value=""/></td>';
+    		strLinha += '<td style="min-width:100px;max-width:120px"><input type="text" name="bean.regrasTributacao[' + qtdRegras + '].credito" id="credito_' + qtdRegras + '" class="valor required form-control" value=""/>';
+    		strLinha += '<br/><input type="text" name="bean.regrasTributacao[' + qtdRegras + '].creditoST" id="creditoST_' + qtdRegras + '" class="valor form-control" value=""/></td>';
     		
     		strLinha += '</tr>';
     		$('#tabelaRegras > tbody:last').append(strLinha);
@@ -70,16 +71,42 @@
             }
         
     	});
+       $.each ($("select[id^='tipoOperacao_']"), function(i){
+        	carregarCombo($(this), tipoOperacaoList, regrasTributacao[i].tipoOperacao.id);
+        });
+       $.each ($("select[id^='origemMercadoria_']"), function(i){
+       	carregarCombo($(this), origemMercadoriaList, regrasTributacao[i].origemMercadoria.id);
+       });
+       $.each ($("select[id^='situacaoTributaria_']"), function(i){
+       	carregarCombo($(this), situacaoTributariaList, regrasTributacao[i].situacaoTributaria.id);
+       });
+       $.each ($("select[id^='cfop_']"), function(i){
+       	carregarCombo($(this), cfopList, regrasTributacao[i].cfop.id);
+       });
+       $.each ($("select[id^='baseCalculo_']"), function(i){
+       	carregarCombo($(this), baseCalculoList, regrasTributacao[i].baseCalculo.id);
+       });
+       $.each ($("select[id^='baseCalculoST_']"), function(i){
+    	   if(regrasTributacao[i].baseCalculoST != undefined){
+         		carregarCombo($(this), baseCalculoSTList, regrasTributacao[i].baseCalculoST.id);
+    	   }else{
+    		   carregarCombo($(this), baseCalculoSTList, null);
+    	   }
+       });
 
     });
  
-    function carregarCombo(obj, list){
-    	$.each(list, function(i){
-			
-			
-			$(obj).append($("<option></option>")
-                    .attr("value",list[i].codigo)
-                    .text(list[i].codigo + " - " + list[i].descricao));
+    	function carregarCombo(obj, list, selecionado){
+    		
+    		$(obj).append($("<option></option>")
+                    .text("Selecione"));
+	    	$.each(list, function(i){
+				
+				
+				$(obj).append($("<option></option>")
+	                    .attr("value",list[i].codigo)
+	                    .attr('selected',list[i].codigo == selecionado)
+	                    .text(list[i].descricao));
 		
 		
 	    
@@ -114,44 +141,44 @@
 	<div class="panel panel-default">
 	<div class="panel-body">
 	<form action="<c:url value='/produto/add'/>" id="formProduto" name="formProduto" method="post">
-		<input type="hidden" id="produtolId" name="produto.id" value="${produto.id}"/>
+		<input type="hidden" id="produtoId" name="bean.id" value="${bean.id}"/>
 		
 		
 		<div class="row">
         	<div class="col-md-4">
         		<label for="id">Código:</label>
-        		<input name="produto.codigo" id="produto.codigo" value="${produto.codigo}" class="form-control required"  size="8" maxlength="4"/>
+        		<input name="bean.codigo" id="bean.codigo" value="${bean.codigo}" class="form-control required"  size="8" maxlength="4"/>
         	</div>
         	
         	<div class="col-md-4">
-        		<label for="produto.descricao">Descrição:</label>
-        		<input name="produto.descricao" id="produto.descricao" value="${produto.descricao}" class="form-control required" size="45" maxlength="45"/>
+        		<label for="bean.descricao">Descrição:</label>
+        		<input name="bean.descricao" id="bean.descricao" value="${bean.descricao}" class="form-control required" size="45" maxlength="45"/>
         	</div>
         	<div class="col-md-4">
-        		<label for="produto.ncm">Ncm:</label>
-        		<input name="produto.ncm" id="produto.ncm" value="${produto.ncm}" class="form-control required" size="8" maxlength="8"/>
+        		<label for="bean.ncm">Ncm:</label>
+        		<input name="bean.ncm" id="bean.ncm" value="${bean.ncm}" class="form-control required" size="8" maxlength="8"/>
         	</div>
       	</div>
 		<div class="row">
         	<div class="col-md-4">
-        	<label for="produto.unidadeMedida.id">Unidade Medida:</label>
-        		<select id="produto.unidadeMedida.id" name="produto.unidadeMedida.id" class="selectpicker required form-control" >
+        	<label for="bean.unidadeMedida.id">Unidade Medida:</label>
+        		<select id="bean.unidadeMedida.id" name="bean.unidadeMedida.id" class="selectpicker required form-control" >
 						<option value ="">Selecione</option>
 						<c:forEach var="unidade" items="${unidadesMedidas}" varStatus="contador">
 						
-							<option value ="${unidade.id}" ${produto.unidadeMedida.id eq unidade.id ? 'selected' : ''}>${unidade.sigla} - ${unidade.descricao}</option>
+							<option value ="${unidade.id}" ${bean.unidadeMedida.id eq unidade.id ? 'selected' : ''}>${unidade.sigla} - ${unidade.descricao}</option>
 		
 						</c:forEach>	
 					</select>
         	</div>
         	
         	<div class="col-md-4">
-        	<label for="produto.grupoMaterial.id">Grupo Material:</label>
-        		<select id="produto.grupoMaterial.id" name="produto.grupoMaterial.id" class="selectpicker required form-control" data-msg-required="Campo obrigatório." >
+        	<label for="bean.grupoMaterial.id">Grupo Material:</label>
+        		<select id="bean.grupoMaterial.id" name="bean.grupoMaterial.id" class="selectpicker required form-control" data-msg-required="Campo obrigatório." >
 						<option value ="">Selecione</option>
 						<c:forEach var="grupo" items="${grupos}" varStatus="contador">
 						
-							<option value ="${grupo.id}" ${produto.grupoMaterial.id eq grupo.id ? 'selected' : ''}>${grupo.descricao}</option>
+							<option value ="${grupo.id}" ${bean.grupoMaterial.id eq grupo.id ? 'selected' : ''}>${grupo.descricao}</option>
 		
 						</c:forEach>	
 					</select>
@@ -176,7 +203,7 @@
 				
 				<thead>
 			<tr>
-				
+				<th ></th>
 				<th >Tipo Operação</th>
 				<th >Origem</th>
 				<th>Situação tributária</th>
@@ -189,78 +216,46 @@
 			</thead>
 			<tbody>
 				
-				<c:if test="${not empty produto.id}">
-					<c:forEach var="regraTributacao" items="${produto.regrasTributacao}" varStatus="contador">
+				<c:if test="${not empty bean.id}">
+					<c:forEach var="regraTributacao" items="${bean.regrasTributacao}" varStatus="contador">
 					<tr>
-						<td style="max-width:15%">
-							<select id="tipoOperacao_${contador}" name="produto.regrasTributacao[${contador}].codTipoOperacao" class="required form-control">
-								<option value ="">Selecione</option>
-								<c:forEach var="tipoOperacao" items="${tipoOperacaoList}" varStatus="contador">
-								
-									<option value ="${tipoOperacao.codigo}" ${regraTributacao.codTipoOperacao eq tipoOperacao.codigo ? 'selected' : ''}>${tipoOperacao.descricao}</option>
-				
-								</c:forEach>	
+						<td style="vertical-align: middle;">
+							<a href="<c:url value='/produto/remove/regra/'/>${regraTributacao.id}"><span title="Excluir" class="glyphicon glyphicon-remove"></span></a> 
+						</td>
+						<td style="max-width:130px" >
+						    <input type="hidden" id="id_${contador.index}" name="bean.regrasTributacao[${contador.index}].id" value="${regraTributacao.id}"/>
+							<select id="tipoOperacao_${contador.index}" name="bean.regrasTributacao[${contador.index}].tipoOperacao.id" class="required form-control">
 							</select>
 						</td>
-						<td style="max-width:15%">
-							<select id="origemMercadoria_${contador}" name="produto.regrasTributacao[${contador}].codOrigemMercadoria" class="required form-control">
-								<option value ="">Selecione</option>
-								<c:forEach var="origemMercadoria" items="${origemMercadoriaList}" varStatus="contador">
-								
-									<option value ="${origemMercadoria.codigo}" ${regraTributacao.codOrigemMercadoria eq origemMercadoria.codigo ? 'selected' : ''}>${origemMercadoria.codigo} - ${origemMercadoria.descricao}</option>
-				
-								</c:forEach>	
+						<td style="max-width:130px" >
+							<select id="origemMercadoria_${contador.index}" name="bean.regrasTributacao[${contador.index}].origemMercadoria.id" class="required form-control">
 							</select>
 							
 						</td>
-						<td style="max-width:15%">
-							<select id="situacaoTributaria_${contador}" name="produto.regrasTributacao[${contador}].codSituacaoTributaria" class="required form-control">
-								<option value ="">Selecione</option>
-								<c:forEach var="situacaoTributaria" items="${situacaoTributariaList}" varStatus="contador">
-								
-									<option value ="${situacaoTributaria.codigo}" ${regraTributacao.codSituacaoTributaria eq situacaoTributaria.codigo ? 'selected' : ''}>${situacaoTributaria.codigo} - ${situacaoTributaria.descricao}</option>
-				
-								</c:forEach>	
+						<td style="max-width:130px" >
+							<select id="situacaoTributaria_${contador.index}" name="bean.regrasTributacao[${contador.index}].situacaoTributaria.id" class="required form-control">
 							</select>
 						</td>
-						<td style="max-width:15%">
-							<select id="cfop_${contador}" name="produto.regrasTributacao[${contador}].codCfop" class="required form-control">
-								<option value ="">Selecione</option>
-								<c:forEach var="cfop" items="${cfopList}" varStatus="contador">
-								
-									<option value ="${cfop.codigo}" ${regraTributacao.codCfop eq cfop.codigo ? 'selected' : ''}>${cfop.codigo} - ${cfop.descricao}</option>
-				
-								</c:forEach>	
+						<td style="max-width:130px" >
+							<select id="cfop_${contador.index}"  name="bean.regrasTributacao[${contador.index}].cfop.id" class="required form-control">
 							</select>
 						</td>
-						<td style="max-width:15%">
-							<select id="baseCalculo_${contador}" name="produto.regrasTributacao[${contador}].codBaseCalculo" class="required form-control">
-								<option value ="">Selecione</option>
-								<c:forEach var="baseCalculo" items="${baseCalculoList}" varStatus="contador">
-								
-									<option value ="${baseCalculo.codigo}" ${regraTributacao.codBaseCalculo eq baseCalculo.codigo ? 'selected' : ''}>${baseCalculo.codigo} - ${baseCalculo.descricao}</option>
-				
-								</c:forEach>	
+						<td style="max-width:130px" >
+							<select id="baseCalculo_${contador.index}" name="bean.regrasTributacao[${contador.index}].baseCalculo.id" class="required form-control">
 							</select>
 							<br/>
-							<select id="baseCalculoST_${contador}" name="produto.regrasTributacao[${contador}].codBaseCalculoST" class="required form-control">
-								<option value ="">Selecione</option>
-								<c:forEach var="baseCalculoST" items="${baseCalculoSTList}" varStatus="contador">
-								
-									<option value ="${baseCalculoST.codigo}" ${regraTributacao.codBaseCalculoST eq baseCalculoST.codigo ? 'selected' : ''}>${baseCalculoST.codigo} - ${baseCalculoST.descricao}</option>
-				
-								</c:forEach>	
+							<select id="baseCalculoST_${contador.index}" name="bean.regrasTributacao[${contador.index}].baseCalculoST.id" class="form-control">
 							</select>
 						</td>
-						<td>
-							<input type="text" name="produto.regrasTributacao[${contador}].aliquota" id="aliquota_${contador}" class="required form-control" value="<fmt:formatNumber value="${regraTributacao.aliquota}" minFractionDigits="2" type="number" />" readonly="readonly"/>
+						<td style="min-width:50px;max-width:80px">
+							<input type="text" name="bean.regrasTributacao[${contador.index}].aliquota" id="aliquota_${contador.index}" class="required form-control" value="<fmt:formatNumber value="${regraTributacao.aliquota}" minFractionDigits="2" type="number" />" />
 							<br/>
-							<input type="text" name="produto.regrasTributacao[${contador}].aliquotaST" id="aliquotaST_${contador}" class="required form-control" value="<fmt:formatNumber value="${regraTributacao.aliquotaST}" minFractionDigits="2" type="number" />" readonly="readonly"/>
+							<input type="text" name="bean.regrasTributacao[${contador.index}].aliquotaST" id="aliquotaST_${contador.index}" class=" form-control" value="<fmt:formatNumber value="${regraTributacao.aliquotaST}" minFractionDigits="2" type="number" />" />
 						</td>
-						<td>
-							<input type="text" name="produto.regrasTributacao[${contador}].credito" id="credito_${contador}" class="required form-control" value="<fmt:formatNumber value="${regraTributacao.credito}" minFractionDigits="2" type="number" />" readonly="readonly"/>
+						<td style="min-width:100px;max-width:120px">
+							<input type="text" name="bean.regrasTributacao[${contador.index}].credito" id="credito_${contador.index}" class="required form-control" value="<fmt:formatNumber value="${regraTributacao.credito}" minFractionDigits="2" type="number" />" />
 							<br/>
-							<input type="text" name="produto.regrasTributacao[${contador}].creditoST" id="creditoST_${contador}" class="required form-control" value="<fmt:formatNumber value="${regraTributacao.creditoST}" minFractionDigits="2" type="number" />" readonly="readonly"/>
+							<input type="text" name="bean.regrasTributacao[${contador.index}].creditoST" id="creditoST_${contador.index}" class="form-control" value="<fmt:formatNumber value="${regraTributacao.creditoST}" minFractionDigits="2" type="number" />" />
 						</td>
 						
 					</tr>
@@ -278,7 +273,7 @@
       	
       	
       	<br/>
-		<button type="button" id="btnAdicionar" class="btn btn-default btn-md">
+		<button type="submit" id="btnAdicionar" class="btn btn-default btn-md">
 		  <span class="glyphicon glyphicon-floppy-disk"></span> Salvar
 		</button>
 		</form>

@@ -1,18 +1,16 @@
+
 package br.com.transmetais.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
-import br.com.caelum.vraptor.view.Results;
-import br.com.transmetais.bean.BaseDeCalculo;
-import br.com.transmetais.bean.BaseDeCalculoST;
-import br.com.transmetais.bean.Cfop;
 import br.com.transmetais.bean.GrupoMaterial;
-import br.com.transmetais.bean.OrigemMercadoria;
 import br.com.transmetais.bean.Produto;
-import br.com.transmetais.bean.SituacaoTributaria;
+import br.com.transmetais.bean.RegraTributacao;
 import br.com.transmetais.bean.UnidadeMedida;
 import br.com.transmetais.dao.GrupoMaterialDAO;
 import br.com.transmetais.dao.ProdutoDAO;
@@ -28,10 +26,10 @@ import br.com.transmetais.dao.impl.TipoOperacaoDaoImpl;
 import com.google.gson.Gson;
 
 @Resource
-public class ProdutoController {
-	
-	private ProdutoDAO dao;
-	private final Result result;
+@Path("/produto")
+public class ProdutoController extends BaseController<Produto, ProdutoDAO>{
+
+
 	private UnidadeMedidaDAO unidadeMedidaDao;
 	private GrupoMaterialDAO grupoMaterialDao;
 	private TipoOperacaoDaoImpl tipoOperacaoDao;
@@ -41,108 +39,106 @@ public class ProdutoController {
 	private SituacaoTributariaDaoImpl situacaoTributariaDao;
 	private CfopDaoImpl cfopDao;
 	
-	public ProdutoController(Result result, ProdutoDAO dao,  UnidadeMedidaDAO unidadeMedidaDao, GrupoMaterialDAO grupoMaterialDao, 
-			TipoOperacaoDaoImpl tipoOperacaoDao, OrigemMercadoriaDaoImpl origemMercadoriaDao, BaseDeCalculoDaoImpl baseDeCalculoDao,
-			BaseDeCalculoSTDaoImpl baseDeCalculoSTDao, SituacaoTributariaDaoImpl situacaoTributariaDao, CfopDaoImpl cfopDao) {
-		this.result = result;
-		this.unidadeMedidaDao = unidadeMedidaDao;
-		this.dao = dao;
-		this.grupoMaterialDao = grupoMaterialDao;
-		this.tipoOperacaoDao = tipoOperacaoDao;
-		this.origemMercadoriaDao = origemMercadoriaDao;
-		this.baseDeCalculoDao = baseDeCalculoDao;
-		this.baseDeCalculoSTDao = baseDeCalculoSTDao;
-		this.situacaoTributariaDao = situacaoTributariaDao;
-		this.cfopDao = cfopDao;
-		
-		
-	}
-	
-	@Path({"/produto/","/produto","/produto/lista"})
-	public List<Produto> lista(){
-		List<Produto> lista = null;
-		
-		try {
-			lista = dao.findAll();
-			
-			
-			result.include("produtos",lista);
-		} catch (DAOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		return lista;
-	}
-	
-	
-	@Path({"/produto/{produto.id}","/produto/form","/produto/novo"})
-	public Produto form(Produto produto) throws DAOException{
-		
-		
-		List<UnidadeMedida> unidadesMedidas = unidadeMedidaDao.findAll();
-		result.include("unidadesMedidas",unidadesMedidas);
-
-		List<GrupoMaterial> grupos = grupoMaterialDao.findAll();
-		result.include("grupos",grupos);
-		
-		
-		Gson gson = new Gson();
-		String json = gson.toJson(tipoOperacaoDao.retrieveCombo());
-		this.result.include("tipoOperacaoList", json);
-		
-		json = gson.toJson(origemMercadoriaDao.retrieveCombo());
-		result.include("origemMercadoriaList",json);
-		
-		json = gson.toJson(situacaoTributariaDao.retrieveCombo());
-		result.include("situacaoTributariaList",json);
-		
-		json = gson.toJson(cfopDao.retrieveCombo());
-		result.include("cfopList",json);
-		
-		json = gson.toJson(baseDeCalculoDao.retrieveCombo());
-		result.include("baseDeCalculoList",json);
-		
-		json = gson.toJson(baseDeCalculoSTDao.retrieveCombo());
-		result.include("baseDeCalculoSTList",json);
-		
-		
-		if (produto != null && produto.getId() != null && produto.getId()>0){
-			
-			produto = dao.findById(produto.getId());
-			
-		}
-		
-		
-		return produto;
-	}
-	
-	public void add(Produto produto) {
-		try {
-			if (produto.getId() != null && produto.getId()>0){
-				dao.updateEntity(produto);
-			}else{
-				dao.addEntity(produto);
+	@Override
+	protected void prePersistUpdate(Produto bean) {
+	    for (RegraTributacao regra : bean.getRegrasTributacao()) {
+			if(regra.getBaseCalculoST() != null 
+					&& regra.getBaseCalculoST().getCodigo() == null){
+				regra.setBaseCalculoST(null);
 			}
+		}
+	}
+	@Override
+	protected void initForm(Produto bean)  {
+		try{
+			List<UnidadeMedida> unidadesMedidas = unidadeMedidaDao.findAll();
+			result.include("unidadesMedidas",unidadesMedidas);
+	
+			List<GrupoMaterial> grupos = grupoMaterialDao.findAll();
+			result.include("grupos",grupos);
 			
-		} catch (DAOException e) {
 			
+			Gson gson = new Gson();
+			String json = gson.toJson(tipoOperacaoDao.retrieveCombo());
+			this.result.include("tipoOperacaoList", json);
+			
+			json = gson.toJson(origemMercadoriaDao.retrieveCombo());
+			result.include("origemMercadoriaList",json);
+			
+			json = gson.toJson(situacaoTributariaDao.retrieveCombo());
+			result.include("situacaoTributariaList",json);
+			
+			json = gson.toJson(cfopDao.retrieveCombo());
+			result.include("cfopList",json);
+			
+			json = gson.toJson(baseDeCalculoDao.retrieveCombo());
+			result.include("baseDeCalculoList",json);
+			
+			json = gson.toJson(baseDeCalculoSTDao.retrieveCombo());
+			result.include("baseDeCalculoSTList",json);
+	
+			json = gson.toJson(bean.getRegrasTributacao());
+			result.include("regras",json);
+	
+		}catch(DAOException e){
 			e.printStackTrace();
 		}
-		
-		result.redirectTo(ProdutoController.class).lista();
-	  }
+	}
 	
+	@Path("/remove/regra/{id}")
+	public void removerRegra(Long regraId){
+		
+	}
 	
-	@Path("/produto/remove/{produto.id}")
-	public void remove(Produto produto) throws DAOException {
+	@Autowired 
+	public void setUnidadeMedidaDao(UnidadeMedidaDAO unidadeMedidaDao) {
+		this.unidadeMedidaDao = unidadeMedidaDao;
+	}
+
+	@Autowired 
+	public void setGrupoMaterialDao(GrupoMaterialDAO grupoMaterialDao) {
+		this.grupoMaterialDao = grupoMaterialDao;
+	}
+
+	@Autowired 
+	public void setTipoOperacaoDao(TipoOperacaoDaoImpl tipoOperacaoDao) {
+		this.tipoOperacaoDao = tipoOperacaoDao;
+	}
+
+	@Autowired 
+	public void setOrigemMercadoriaDao(OrigemMercadoriaDaoImpl origemMercadoriaDao) {
+		this.origemMercadoriaDao = origemMercadoriaDao;
+	}
+
+	@Autowired 
+	public void setBaseDeCalculoDao(BaseDeCalculoDaoImpl baseDeCalculoDao) {
+		this.baseDeCalculoDao = baseDeCalculoDao;
+	}
+
+	@Autowired 
+	public void setBaseDeCalculoSTDao(BaseDeCalculoSTDaoImpl baseDeCalculoSTDao) {
+		this.baseDeCalculoSTDao = baseDeCalculoSTDao;
+	}
+
+	@Autowired 
+	public void setSituacaoTributariaDao(
+			SituacaoTributariaDaoImpl situacaoTributariaDao) {
+		this.situacaoTributariaDao = situacaoTributariaDao;
+	}
+
+	@Autowired 
+	public void setCfopDao(CfopDaoImpl cfopDao) {
+		this.cfopDao = cfopDao;
+	}
+
+	@Override
+	protected Produto createInstance() {
+		return new Produto();
+	}
+	@Override
+	protected void postPersistUpdate(Produto bean, Result result) {
+		// TODO Auto-generated method stub
 		
-		if (produto.getId() != null && produto.getId()>0){
-			dao.removeEntity(produto);
-		
-		}
-		result.redirectTo(ProdutoController.class).lista();
-	  }
+	}
 
 }
