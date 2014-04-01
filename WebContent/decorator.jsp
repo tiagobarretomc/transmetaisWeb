@@ -39,6 +39,8 @@
 	type="text/javascript"></script>
 <script type="text/javascript"
 	src="/transmetaisWeb/javascripts/jquery.price_format.2.0.min.js" /></script>
+<script type="text/javascript"
+	src="/transmetaisWeb/javascripts/scripts.js" /></script>
 
 <!-- 
 		<script type="text/javascript" src="/transmetaisWeb/javascripts/jquery.puts.js"></script>
@@ -200,7 +202,11 @@ form {
 			</div>
 		</div>
 		<div id="content">
-		
+			<c:if test="${not empty mensagem}">
+			<script>
+    			bootbox.alert('${mensagem}');
+    		</script>
+    		</c:if>
 			<sitemesh:write property="body" />
 
 

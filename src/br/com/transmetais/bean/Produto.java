@@ -20,7 +20,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="produto")
 public class Produto {
-	@Id 
+	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	private String codigo;
