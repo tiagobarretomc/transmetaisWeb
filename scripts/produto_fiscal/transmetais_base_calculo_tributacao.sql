@@ -25,11 +25,12 @@ DROP TABLE IF EXISTS `base_calculo_tributacao`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `base_calculo_tributacao` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `codigo` int(11) NOT NULL,
   `descricao` varchar(255) CHARACTER SET latin1 NOT NULL,
-  PRIMARY KEY (`codigo`),
+  PRIMARY KEY (`id`),
   UNIQUE KEY `codigo` (`codigo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +39,7 @@ CREATE TABLE `base_calculo_tributacao` (
 
 LOCK TABLES `base_calculo_tributacao` WRITE;
 /*!40000 ALTER TABLE `base_calculo_tributacao` DISABLE KEYS */;
-INSERT INTO `base_calculo_tributacao` VALUES (0,'Margem Valor Agregado'),(1,'Pauta (Valor)'),(2,'Preço Tabelado Máx. (Valor)'),(3,'Valor da operação');
+INSERT INTO `base_calculo_tributacao` VALUES (1,0,'Margem Valor Agregado'),(2,1,'Pauta (Valor)'),(3,2,'Preço Tabelado Máx. (Valor)'),(4,3,'Valor da operação');
 /*!40000 ALTER TABLE `base_calculo_tributacao` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-03-17 11:30:14
+-- Dump completed on 2014-04-01 21:12:47

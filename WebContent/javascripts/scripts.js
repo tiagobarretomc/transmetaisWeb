@@ -36,4 +36,5 @@ function initFields() {
 		limit : 12
 
 	});
+	$('.selectpicker').selectpicker();
 }

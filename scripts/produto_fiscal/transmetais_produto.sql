@@ -18,27 +18,36 @@ USE `transmetais`;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `regime_tributario`
+-- Table structure for table `produto`
 --
 
-DROP TABLE IF EXISTS `regime_tributario`;
+DROP TABLE IF EXISTS `produto`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `regime_tributario` (
-  `codigo` int(11) NOT NULL,
-  `descricao` varchar(255) CHARACTER SET latin1 NOT NULL,
-  UNIQUE KEY `codigo` (`codigo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+CREATE TABLE `produto` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `codigo` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
+  `descricao` varchar(45) CHARACTER SET latin1 NOT NULL,
+  `unidade_medida_id` int(11) DEFAULT NULL,
+  `ncm` varchar(8) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `grupo_material_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `codigo_UNIQUE` (`codigo`),
+  KEY `fk_unidade_medida_idx` (`unidade_medida_id`),
+  KEY `fk_produto_grupo_material_idx` (`grupo_material_id`),
+  CONSTRAINT `fk_produto_grupo_material` FOREIGN KEY (`grupo_material_id`) REFERENCES `grupo_material` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_unidade_medida_idx` FOREIGN KEY (`unidade_medida_id`) REFERENCES `unidade_medida` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `regime_tributario`
+-- Dumping data for table `produto`
 --
 
-LOCK TABLES `regime_tributario` WRITE;
-/*!40000 ALTER TABLE `regime_tributario` DISABLE KEYS */;
-INSERT INTO `regime_tributario` VALUES (1,'Simples Nacional'),(2,'Simples Nacional'),(3,'Regime Normal');
-/*!40000 ALTER TABLE `regime_tributario` ENABLE KEYS */;
+LOCK TABLES `produto` WRITE;
+/*!40000 ALTER TABLE `produto` DISABLE KEYS */;
+INSERT INTO `produto` VALUES (43,'1','1',1,'1',1);
+/*!40000 ALTER TABLE `produto` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -50,4 +59,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-03-17 11:30:14
+-- Dump completed on 2014-04-01 21:12:47

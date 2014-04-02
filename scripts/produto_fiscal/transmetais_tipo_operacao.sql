@@ -27,9 +27,10 @@ DROP TABLE IF EXISTS `tipo_operacao`;
 CREATE TABLE `tipo_operacao` (
   `codigo` int(11) NOT NULL,
   `descricao` varchar(255) CHARACTER SET latin1 NOT NULL,
-  PRIMARY KEY (`codigo`),
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`),
   UNIQUE KEY `codigo` (`codigo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +39,7 @@ CREATE TABLE `tipo_operacao` (
 
 LOCK TABLES `tipo_operacao` WRITE;
 /*!40000 ALTER TABLE `tipo_operacao` DISABLE KEYS */;
-INSERT INTO `tipo_operacao` VALUES (1,'Entrada de Mercadoria ou Aquisição de Serviços de dentro do Estado.'),(2,'Entrada de Mercadoria ou Aquisição de Serviços de fora do Estado.'),(3,'Entrada de Mercadoria ou Aquisição de Serviços do Exterior.'),(5,'Saída de Mercadoria ou Prestação de Serviços para dentro do Estado.'),(6,'Saída de Mercadoria ou Prestação de Serviços para fora do Estado.'),(7,'Saída de Mercadoria ou Prestação de Serviços para o Exterior.');
+INSERT INTO `tipo_operacao` VALUES (1,'Entrada de Mercadoria ou Aquisição de Serviços de dentro do Estado.',1),(2,'Entrada de Mercadoria ou Aquisição de Serviços de fora do Estado.',2),(3,'Entrada de Mercadoria ou Aquisição de Serviços do Exterior.',3),(5,'Saída de Mercadoria ou Prestação de Serviços para dentro do Estado.',4),(6,'Saída de Mercadoria ou Prestação de Serviços para fora do Estado.',5),(7,'Saída de Mercadoria ou Prestação de Serviços para o Exterior.',6);
 /*!40000 ALTER TABLE `tipo_operacao` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-03-17 11:30:15
+-- Dump completed on 2014-04-01 21:12:47

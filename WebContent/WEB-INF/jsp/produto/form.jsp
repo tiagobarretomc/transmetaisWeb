@@ -79,14 +79,14 @@
     	   }
        });
        initFields();
-
+	
     });
  
     function onchangeBaseCalculoST(obj){
 		$(obj).change(function(){
-			if(this.value == 0){
-				$('#baseCalculoST_0'). closest('tr').find("input[id^='aliquotaST_']").attr("value",null);
-				$('#baseCalculoST_0'). closest('tr').find("input[id^='creditoST_']").attr("value",null);
+			if(this.value == "0" || this.value == ""){
+				$('#' + $(obj).attr("id")). closest('tr').find("input[id^='aliquotaST_']").val(null);
+				$('#' + $(obj).attr("id")). closest('tr').find("input[id^='creditoST_']").val(null);
 			}
 		});
 	}
@@ -189,27 +189,27 @@
 						</td>
 						<td style="max-width:130px" >
 						    <input type="hidden" id="id_${contador.index}" name="bean.regrasTributacao[${contador.index}].id" value="${regraTributacao.id}"/>
-							<select id="tipoOperacao_${contador.index}" name="bean.regrasTributacao[${contador.index}].tipoOperacao.id" class="required form-control">
+							<select id="tipoOperacao_${contador.index}" name="bean.regrasTributacao[${contador.index}].tipoOperacao.id" class="required form-control selectpicker"  data-live-search="true">
 							</select>
 						</td>
 						<td style="max-width:130px" >
-							<select id="origemMercadoria_${contador.index}" name="bean.regrasTributacao[${contador.index}].origemMercadoria.id" class="required form-control">
+							<select id="origemMercadoria_${contador.index}" name="bean.regrasTributacao[${contador.index}].origemMercadoria.id" class="required form-control selectpicker"  data-live-search="true">
 							</select>
 							
 						</td>
 						<td style="max-width:130px" >
-							<select id="situacaoTributaria_${contador.index}" name="bean.regrasTributacao[${contador.index}].situacaoTributaria.id" class="required form-control">
+							<select id="situacaoTributaria_${contador.index}" name="bean.regrasTributacao[${contador.index}].situacaoTributaria.id" class="required form-control selectpicker"  data-live-search="true">
 							</select>
 						</td>
 						<td style="max-width:130px" >
-							<select id="cfop_${contador.index}"  name="bean.regrasTributacao[${contador.index}].cfop.id" class="required form-control">
+							<select id="cfop_${contador.index}"  name="bean.regrasTributacao[${contador.index}].cfop.id" class="required form-control selectpicker"  data-live-search="true">
 							</select>
 						</td>
 						<td style="max-width:130px" >
-							<select id="baseCalculo_${contador.index}" name="bean.regrasTributacao[${contador.index}].baseCalculo.id" class="required form-control">
+							<select id="baseCalculo_${contador.index}" name="bean.regrasTributacao[${contador.index}].baseCalculo.id" class="required form-control selectpicker"  data-live-search="true">
 							</select>
 							<br/>
-							<select id="baseCalculoST_${contador.index}" name="bean.regrasTributacao[${contador.index}].baseCalculoST.id"  class="form-control">
+							<select id="baseCalculoST_${contador.index}" name="bean.regrasTributacao[${contador.index}].baseCalculoST.id"  class="form-control selectpicker"  data-live-search="true">
 							</select>
 						</td>
 						<td style="min-width:50px;max-width:80px">

@@ -40,6 +40,7 @@ CREATE TABLE `regra_tributacao_produto` (
 
 LOCK TABLES `regra_tributacao_produto` WRITE;
 /*!40000 ALTER TABLE `regra_tributacao_produto` DISABLE KEYS */;
+INSERT INTO `regra_tributacao_produto` VALUES (43,47);
 /*!40000 ALTER TABLE `regra_tributacao_produto` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -52,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-03-17 11:30:15
+-- Dump completed on 2014-04-01 21:12:47

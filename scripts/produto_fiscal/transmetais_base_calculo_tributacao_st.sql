@@ -25,11 +25,12 @@ DROP TABLE IF EXISTS `base_calculo_tributacao_st`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `base_calculo_tributacao_st` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `codigo` int(11) NOT NULL,
   `descricao` varchar(255) CHARACTER SET latin1 NOT NULL,
-  PRIMARY KEY (`codigo`),
+  PRIMARY KEY (`id`),
   UNIQUE KEY `codigo` (`codigo`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +39,7 @@ CREATE TABLE `base_calculo_tributacao_st` (
 
 LOCK TABLES `base_calculo_tributacao_st` WRITE;
 /*!40000 ALTER TABLE `base_calculo_tributacao_st` DISABLE KEYS */;
-INSERT INTO `base_calculo_tributacao_st` VALUES (0,'Preço Tabelado ou Máximo Sugerido'),(1,'Lista Negativa (Valor)'),(2,'Lista Positiva (Valor)'),(3,'Lista Neutra (Valor)'),(4,'Margem Valor Agregado'),(5,'Pauta (Valor)');
+INSERT INTO `base_calculo_tributacao_st` VALUES (1,0,'Preço Tabelado ou Máximo Sugerido'),(2,1,'Lista Negativa (Valor)'),(3,2,'Lista Positiva (Valor)'),(4,3,'Lista Neutra (Valor)'),(5,4,'Margem Valor Agregado'),(6,5,'Pauta (Valor)');
 /*!40000 ALTER TABLE `base_calculo_tributacao_st` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -51,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-03-17 11:30:15
+-- Dump completed on 2014-04-01 21:12:47
