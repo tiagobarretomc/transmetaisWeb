@@ -35,11 +35,13 @@ public abstract class BaseController<E, T extends CrudDAO<E>> {
 	@Path("/remove/{id}")
 	public void remove(Long id) throws DAOException {
 		E bean = dao.findById(id);
+		String msg = null;
 		if (id != null && id>0){
 			dao.removeEntity(bean);
-		
+			msg = "Registro excluído com sucesso." ;
 		}
-		result.redirectTo(this.getClass()).lista();
+		result.include("mensagem", msg);
+		result.forwardTo(this.getClass()).lista();
 	  }
 
 	public void form(E bean){
@@ -68,16 +70,20 @@ public abstract class BaseController<E, T extends CrudDAO<E>> {
 	}
 	
 	public void add(E bean) {
+		prePersistUpdate(bean);
 	 	validateForm(bean);
-			prePersistUpdate(bean);
-			Long id = (Long)EntityUtil.getId(bean);
-			if (id != null && id > 0){
-				update(bean);
-			}else{
-				persist(bean);
-			}
-			postPersistUpdate(bean, result);
-			result.redirectTo(this.getClass()).lista();
+		Long id = (Long)EntityUtil.getId(bean);
+		String msg = null;
+		if (id != null && id > 0){
+			update(bean);
+			msg = "Registro alterado com sucesso." ;
+		}else{
+			persist(bean);
+			msg = "Registro incluído com sucesso." ;
+		}
+		postPersistUpdate(bean, result);
+		result.include("mensagem", msg);
+		result.forwardTo(this.getClass()).lista();
 		
 	  }
 	

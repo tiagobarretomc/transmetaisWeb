@@ -15,29 +15,13 @@
 	var regrasTributacao = ${regras};
     var qtdRegras = ${fn:length(regras)};
     $(document).ready(function(){
-    	<c:if test="${not empty errors}">
-    		var msg;
-    		bootbox.alert('${errors}');
-    	</c:if>
     	
-        $('.selectpicker').selectpicker({
-        });
-        $(".percent").priceFormat({
-            prefix: '',
-            centsSeparator: ',',
-            thousandsSeparator: '.',
-            limit: 5
-            
-        });
-        $(".valor").priceFormat({
-            prefix: '',
-            centsSeparator: ',',
-            thousandsSeparator: '.',
-            limit: 12
-            
-        });
+        
         $("#btnAdicionarRegra").click(function(){
-    		var strLinha = '<tr><td style="max-width:130px"><select id="tipoOperacao_' + qtdRegras + '" name="bean.regrasTributacao[' + qtdRegras + '].tipoOperacao.id" class="selectpicker required form-control" data-live-search="true"></select></td>';
+    		var strLinha = '<tr id="regra_' + qtdRegras + '">';
+    		strLinha += '<td style="vertical-align: middle;"><span title="Excluir" class="glyphicon glyphicon-remove" onclick="removerRegra(' + qtdRegras +'"></span></td>';
+    		strLinha += '<td style="max-width:130px"><input type="hidden" id="id_' + qtdRegras + '" name="bean.regrasTributacao[' + qtdRegras + '].id"/>';
+    		strLinha += '<select id="tipoOperacao_' + qtdRegras + '" name="bean.regrasTributacao[' + qtdRegras + '].tipoOperacao.id" class="selectpicker required form-control" data-live-search="true"></select></td>';
     		strLinha += '<td style="max-width:130px"><select id="origemMercadoria_' + qtdRegras + '" name="bean.regrasTributacao[' + qtdRegras + '].origemMercadoria.id" class="selectpicker required form-control" data-live-search="true"></select></td>';
     		strLinha += '<td style="max-width:130px"><select id="situacaoTributaria_' + qtdRegras + '" name="bean.regrasTributacao[' + qtdRegras + '].situacaoTributaria.id" class="selectpicker required form-control" data-live-search="true"></select></td>';
     		strLinha += '<td style="max-width:130px"><select id="cfop_' + qtdRegras + '" name="bean.regrasTributacao[' + qtdRegras + '].cfop.id" class="selectpicker required form-control" data-live-search="true"></select></td>';
@@ -57,7 +41,7 @@
     		carregarCombo($('#cfop_' + qtdRegras), cfopList);
     		carregarCombo($('#baseCalculo_' + qtdRegras), baseCalculoList);
     		carregarCombo($('#baseCalculoST_' + qtdRegras), baseCalculoSTList);
-    		
+    		onchangeBaseCalculoST($('#baseCalculoST_' + qtdRegras));
     		qtdRegras++;
     	});
         $('#formProduto').validate({
@@ -87,50 +71,31 @@
        	carregarCombo($(this), baseCalculoList, regrasTributacao[i].baseCalculo.id);
        });
        $.each ($("select[id^='baseCalculoST_']"), function(i){
+    	   onchangeBaseCalculoST($(this));
     	   if(regrasTributacao[i].baseCalculoST != undefined){
          		carregarCombo($(this), baseCalculoSTList, regrasTributacao[i].baseCalculoST.id);
     	   }else{
     		   carregarCombo($(this), baseCalculoSTList, null);
     	   }
        });
+       initFields();
 
     });
  
-    	function carregarCombo(obj, list, selecionado){
-    		
-    		$(obj).append($("<option></option>")
-                    .text("Selecione"));
-	    	$.each(list, function(i){
-				
-				
-				$(obj).append($("<option></option>")
-	                    .attr("value",list[i].codigo)
-	                    .attr('selected',list[i].codigo == selecionado)
-	                    .text(list[i].descricao));
-		
-		
-	    
+    function onchangeBaseCalculoST(obj){
+		$(obj).change(function(){
+			if(this.value == 0){
+				$('#baseCalculoST_0'). closest('tr').find("input[id^='aliquotaST_']").attr("value",null);
+				$('#baseCalculoST_0'). closest('tr').find("input[id^='creditoST_']").attr("value",null);
+			}
 		});
-    	$(obj).selectpicker({
-        });
-    	$(".percent").priceFormat({
-            prefix: '',
-            centsSeparator: ',',
-            thousandsSeparator: '.',
-            limit: 5
-            
-        });
-        $(".valor").priceFormat({
-            prefix: '',
-            centsSeparator: ',',
-            thousandsSeparator: '.',
-            limit: 12
-            
-        });
-    };
+	}
+    	
 
     
-    
+    function removerRegra(id){
+    	$("#regra_" + id).remove();
+    }
         
 </script>
 
@@ -218,9 +183,9 @@
 				
 				<c:if test="${not empty bean.id}">
 					<c:forEach var="regraTributacao" items="${bean.regrasTributacao}" varStatus="contador">
-					<tr>
+					<tr id="regra_${contador.index}">
 						<td style="vertical-align: middle;">
-							<a href="<c:url value='/produto/remove/regra/'/>${regraTributacao.id}"><span title="Excluir" class="glyphicon glyphicon-remove"></span></a> 
+							<span title="Excluir" class="glyphicon glyphicon-remove" onclick="removerRegra(${contador.index})"></span>
 						</td>
 						<td style="max-width:130px" >
 						    <input type="hidden" id="id_${contador.index}" name="bean.regrasTributacao[${contador.index}].id" value="${regraTributacao.id}"/>
@@ -244,18 +209,18 @@
 							<select id="baseCalculo_${contador.index}" name="bean.regrasTributacao[${contador.index}].baseCalculo.id" class="required form-control">
 							</select>
 							<br/>
-							<select id="baseCalculoST_${contador.index}" name="bean.regrasTributacao[${contador.index}].baseCalculoST.id" class="form-control">
+							<select id="baseCalculoST_${contador.index}" name="bean.regrasTributacao[${contador.index}].baseCalculoST.id"  class="form-control">
 							</select>
 						</td>
 						<td style="min-width:50px;max-width:80px">
-							<input type="text" name="bean.regrasTributacao[${contador.index}].aliquota" id="aliquota_${contador.index}" class="required form-control" value="<fmt:formatNumber value="${regraTributacao.aliquota}" minFractionDigits="2" type="number" />" />
+							<input type="text" name="bean.regrasTributacao[${contador.index}].aliquota" id="aliquota_${contador.index}" class="percent required form-control" value="<fmt:formatNumber value="${regraTributacao.aliquota}" minFractionDigits="2" type="number" />" />
 							<br/>
-							<input type="text" name="bean.regrasTributacao[${contador.index}].aliquotaST" id="aliquotaST_${contador.index}" class=" form-control" value="<fmt:formatNumber value="${regraTributacao.aliquotaST}" minFractionDigits="2" type="number" />" />
+							<input type="text" name="bean.regrasTributacao[${contador.index}].aliquotaST" id="aliquotaST_${contador.index}" class="percent form-control" value="<fmt:formatNumber value="${regraTributacao.aliquotaST}" minFractionDigits="2" type="number" />" />
 						</td>
 						<td style="min-width:100px;max-width:120px">
-							<input type="text" name="bean.regrasTributacao[${contador.index}].credito" id="credito_${contador.index}" class="required form-control" value="<fmt:formatNumber value="${regraTributacao.credito}" minFractionDigits="2" type="number" />" />
+							<input type="text" name="bean.regrasTributacao[${contador.index}].credito" id="credito_${contador.index}" class="valor required form-control" value="<fmt:formatNumber value="${regraTributacao.credito}" minFractionDigits="2" type="number" />" />
 							<br/>
-							<input type="text" name="bean.regrasTributacao[${contador.index}].creditoST" id="creditoST_${contador.index}" class="form-control" value="<fmt:formatNumber value="${regraTributacao.creditoST}" minFractionDigits="2" type="number" />" />
+							<input type="text" name="bean.regrasTributacao[${contador.index}].creditoST" id="creditoST_${contador.index}" class="valor form-control" value="<fmt:formatNumber value="${regraTributacao.creditoST}" minFractionDigits="2" type="number" />" />
 						</td>
 						
 					</tr>

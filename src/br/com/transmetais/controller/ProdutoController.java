@@ -43,7 +43,7 @@ public class ProdutoController extends BaseController<Produto, ProdutoDAO>{
 	protected void prePersistUpdate(Produto bean) {
 	    for (RegraTributacao regra : bean.getRegrasTributacao()) {
 			if(regra.getBaseCalculoST() != null 
-					&& regra.getBaseCalculoST().getCodigo() == null){
+					&& regra.getBaseCalculoST().getId() == 0){
 				regra.setBaseCalculoST(null);
 			}
 		}
@@ -85,10 +85,6 @@ public class ProdutoController extends BaseController<Produto, ProdutoDAO>{
 		}
 	}
 	
-	@Path("/remove/regra/{id}")
-	public void removerRegra(Long regraId){
-		
-	}
 	
 	@Autowired 
 	public void setUnidadeMedidaDao(UnidadeMedidaDAO unidadeMedidaDao) {

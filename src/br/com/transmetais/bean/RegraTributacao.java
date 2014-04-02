@@ -37,7 +37,7 @@ public class RegraTributacao {
 	@JoinColumn(name="base_calculo_tributacao_id")
 	private BaseDeCalculo baseCalculo;
 	
-	@ManyToOne
+	@ManyToOne(optional=true)
 	@JoinColumn(name="base_calculo_tributacao_st_id")
 	private BaseDeCalculoST baseCalculoST;
 	
