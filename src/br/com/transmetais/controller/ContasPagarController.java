@@ -6,72 +6,47 @@ import java.util.List;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.transmetais.bean.ContaAPagar;
+import br.com.transmetais.bean.ContaAPagarAdiantamento;
+import br.com.transmetais.bean.ContaAPagarCompra;
 import br.com.transmetais.bean.Movimentacao;
-import br.com.transmetais.dao.CompraDAO;
+import br.com.transmetais.bean.MovimentacaoContasAPagar;
+import br.com.transmetais.dao.ContaAPagarDAO;
 import br.com.transmetais.dao.ContaDAO;
-import br.com.transmetais.dao.FornecedorDAO;
 import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.commons.DAOException;
+import br.com.transmetais.type.StatusMovimentacaoEnum;
+import br.com.transmetais.type.TipoOperacaoEnum;
 
 @Resource
 public class ContasPagarController {
 	
 	private final Result result;
-	private CompraDAO compraDao;
-	private FornecedorDAO fornecedorDao;
+	
 	private ContaDAO contaDao;
+	private MovimentacaoDAO movimentacaoDao;
 	
-	private MovimentacaoDAO dao;
+	private ContaAPagarDAO dao;
 	
 	
-	public ContasPagarController(Result result,CompraDAO compraDao, MovimentacaoDAO dao, FornecedorDAO fornecedorDao, ContaDAO contaDao ) {
+	public ContasPagarController(Result result,ContaAPagarDAO dao, ContaDAO contaDao, MovimentacaoDAO movimentacaoDao) {
 		this.dao = dao;
-		this.compraDao = compraDao;
 		this.result = result;
-		this.fornecedorDao = fornecedorDao;
 		this.contaDao = contaDao;
+		this.movimentacaoDao = movimentacaoDao;
+		
 	}
 	
 	//tela de listagem de compras
 	@Path({"/contasPagar/","/contasPagar","/contasPagar/lista"})
-	public List<Movimentacao> lista(Date dataInicio, Date dataFim){
-		List<Movimentacao> lista = null;
+	public List<ContaAPagar> lista(Date dataInicio, Date dataFim){
+		List<ContaAPagar> lista = null;
 		
 		try {
-			//List<Fornecedor> fornecedores = fornecedorDao.findAll();
-			//List<Material> materiais = materialDao.findAll();
+			
 			
 			lista = dao.findByFilter(dataInicio, dataFim);
-//			BigDecimal valorTotal = new BigDecimal(0);
-//			BigDecimal quantidade = new BigDecimal(0);
-//			for (Compra compra : lista) {
-//				for(ItemCompra item : compra.getItens()){
-//					valorTotal = valorTotal.add( item.getValor());
-//					quantidade = quantidade.add( item.getQuantidade());
-//					
-//				}
-//			}
-			
-//			BigDecimal precoMedio =  new BigDecimal(0);
-//			
-//			if(valorTotal.compareTo(new BigDecimal(0)) != 0 && quantidade.compareTo(new BigDecimal(0)) != 0){
-//				
-//				precoMedio = valorTotal.divide(quantidade, BigDecimal.ROUND_HALF_DOWN);
-//			}
-			
-			
-//			result.include("fornecedores", fornecedores);
-//			result.include("materiais", materiais);
-//			result.include("tiposFrete",TipoFreteEnum.values());
-//			result.include("statusList",StatusCompraEnum.values());
-//			
-//			result.include("valorTotal", valorTotal);
-//			result.include("quantidade", quantidade);
-//			result.include("precoMedio", precoMedio);
-//			
-//			result.include("compras",lista);
-//			
-			//result.forwardTo("/jsp/compra/lista.jsp");
+
 			
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
@@ -82,36 +57,14 @@ public class ContasPagarController {
 	}
 	
 	
-		public List<Movimentacao> loadListaMovimentacao(Date dataInicio, Date dataFim){
-			List<Movimentacao> lista = null;
+		public List<ContaAPagar> loadListaMovimentacao(Date dataInicio, Date dataFim){
+			List<ContaAPagar> lista = null;
 			
 			try {
 				
 				
 				lista = dao.findByFilter(dataInicio, dataFim);
-//				BigDecimal valorTotal = new BigDecimal(0);
-//				BigDecimal quantidade = new BigDecimal(0);
-//				for (Compra compra : lista) {
-//					for(ItemCompra item : compra.getItens()){
-//						valorTotal = valorTotal.add( item.getValor());
-//						quantidade = quantidade.add( item.getQuantidade());
-//						
-//					}
-//				}
-//				
-//				
-//				BigDecimal precoMedio =  new BigDecimal(0);
-//				
-//				if(valorTotal.compareTo(new BigDecimal(0)) != 0 && quantidade.compareTo(new BigDecimal(0)) != 0){
-//					
-//					precoMedio = valorTotal.divide(quantidade, BigDecimal.ROUND_HALF_DOWN);
-//				}
-//				
-//				result.include("valorTotal", valorTotal);
-//				result.include("quantidade", quantidade);
-//				result.include("precoMedio", precoMedio);
-//				
-//				result.include("compras",lista);
+
 			} catch (DAOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -126,18 +79,54 @@ public class ContasPagarController {
 		result.redirectTo(ContasPagarController.class).lista(null, null);
 	}
 	
-	@Path({"/contasPagar/{movimentacao.id}"})
-	public Movimentacao form(Movimentacao movimentacao) throws DAOException{
+	@Path({"/contasPagar/{contaAPagar.id}"})
+	public ContaAPagar form(ContaAPagar contaAPagar) throws DAOException{
 		
 		
-		movimentacao = dao.findById(movimentacao.getId());
-				//System.out.println(fornecedor.getInformacoesBancarias());
+		contaAPagar = dao.findById(contaAPagar.getId());
+				
 		
 		result.include("contas",contaDao.obterContasFinanceiras());
 		
-		return movimentacao;
+		return contaAPagar;
 	}
+
 	
+	public ContaAPagar confirmar(ContaAPagar contaAPagar) throws DAOException{
+		
+		
+		ContaAPagar contaAPagarOrig = dao.findById(contaAPagar.getId());
+		
+		contaAPagarOrig.setConta(contaAPagar.getConta());
+		contaAPagarOrig.setDataPagamento(contaAPagar.getDataPagamento());
+		contaAPagarOrig.setStatus(StatusMovimentacaoEnum.P);
+		dao.updateEntity(contaAPagarOrig);
+		
+		
+		//Quando se tratar de adiantamento será inserido a movimentacao de crédito na conta do fornecedor
+		if (contaAPagarOrig instanceof ContaAPagarAdiantamento){
+			MovimentacaoContasAPagar movimentacaoDestino = new MovimentacaoContasAPagar();
+			movimentacaoDestino.setContaAPagar(contaAPagarOrig);
+			movimentacaoDestino.setConta(((ContaAPagarAdiantamento) contaAPagarOrig).getAdiantamento().getFornecedor().getConta());
+			
+			movimentacaoDestino.setValor(contaAPagarOrig.getValor());
+			movimentacaoDestino.setData(contaAPagarOrig.getDataPagamento());
+			movimentacaoDestino.setTipoOperacao(TipoOperacaoEnum.C);
+			
+			movimentacaoDao.addEntity(movimentacaoDestino);
+			
+			//(ContaAPagarAdiantamento)contaAPagarOrig).
+			
+		}else if (contaAPagarOrig instanceof ContaAPagarCompra){
+			
+		}
+		
+				
+		
+		result.include("contas",contaDao.obterContasFinanceiras());
+		
+		return contaAPagar;
+	}
 	
 	
 

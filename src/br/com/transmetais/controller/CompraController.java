@@ -10,17 +10,17 @@ import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.Compra;
+import br.com.transmetais.bean.ContaAPagarCompra;
 import br.com.transmetais.bean.Fornecedor;
 import br.com.transmetais.bean.FornecedorMaterial;
 import br.com.transmetais.bean.ItemCompra;
 import br.com.transmetais.bean.Material;
-import br.com.transmetais.bean.MovimentacaoCompra;
 import br.com.transmetais.dao.CompraDAO;
+import br.com.transmetais.dao.ContaAPagarDAO;
 import br.com.transmetais.dao.ContaDAO;
 import br.com.transmetais.dao.FornecedorDAO;
 import br.com.transmetais.dao.FornecedorMaterialDAO;
 import br.com.transmetais.dao.MaterialDAO;
-import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.type.StatusCompraEnum;
 import br.com.transmetais.type.StatusMovimentacaoEnum;
@@ -34,18 +34,18 @@ public class CompraController {
 	private CompraDAO dao;
 	private FornecedorDAO fornecedorDao;
 	private FornecedorMaterialDAO fornecedorMaterialDao;
-	private MovimentacaoDAO movimentacaoDao;
-	private ContaDAO contaDao;
+	private ContaAPagarDAO contaAPagarDAO;
+	
 	private MaterialDAO materialDao;
 	
-	public CompraController(Result result, CompraDAO compraDao, FornecedorDAO fornecedorDao, FornecedorMaterialDAO fornecedorMaterialDao, MovimentacaoDAO movimentacaoDao, 
+	public CompraController(Result result, CompraDAO compraDao, FornecedorDAO fornecedorDao, FornecedorMaterialDAO fornecedorMaterialDao, ContaAPagarDAO contaAPagarDAO, 
 			ContaDAO contaDao, MaterialDAO materialDao) {
 		this.dao = compraDao;
 		this.fornecedorDao = fornecedorDao;
 		this.fornecedorMaterialDao = fornecedorMaterialDao;
-		this.movimentacaoDao = movimentacaoDao;
+		this.contaAPagarDAO = contaAPagarDAO;
 		this.result = result;
-		this.contaDao = contaDao;
+		
 		this.materialDao = materialDao;
 	}
 	
@@ -157,15 +157,16 @@ public class CompraController {
 				compra.setStatus(StatusCompraEnum.A);
 				dao.addEntity(compra);
 				
-				MovimentacaoCompra movimentacao = new MovimentacaoCompra();
-				movimentacao.setCompra(compra);
-				movimentacao.setConta(compra.getConta());
-				movimentacao.setData(new Date());
-				movimentacao.setTipoOperacao(TipoOperacaoEnum.D);
-				movimentacao.setValor(compra.getValor());
-				movimentacao.setStatus(StatusMovimentacaoEnum.A);
+				ContaAPagarCompra contaPagar = new ContaAPagarCompra();
+				contaPagar.setCompra(compra);
+				//contaPagar.setConta(compra.getConta());
+				contaPagar.setDataPrevista(new Date());
 				
-				movimentacaoDao.addEntity(movimentacao);
+				contaPagar.setValor(compra.getValor());
+				contaPagar.setStatus(StatusMovimentacaoEnum.A);
+				contaPagar.setDescricao("Compra Fornecedor " + compra.getFornecedor().getApelido() + " - " + compra.getFornecedor().getNome());
+				
+				contaAPagarDAO.addEntity(contaPagar);
 				
 				//compra.getConta().setSaldo(compra.getConta().getSaldo().subtract(movimentacao.getValor()));
 				//contaDao.updateEntity(compra.getConta());

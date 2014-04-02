@@ -87,7 +87,7 @@
 	</thead>
 	<tbody>
 	<c:set var="varCont" value="1" />
-		<c:forEach var="movimentacao" items="${movimentacaoList}" varStatus="contador">
+		<c:forEach var="conta" items="${contaAPagarList}" varStatus="contador">
 	
 		<tr>
 			
@@ -98,22 +98,22 @@
 					
 				 --%>
 				
-				<button class="btn btn-default btn-xs btnDetalhe" id="btnDetalhe_${movimentacao.id}" type="button" >
+				<button class="btn btn-default btn-xs btnDetalhe" id="btnDetalhe_${conta.id}" type="button" >
 					<span class="glyphicon glyphicon-ok-sign"></span>
 					
 					</button>
 				</td>
 				<td>
-					<fmt:formatDate value="${movimentacao.data}" type="date" pattern="dd/MM/yyyy"/>
+					<fmt:formatDate value="${conta.dataPrevista}" type="date" pattern="dd/MM/yyyy"/>
 					
 				</td>
 				<td>
 					
-						<c:if test="${movimentacao.class.name  == 'br.com.transmetais.bean.MovimentacaoCompra'}">
-							<b>Compra <fmt:formatNumber minIntegerDigits="4" value="${movimentacao.compra.id}" groupingUsed="" /></b> Fornecedor: ${movimentacao.compra.fornecedor.apelido } - ${movimentacao.compra.fornecedor.nome }
+						<c:if test="${conta.class.name  == 'br.com.transmetais.bean.ContaAPagarCompra'}">
+							<b>Compra <fmt:formatNumber minIntegerDigits="4" value="${conta.compra.id}" groupingUsed="" /></b> Fornecedor: ${conta.compra.fornecedor.apelido } - ${conta.compra.fornecedor.nome }
 						</c:if>
-						<c:if test="${movimentacao.class.name  == 'br.com.transmetais.bean.MovimentacaoAdiantamento'}">
-							<b>Adiantamento <fmt:formatNumber minIntegerDigits="4" value="${movimentacao.adiantamento.id}" groupingUsed="" /></b> Fornecedor: ${movimentacao.adiantamento.fornecedor.apelido } - ${movimentacao.adiantamento.fornecedor.nome }
+						<c:if test="${conta.class.name  == 'br.com.transmetais.bean.ContaAPagarAdiantamento'}">
+							<b>Adiantamento <fmt:formatNumber minIntegerDigits="4" value="${conta.adiantamento.id}" groupingUsed="" /></b> Fornecedor: ${conta.adiantamento.fornecedor.apelido } - ${conta.adiantamento.fornecedor.nome }
 						</c:if>
 					 
 				</td>
@@ -122,19 +122,19 @@
 				
 				<td>
 						<c:set var="valor" value="0"/>
-						<fmt:formatNumber value="${movimentacao.tipoOperacao.name eq 'D' ? movimentacao.valor * -1 :  movimentacao.valor}" minFractionDigits="2" type="currency"/>
+						<fmt:formatNumber value="${ conta.valor * -1}" minFractionDigits="2" type="currency"/>
 					</td>
 					
 				<td >
-					${movimentacao.status.descricao}
+					${conta.status.descricao}
 				</td>
 				
 				<td>
-					<fmt:formatDate value="${movimentacao.dataPagamento}" type="date" pattern="dd/MM/yyyy"/>
+					<fmt:formatDate value="${conta.dataPagamento}" type="date" pattern="dd/MM/yyyy"/>
 					
 				</td>
 				<td >
-					${movimentacao.conta.descricao}
+					${conta.conta.descricao}
 				</td>
 			
 			</tr>
@@ -142,21 +142,10 @@
 	</tbody>
 	</table>
 	<br/>
-	<div class="panel panel-default">
-  	<div class="panel-body">
-	<div class="row">
-		<div class="col-md-4"><b>Valor Total:</b> <fmt:formatNumber value="${valorTotal}" minFractionDigits="2" type="currency"/></div>
-		<div class="col-md-4"><b>Quantidade Total:</b> <fmt:formatNumber value="${quantidade}" minFractionDigits="2" type="number"/></div>
-		<div class="col-md-4">Preço Médio: <fmt:formatNumber value="${ precoMedio}" minFractionDigits="2" type="currency"/></div>
+
+	</div>
+	</div>
 	
-	</div>
-	</div>
-	</div>
-	</div>
-	</div>
-	<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-  Launch demo modal
-</button>
 	 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -169,8 +158,8 @@
         
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+        <button type="button" class="btn btn-primary" id="btnConfirmar">Salvar</button>
       </div>
     </div>
   </div>

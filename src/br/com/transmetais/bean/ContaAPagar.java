@@ -16,27 +16,27 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import br.com.transmetais.type.TipoOperacaoEnum;
+import br.com.transmetais.type.StatusMovimentacaoEnum;
 
 @Entity
-@Table(name="movimentacao")
+@Table(name="contaapagar")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Movimentacao {
+public class ContaAPagar {
 	@Id 
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	protected Integer id;
-	protected Date data;
-	@Enumerated(EnumType.STRING)
-	@Column(name="tipo_operacao")
-	protected TipoOperacaoEnum tipoOperacao;
+	@Column(name="data_prevista")
+	protected Date dataPrevista;
 	@ManyToOne
 	@JoinColumn(name="conta_id")
 	protected Conta conta;
-	
-	
 	protected BigDecimal valor;
-	
-
+	@Column(name="data_pagamento")
+	protected Date dataPagamento;
+	@Column(name="status")
+	@Enumerated(EnumType.STRING)
+	protected StatusMovimentacaoEnum status;
+	protected String descricao;
 	
 	public Integer getId() {
 		return id;
@@ -44,18 +44,7 @@ public class Movimentacao {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public Date getData() {
-		return data;
-	}
-	public void setData(Date data) {
-		this.data = data;
-	}
-	public TipoOperacaoEnum getTipoOperacao() {
-		return tipoOperacao;
-	}
-	public void setTipoOperacao(TipoOperacaoEnum tipoOperacao) {
-		this.tipoOperacao = tipoOperacao;
-	}
+	
 	public Conta getConta() {
 		return conta;
 	}
@@ -69,6 +58,32 @@ public class Movimentacao {
 	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
+	
+	public Date getDataPagamento() {
+		return dataPagamento;
+	}
+	public void setDataPagamento(Date dataPagamento) {
+		this.dataPagamento = dataPagamento;
+	}
+	public StatusMovimentacaoEnum getStatus() {
+		return status;
+	}
+	public void setStatus(StatusMovimentacaoEnum status) {
+		this.status = status;
+	}
+	public String getDescricao() {
+		return descricao;
+	}
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+	public Date getDataPrevista() {
+		return dataPrevista;
+	}
+	public void setDataPrevista(Date dataPrevista) {
+		this.dataPrevista = dataPrevista;
+	}
+
 	
 	
 }

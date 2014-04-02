@@ -8,8 +8,9 @@ import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.Adiantamento;
 import br.com.transmetais.bean.Conta;
-import br.com.transmetais.bean.MovimentacaoAdiantamento;
+import br.com.transmetais.bean.ContaAPagarAdiantamento;
 import br.com.transmetais.dao.AdiantamentoDAO;
+import br.com.transmetais.dao.ContaAPagarDAO;
 import br.com.transmetais.dao.ContaDAO;
 import br.com.transmetais.dao.FornecedorDAO;
 import br.com.transmetais.dao.MovimentacaoDAO;
@@ -17,24 +18,23 @@ import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.type.FormaPagamentoEnum;
 import br.com.transmetais.type.SituacaoAdiantamentoEnum;
 import br.com.transmetais.type.StatusMovimentacaoEnum;
-import br.com.transmetais.type.TipoOperacaoEnum;
 
 @Resource
 public class AdiantamentoController {
 	
 	private AdiantamentoDAO dao;
 	private FornecedorDAO fornecedorDao;
-	private MovimentacaoDAO movimentacaoDao;
+	private ContaAPagarDAO contaAPagarDAO;
 	private ContaDAO contaDao;
 	
 	private final Result result;
 	
 	
-	public AdiantamentoController(Result result, AdiantamentoDAO dao, FornecedorDAO fornecedorDao, MovimentacaoDAO movimentacaoDao, ContaDAO contaDao) {
+	public AdiantamentoController(Result result, AdiantamentoDAO dao, FornecedorDAO fornecedorDao, ContaAPagarDAO contaAPagarDAO, ContaDAO contaDao) {
 		this.result = result;
 		this.dao = dao;
 		this.fornecedorDao = fornecedorDao;
-		this.movimentacaoDao = movimentacaoDao;
+		this.contaAPagarDAO = contaAPagarDAO;
 		this.contaDao = contaDao;
 		
 		
@@ -117,6 +117,16 @@ public class AdiantamentoController {
 					
 					dao.updateEntity(adiantOrig);
 					
+					ContaAPagarAdiantamento contaPagar = new ContaAPagarAdiantamento();
+					contaPagar.setDataPrevista(adiantOrig.getDataPagamento());
+					contaPagar.setAdiantamento(adiantOrig);
+					contaPagar.setStatus(StatusMovimentacaoEnum.A);
+					contaPagar.setValor(adiantOrig.getValor());
+					contaPagar.setDescricao("Adiantamento ao Fornecedor " + adiantOrig.getFornecedor().getApelido() + " - " +adiantOrig.getFornecedor().getNome());
+					
+					contaAPagarDAO.addEntity(contaPagar);
+					/*
+					
 					//Registro de Movimentacao de ENtrada na conta do fornecedor
 					MovimentacaoAdiantamento movimentacao = new MovimentacaoAdiantamento();
 					movimentacao.setConta(adiantOrig.getFornecedor().getConta());
@@ -146,7 +156,7 @@ public class AdiantamentoController {
 					movementacaoDebito.setStatus(StatusMovimentacaoEnum.A);
 					
 					movimentacaoDao.addEntity(movementacaoDebito);
-					
+					*/
 					//contaOrigem = contaDao.findById(contaOrigem.getId());
 					//contaOrigem.setSaldo(contaOrigem.getSaldo().subtract(movementacaoDebito.getValor()));
 					//contaDao.updateEntity(contaOrigem);

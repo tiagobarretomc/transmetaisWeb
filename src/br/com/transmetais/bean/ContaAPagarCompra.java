@@ -8,9 +8,9 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name="movimentacao_compra")
-@PrimaryKeyJoinColumn(name="movimentacao_id")
-public class MovimentacaoCompra extends Movimentacao{
+@Table(name="contaapagar_compra")
+@PrimaryKeyJoinColumn(name="contaapagar_id")
+public class ContaAPagarCompra extends ContaAPagar{
 	
 	
 	@ManyToOne
@@ -24,11 +24,5 @@ public class MovimentacaoCompra extends Movimentacao{
 	public void setCompra(Compra compra) {
 		this.compra = compra;
 	}
-
-	
-	
-	
-	
-
 	
 }

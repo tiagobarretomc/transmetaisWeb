@@ -5,24 +5,30 @@
 
     $(document).ready(function(){
     	
+    	$("#btnConfirmar").click(function(){
+    		alert("salvar a parada doida!");
+    	});
     
     	$("#movimentacao\\.dataPagamento").mask("99/99/9999");
     	
-    	var options = new Array();
-	   	 options['language'] = 'pt-BR';
-	   	 $('.datepicker').datepicker(options);
     	
-    	$("#btnAprovar").click(function(){
-    		$("#formMovimentacao").submit();
-    	});
+	   	 $('.datepicker').datepicker({
+	   		'language' : 'pt-BR',
+	   		'autoclose' : true
+	   	    
+	   	});
+    	
+    	
     	
         $('#formMovimentacao').validate({
             
         
     	});
+    	
+    	
         
         $('.selectpicker').selectpicker({
-	            //'selectedText': 'cat'
+	           
 	        });
         
       
@@ -72,12 +78,12 @@
         	
         	
         	<div class="col-md-3">
-        		<label for="movimentacao.valor">Valor:</label>
-        		<input name="movimentacao.valor" id="movimentacao.valor" readonly="readonly" value="<fmt:formatNumber value="${movimentacao.valor}" minFractionDigits="2" type="number" />" class="form-control required" />
+        		<label for="contaAPagar.valor">Valor:</label>
+        		<input name="contaAPagar.valor" id="contaAPagar.valor" readonly="readonly" value="<fmt:formatNumber value="${contaAPagar.valor}" minFractionDigits="2" type="number" />" class="form-control required" />
         	</div>
         	<div class="col-md-2">
-        		<label for="movimentacao.data">Data Prevista:</label>
-        		<input name="movimentacao.data" readonly="readonly" id="movimentacao.data" value="<fmt:formatDate value="${movimentacao.data}" type="date" pattern="dd/MM/yyyy"/>"  class="form-control required" />
+        		<label for="contaAPagar.dataPrevista">Data Prevista:</label>
+        		<input name="contaAPagar.dataPrevista" readonly="readonly" id="contaAPagar.dataPrevista" value="<fmt:formatDate value="${contaAPagar.dataPrevista}" type="date" pattern="dd/MM/yyyy"/>"  class="form-control required" />
         	</div>
         	
       	</div>
@@ -85,38 +91,37 @@
 	      
 	      	<div class="col-md-2">
 	      	<c:set var="now" value="<%=new java.util.Date()%>" />
-        		<label for="movimentacao.dataPagamento">Data Pagamento:</label>
-        		<input name="movimentacao.dataPagamento"  id="movimentacao.dataPagamento" value="<fmt:formatDate value="${now}" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" data-date-format="dd/mm/yyyy" />
+        		<label for="contaAPagar.dataPagamento">Data Pagamento:</label>
+        		<input name="contaAPagar.dataPagamento"  id="contaAPagar.dataPagamento" value="<fmt:formatDate value="${now}" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" data-date-format="dd/mm/yyyy" />
         	</div>
-        	<c:if test="${movimentacao.tipoOperacao == 'D' }">
+        	
 	        	<div class="col-md-4">
 		      		<label for="contaSacada">Conta sacada:</label>
 	        		
-					<select  id="contaOrigem.id" name="contaOrigem.id" class=" form-control required" >
+					<select  id="contaAPagar.conta" name="contaAPagar.conta" class=" form-control required selectpicker" >
 						<option value="" >--Selecione--</option>
 						<c:forEach var="conta" items="${contas}">
-							<option value="${conta.id }" ${conta.id == movimentacao.conta.id ? 'selected="selected"' : '' }>${conta.descricao}</option>
+							<option value="${conta.id }" ${conta.id == contaAPagar.conta.id ? 'selected="selected"' : '' }>${conta.descricao}</option>
 						</c:forEach>
 					</select>
 		      	</div>
-        	</c:if>
-        	<c:if test="${movimentacao.tipoOperacao.name == 'C' and  movimentacao.class.name == 'br.com.transmetais.bean.MovimentacaoAdiantamento'}">
-        		<div class="col-md-4">
-		      		<label for="contaSacada">Conta Destino:</label>
-	        		
-					<input type="text" readonly="readonly" value="${movimentacao.adiantamento.fornecedor.conta.descricao }" class="form-control "/>
-		      	</div>
-        	</c:if>
+        	
       	</div>
+        	<c:if test="${ contaAPagar.class.name == 'br.com.transmetais.bean.ContaAPagarAdiantamento'}">
+	        	<div class="row">
+	        		<div class="col-md-4">
+			      		<label for="contaSacada">Conta Destino:</label>
+		        		
+						<input type="text" readonly="readonly" value="${contaAPagar.adiantamento.fornecedor.conta.descricao }" class="form-control "/>
+			      	</div>
+			     </div>
+        	</c:if>
 		
       	
       	
       	
       	<br/>
-		<button type="button" id="btnAdicionar" class="btn btn-default btn-md">
-		  <span class="glyphicon glyphicon-floppy-disk"></span> Confirmar
-		</button>
+		
 		</form>
 </div>
-</div>
-</div>
+
