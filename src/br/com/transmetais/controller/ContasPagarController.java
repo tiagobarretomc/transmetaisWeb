@@ -6,6 +6,7 @@ import java.util.List;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.transmetais.bean.Conta;
 import br.com.transmetais.bean.ContaAPagar;
 import br.com.transmetais.bean.ContaAPagarAdiantamento;
 import br.com.transmetais.bean.ContaAPagarCompra;
@@ -92,7 +93,7 @@ public class ContasPagarController {
 	}
 
 	
-	public ContaAPagar confirmar(ContaAPagar contaAPagar) throws DAOException{
+	public void confirmar(ContaAPagar contaAPagar) throws DAOException{
 		
 		
 		ContaAPagar contaAPagarOrig = dao.findById(contaAPagar.getId());
@@ -101,6 +102,21 @@ public class ContasPagarController {
 		contaAPagarOrig.setDataPagamento(contaAPagar.getDataPagamento());
 		contaAPagarOrig.setStatus(StatusMovimentacaoEnum.P);
 		dao.updateEntity(contaAPagarOrig);
+		
+		MovimentacaoContasAPagar movimentacao = new MovimentacaoContasAPagar();
+		movimentacao.setContaAPagar(contaAPagarOrig);
+		movimentacao.setConta(contaAPagarOrig.getConta());
+		
+		movimentacao.setValor(contaAPagarOrig.getValor());
+		movimentacao.setData(contaAPagarOrig.getDataPagamento());
+		movimentacao.setTipoOperacao(TipoOperacaoEnum.D);
+		
+		movimentacaoDao.addEntity(movimentacao);
+		
+		//Alterar o Saldo da Conta Sacada
+		Conta contaSacada = contaDao.findById(contaAPagarOrig.getConta().getId());
+		contaSacada.setSaldo(contaSacada.getSaldo().subtract(contaAPagarOrig.getValor()));
+		contaDao.updateEntity(contaSacada);
 		
 		
 		//Quando se tratar de adiantamento será inserido a movimentacao de crédito na conta do fornecedor
@@ -115,17 +131,18 @@ public class ContasPagarController {
 			
 			movimentacaoDao.addEntity(movimentacaoDestino);
 			
-			//(ContaAPagarAdiantamento)contaAPagarOrig).
+			//Alterar o Saldo do fornecedor
+			Conta conta = ((ContaAPagarAdiantamento) contaAPagarOrig).getAdiantamento().getFornecedor().getConta();
+			conta.setSaldo(conta.getSaldo().add(movimentacaoDestino.getValor()));
+			contaDao.updateEntity(conta);
 			
-		}else if (contaAPagarOrig instanceof ContaAPagarCompra){
 			
 		}
-		
 				
 		
-		result.include("contas",contaDao.obterContasFinanceiras());
+		//result.include("contas",contaDao.obterContasFinanceiras());
 		
-		return contaAPagar;
+		result.nothing();
 	}
 	
 	

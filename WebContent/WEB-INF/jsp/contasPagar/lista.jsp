@@ -98,10 +98,11 @@
 					
 				 --%>
 				
-				<button class="btn btn-default btn-xs btnDetalhe" id="btnDetalhe_${conta.id}" type="button" >
-					<span class="glyphicon glyphicon-ok-sign"></span>
-					
-					</button>
+					<c:if test="${conta.status == 'A' }">
+						<button class="btn btn-default btn-xs btnDetalhe" id="btnDetalhe_${conta.id}" type="button" >
+							<span class="glyphicon glyphicon-ok-sign"></span>
+						</button>
+					</c:if>
 				</td>
 				<td>
 					<fmt:formatDate value="${conta.dataPrevista}" type="date" pattern="dd/MM/yyyy"/>
@@ -122,7 +123,7 @@
 				
 				<td>
 						<c:set var="valor" value="0"/>
-						<fmt:formatNumber value="${ conta.valor * -1}" minFractionDigits="2" type="currency"/>
+						<fmt:formatNumber value="${ conta.valor}" minFractionDigits="2" type="currency"/>
 					</td>
 					
 				<td >

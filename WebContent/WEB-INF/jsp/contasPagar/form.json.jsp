@@ -6,7 +6,22 @@
     $(document).ready(function(){
     	
     	$("#btnConfirmar").click(function(){
-    		alert("salvar a parada doida!");
+    		//alert("salvar a parada doida!");
+    		
+    		
+    		$.ajax({
+		        type: 'POST',
+		        url: "${pageContext.request.contextPath}/contasPagar/confirmar",
+		        data:	$( "#formMovimentacao" ).serialize(),
+		 	    success: function(json){
+		 	    	$("#divTabela").load( '<c:url value="/contasPagar/loadListaMovimentacao"/>', $('#formCompra').serialize() );
+		 	    	$('#myModal').modal('hide');
+
+				},
+			    error: function(xhr){
+			    	alert('erro!');
+					    }
+		    });
     	});
     
     	$("#movimentacao\\.dataPagamento").mask("99/99/9999");
@@ -15,7 +30,6 @@
 	   	 $('.datepicker').datepicker({
 	   		'language' : 'pt-BR',
 	   		'autoclose' : true
-	   	    
 	   	});
     	
     	
@@ -29,10 +43,7 @@
         
         $('.selectpicker').selectpicker({
 	           
-	        });
-        
-      
-        
+	    });
     	
     	
     });
@@ -56,7 +67,7 @@
 	<div class="panel-body">
      --%>
 	<form action="<c:url value='/adiantamento/confirmar'/>" id="formMovimentacao" name="formMovimentacao" method="post">
-		
+		<input type="hidden" name="contaAPagar.id" id="contaAPagar.id" value="${contaAPagar.id}"/>
 		<div class="row">
 		<%--
 			<div class="col-md-12">
@@ -98,7 +109,7 @@
 	        	<div class="col-md-4">
 		      		<label for="contaSacada">Conta sacada:</label>
 	        		
-					<select  id="contaAPagar.conta" name="contaAPagar.conta" class=" form-control required selectpicker" >
+					<select  id="contaAPagar.conta.id" name="contaAPagar.conta.id" class=" form-control required selectpicker" >
 						<option value="" >--Selecione--</option>
 						<c:forEach var="conta" items="${contas}">
 							<option value="${conta.id }" ${conta.id == contaAPagar.conta.id ? 'selected="selected"' : '' }>${conta.descricao}</option>
