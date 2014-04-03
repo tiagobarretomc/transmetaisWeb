@@ -2,7 +2,7 @@ package br.com.transmetais.type;
 
 public enum SituacaoAdiantamentoEnum {
 	
-	A("Aberto"), P("Aprovado"), C("Cancelado");
+	A("Aberto"), P("Aprovado"), C("Cancelado"), PG("Pago");
 	
 	private String descricao;
 	SituacaoAdiantamentoEnum tipo;

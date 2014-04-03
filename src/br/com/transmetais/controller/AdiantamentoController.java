@@ -13,7 +13,6 @@ import br.com.transmetais.dao.AdiantamentoDAO;
 import br.com.transmetais.dao.ContaAPagarDAO;
 import br.com.transmetais.dao.ContaDAO;
 import br.com.transmetais.dao.FornecedorDAO;
-import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.type.FormaPagamentoEnum;
 import br.com.transmetais.type.SituacaoAdiantamentoEnum;
@@ -60,7 +59,7 @@ public class AdiantamentoController {
 			
 		}
 		
-		result.include("fornecedores", fornecedorDao.findAll());
+		result.include("fornecedores", fornecedorDao.obterComRotativo());
 		result.include("tiposPagamentos", FormaPagamentoEnum.values());
 	
 		return adiantamento;
@@ -112,7 +111,7 @@ public class AdiantamentoController {
 					
 					
 					adiantOrig.setSituacao(SituacaoAdiantamentoEnum.P);
-					adiantOrig.setDataPagamento(adiantamento.getDataPagamento());
+					//adiantOrig.setDataPagamento(adiantamento.getDataPagamento());
 					adiantOrig.setTipoPagamento(adiantamento.getTipoPagamento());
 					
 					dao.updateEntity(adiantOrig);
@@ -125,41 +124,7 @@ public class AdiantamentoController {
 					contaPagar.setDescricao("Adiantamento ao Fornecedor " + adiantOrig.getFornecedor().getApelido() + " - " +adiantOrig.getFornecedor().getNome());
 					
 					contaAPagarDAO.addEntity(contaPagar);
-					/*
 					
-					//Registro de Movimentacao de ENtrada na conta do fornecedor
-					MovimentacaoAdiantamento movimentacao = new MovimentacaoAdiantamento();
-					movimentacao.setConta(adiantOrig.getFornecedor().getConta());
-					movimentacao.setData(adiantamento.getDataPagamento());
-					//um valor está sendo creditado na conta do fornecedor
-					movimentacao.setTipoOperacao(TipoOperacaoEnum.C);
-					movimentacao.setValor(adiantamento.getValor());
-					movimentacao.setValorPrevisto(adiantamento.getValor());
-					movimentacao.setAdiantamento(adiantOrig);
-					movimentacao.setStatus(StatusMovimentacaoEnum.A);
-					
-					
-					movimentacaoDao.addEntity(movimentacao);
-					
-					adiantOrig.getFornecedor().getConta().setSaldo(adiantOrig.getFornecedor().getConta().getSaldo().add(adiantamento.getValor()));
-					
-					contaDao.updateEntity(adiantOrig.getFornecedor().getConta());
-					
-					//Registro de Movimentacao de Saída de uma conta da Empresa
-					MovimentacaoAdiantamento movementacaoDebito = new MovimentacaoAdiantamento();
-					movementacaoDebito.setConta(contaOrigem);
-					movementacaoDebito.setData(adiantamento.getDataPagamento());
-					//um valor está sendo creditado na conta do fornecedor
-					movementacaoDebito.setTipoOperacao(TipoOperacaoEnum.D);
-					movementacaoDebito.setValor(adiantamento.getValor());
-					movementacaoDebito.setAdiantamento(adiantOrig);	
-					movementacaoDebito.setStatus(StatusMovimentacaoEnum.A);
-					
-					movimentacaoDao.addEntity(movementacaoDebito);
-					*/
-					//contaOrigem = contaDao.findById(contaOrigem.getId());
-					//contaOrigem.setSaldo(contaOrigem.getSaldo().subtract(movementacaoDebito.getValor()));
-					//contaDao.updateEntity(contaOrigem);
 					
 				}
 				
