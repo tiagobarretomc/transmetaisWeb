@@ -24,7 +24,6 @@ import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.Fornecedor;
-import br.com.transmetais.dao.FornecedorDAO;
 import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.dao.impl.FornecedorDaoImpl;
 

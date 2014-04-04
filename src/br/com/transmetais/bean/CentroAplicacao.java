@@ -16,7 +16,7 @@ public class CentroAplicacao {
 	@Id 
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
-	private String numero;
+	private Long numero;
 	@ManyToOne
 	@JoinColumn(name="centro_custo_id")
 	private CentroCusto centroCusto;
@@ -27,10 +27,10 @@ public class CentroAplicacao {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public String getNumero() {
+	public Long getNumero() {
 		return numero;
 	}
-	public void setNumero(String numero) {
+	public void setNumero(Long numero) {
 		this.numero = numero;
 	}
 	public String getDescricao() {

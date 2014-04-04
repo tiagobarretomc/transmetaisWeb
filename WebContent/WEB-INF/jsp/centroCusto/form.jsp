@@ -35,7 +35,7 @@
         	</div>
         	<div class="col-md-4">
         		<label for="centroCusto.numero">Número:</label>
-        		<input name="centroCusto.numero" id="centroCusto.numero" value="${centroCusto.numero}" class="form-control required" size="8" maxlength="4"/>
+        		<input name="centroCusto.numero" id="centroCusto.numero" value="${centroCusto.numero}" class="form-control required" size="8" maxlength="10"/>
         	</div>
         	
         	<div class="col-md-4">

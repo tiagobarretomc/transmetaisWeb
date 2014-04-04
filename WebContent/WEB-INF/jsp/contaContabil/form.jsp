@@ -44,7 +44,7 @@
         	
         	<div class="col-md-4">
         		<label for="contaContabil.numero">Número:</label>
-        		<input name="contaContabil.numero" id="contaContabil.numero" value="${contaContabil.numero}" class="form-control required"  maxlength="100"/>
+        		<input name="contaContabil.numero" id="contaContabil.numero" value="${contaContabil.numero}" class="form-control required"  maxlength="10"/>
         	</div>
         	<div class="col-md-3">
         		<label for="contaContabil.descricao">Descrição:</label>

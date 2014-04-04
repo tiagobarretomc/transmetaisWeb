@@ -104,7 +104,7 @@ public abstract class BaseController<E, T extends CrudDAO<E>> {
 			e.printStackTrace();		
 		}
 	}
-	@Path({"/lista"})
+	@Path({"/lista","/lista/"})
 	public List<E> lista(){
 		List<E> lista = null;
 		
@@ -123,6 +123,11 @@ public abstract class BaseController<E, T extends CrudDAO<E>> {
 	protected void validateForm(E bean){
 		validator.validate(bean);
 		validator.onErrorRedirectTo(this.getClass()).form(bean);
+	}
+	
+	protected  E createInstance(Class<E> type) throws InstantiationException, IllegalAccessException{
+		E tipoBase = type.newInstance();
+		return tipoBase;
 	}
 	
 	protected abstract E createInstance();

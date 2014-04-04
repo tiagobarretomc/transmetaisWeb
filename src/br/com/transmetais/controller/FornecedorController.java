@@ -76,7 +76,8 @@ public class FornecedorController {
 							conta.setDescricao(fornecedor.getApelido() + " - " + fornecedor.getNome());
 							
 							conta.setBancaria(false);
-							conta.setSaldo(new BigDecimal(0));
+							conta.setSaldo(fornecedor.getConta().getSaldo());
+							conta.setSaldoInicial(fornecedor.getConta().getSaldo());
 							conta.setSaldoInicial(new BigDecimal(0));
 							contaDao.addEntity(conta);
 							
@@ -103,8 +104,8 @@ public class FornecedorController {
 					conta.setDescricao(fornecedor.getApelido());
 					//conta.setFornecedor(fornecedor);
 					conta.setBancaria(false);
-					conta.setSaldo(new BigDecimal(0));
-					conta.setSaldoInicial(new BigDecimal(0));
+					conta.setSaldo(fornecedor.getConta().getSaldo());
+					conta.setSaldoInicial(fornecedor.getConta().getSaldo());
 					contaDao.addEntity(conta);
 					
 					//Setando a Conta ao fornecedor por se tratar de uma relacao 1x1

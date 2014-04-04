@@ -21,7 +21,7 @@ public class CentroCusto {
 	@Id 
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
-	private String numero;
+	private Long numero;
 	private String descricao;
 	@OneToMany(mappedBy="centroCusto")
 	@LazyCollection(LazyCollectionOption.TRUE)
@@ -34,10 +34,10 @@ public class CentroCusto {
 	public void setId(Integer id) {
 		this.id = id;
 	}
-	public String getNumero() {
+	public Long getNumero() {
 		return numero;
 	}
-	public void setNumero(String numero) {
+	public void setNumero(Long numero) {
 		this.numero = numero;
 	}
 	public String getDescricao() {

@@ -13,7 +13,7 @@ public class ContaContabil {
 	@Id 
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;
-	private String numero;
+	private Long numero;
 	private String descricao;
 	
 	
@@ -31,11 +31,11 @@ public class ContaContabil {
 		this.descricao = descricao;
 	}
 	
-	public String getNumero() {
+	public Long getNumero() {
 		return numero;
 	}
 	
-	public void setNumero(String numero) {
+	public void setNumero(Long numero) {
 		this.numero = numero;
 	}
 

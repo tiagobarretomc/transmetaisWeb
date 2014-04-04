@@ -230,7 +230,7 @@
 		
 						</c:forEach>
 						
-						Z
+						
 					</select>
  				</div></div>
  			<div class="col-md-3">
@@ -244,7 +244,7 @@
 			</div>
 			<div id="divSaldo" class="col-md-2">
         		<label for="fornecedor.conta.saldo">Saldo:</label>
-        		<input readonly="readonly" name="saldo" id="fornecedor.conta.saldo" value="<fmt:formatNumber value="${fornecedor.conta.saldo}" minFractionDigits="2" type="currency"/>" class="form-control " />
+        		<input  name="saldo" id="fornecedor.conta.saldo" value="<fmt:formatNumber value="${fornecedor.conta.saldo}" minFractionDigits="2" type="currency"/>" class="form-control " />
         	</div>
 			</div>
 			<div class="row">

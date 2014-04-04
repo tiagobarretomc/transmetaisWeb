@@ -4,7 +4,7 @@
 <script type="text/javascript">
 
     $(document).ready(function(){
-    	$("#centroAplicacao\\.numero").mask('9999');
+    	//$("#centroAplicacao\\.numero").mask('9999999999');
     	$("#btnAdicionar").click(function(){
     		$("#formCentroAplicacao").submit();
     	});
@@ -35,12 +35,12 @@
 		<div class="row">
         	<div class="col-md-1">
         		<label for="centroAplicacao.id">Código:</label>
-        		<input name="centroAplicacao.id" readonly="readonly" id="centroAplicacao.id" value="<fmt:formatNumber minIntegerDigits="4" value="${centroAplicacao.id}" groupingUsed="" />" class="form-control " size="8" maxlength="4"/>
+        		<input name="centroAplicacao.id" readonly="readonly" id="centroAplicacao.id" value="<fmt:formatNumber minIntegerDigits="4" value="${centroAplicacao.id}" groupingUsed="" />" class="form-control " size="8" />
         	</div>
         	
         	<div class="col-md-2">
         		<label for="centroAplicacao.numero">Número:</label>
-        		<input name="centroAplicacao.numero" id="centroAplicacao.numero" value="${centroAplicacao.numero}" class="form-control required" size="8" maxlength="4"/>
+        		<input name="centroAplicacao.numero" id="centroAplicacao.numero" value="${centroAplicacao.numero}" class="form-control required" size="8" maxlength="10"/>
         	</div>
         </div>
         
