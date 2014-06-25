@@ -133,5 +133,12 @@ public class ContaBancariaController {
 		
 		return lista;
 	}
+	@Path({"/contaBancaria/transferencia/","/contaBancaria/transferencia"})
+	public void transferencia() throws DAOException {
+		result.include("contas",dao.findAll());
+	}
+	
+	
+	
 
 }
