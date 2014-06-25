@@ -32,12 +32,8 @@ public class Movimentacao {
 	@ManyToOne
 	@JoinColumn(name="conta_id")
 	protected Conta conta;
-	
-	
 	protected BigDecimal valor;
-	
-
-	
+		
 	public Integer getId() {
 		return id;
 	}

@@ -25,7 +25,6 @@ import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.type.StatusCompraEnum;
 import br.com.transmetais.type.StatusMovimentacaoEnum;
 import br.com.transmetais.type.TipoFreteEnum;
-import br.com.transmetais.type.TipoOperacaoEnum;
 
 @Resource
 public class CompraController {

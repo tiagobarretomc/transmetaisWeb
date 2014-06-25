@@ -44,8 +44,8 @@
 	
 		<tr>
 			<td>
-				<a href="<c:url value='/despesa/'/>${produto.id}"><span title="Alterar"  class="glyphicon glyphicon-edit"></span></a>
-				<a href="<c:url value='/despesa/remove/'/>${produto.id}"><span title="Excluir" class="glyphicon glyphicon-remove"></span></a> 
+				<a href="<c:url value='/despesa/'/>${despesa.id}"><span title="Alterar"  class="glyphicon glyphicon-edit"></span></a>
+				<a href="<c:url value='/despesa/remove/'/>${despesa.id}"><span title="Excluir" class="glyphicon glyphicon-remove"></span></a> 
 			</td>
 			<td>
 				${despesa.id} 
@@ -55,7 +55,7 @@
 			</td>
 			<td><fmt:formatDate value="${despesa.dataVencimento}" type="date" pattern="dd/MM/yyyy"/></td>
 			<td>
-				{bean.centroAplicacao.numero} - {bean.centroAplicacao.descricao}
+				${despesa.centroAplicacao.numero} - ${despesa.centroAplicacao.descricao}
 			</td>
 			<td>
 				<fmt:formatNumber value="${despesa.valor}" minFractionDigits="2" type="currency"/>

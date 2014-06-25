@@ -93,6 +93,8 @@ public class FornecedorController {
 				dao.updateEntity(fornecedor);
 				
 			}else{
+				Conta contaFornec = fornecedor.getConta();
+				fornecedor.setConta(null);
 				//Adicionar o fornecedor
 				dao.addEntity(fornecedor);
 				
@@ -104,8 +106,8 @@ public class FornecedorController {
 					conta.setDescricao(fornecedor.getApelido());
 					//conta.setFornecedor(fornecedor);
 					conta.setBancaria(false);
-					conta.setSaldo(fornecedor.getConta().getSaldo());
-					conta.setSaldoInicial(fornecedor.getConta().getSaldo());
+					conta.setSaldo(contaFornec.getSaldo());
+					conta.setSaldoInicial(contaFornec.getSaldo());
 					contaDao.addEntity(conta);
 					
 					//Setando a Conta ao fornecedor por se tratar de uma relacao 1x1

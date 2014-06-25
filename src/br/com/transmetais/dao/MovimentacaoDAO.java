@@ -9,6 +9,6 @@ import br.com.transmetais.dao.commons.DAOException;
 
 public interface MovimentacaoDAO extends CrudDAO<Movimentacao>{
 	
-	public List<Movimentacao> findByFilter(Date dataInicio, Date dataFim) throws DAOException;
+	public List<Movimentacao> findByFilter(Date dataInicio, Date dataFim, Long contaId) throws DAOException;
 
 }

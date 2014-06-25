@@ -7,10 +7,9 @@ import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.Conta;
-import br.com.transmetais.bean.Estado;
-import br.com.transmetais.bean.Funcionario;
 import br.com.transmetais.bean.Movimentacao;
 import br.com.transmetais.dao.ContaDAO;
+import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.type.TipoOperacaoEnum;
 
@@ -18,13 +17,14 @@ import br.com.transmetais.type.TipoOperacaoEnum;
 public class ContaBancariaController {
 	
 	private ContaDAO dao;
+	private MovimentacaoDAO movimentacaoDao; 
 	private final Result result;
 	
 	
-	public ContaBancariaController(Result result, ContaDAO dao) {
+	public ContaBancariaController(Result result, ContaDAO dao, MovimentacaoDAO movimentacaoDao) {
 		this.result = result;
 		this.dao = dao;
-		
+		this.movimentacaoDao = movimentacaoDao;
 		
 	}
 	
@@ -102,5 +102,36 @@ public class ContaBancariaController {
 		}
 		result.redirectTo(ContaBancariaController.class).lista();
 	  }
+	
+	@Path("/contaBancaria/extrato/")
+	public void extrato(Conta conta) throws DAOException {
+		
+		result.include("contas",dao.findAll());
+	  }
+	
+	public List<Movimentacao> loadExtrato(Long contaId){
+		List<Movimentacao> lista = null;
+		
+		try {
+			
+			Conta conta = dao.findById(contaId);
+			
+			lista = movimentacaoDao.findByFilter(null, null, contaId);
+			
+			if (conta.getFornecedor() != null){
+				result.include("titular",conta.getFornecedor());
+			}else if (conta.getCliente()!= null){
+				result.include("titular",conta.getCliente());
+			}
+			
+			result.include("conta",conta);
+			result.include("movimentacoes",lista);
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return lista;
+	}
 
 }

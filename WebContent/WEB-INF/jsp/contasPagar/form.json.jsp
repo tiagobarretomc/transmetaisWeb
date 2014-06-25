@@ -109,12 +109,21 @@
 	        	<div class="col-md-4">
 		      		<label for="contaSacada">Conta sacada:</label>
 	        		
+	        		<c:if test="${ contaAPagar.class.name == 'br.com.transmetais.bean.ContaAPagarCompra' and contaAPagar.compra.fornecedor.tipoFaturamento.name == 'ADIANT'}">
+		        		<select  id="contaAPagar.conta.id" name="contaAPagar.conta.id"  class=" form-control required selectpicker">
+							<option value="${ contaAPagar.compra.fornecedor.conta.id}" >${ contaAPagar.compra.fornecedor.conta.descricao}</option>
+							
+						</select>
+	        		</c:if>
+	        		
+	        		<c:if test="${ contaAPagar.class.name != 'br.com.transmetais.bean.ContaAPagarCompra' or contaAPagar.compra.fornecedor.tipoFaturamento.name != 'ADIANT'}">
 					<select  id="contaAPagar.conta.id" name="contaAPagar.conta.id" class=" form-control required selectpicker" >
 						<option value="" >--Selecione--</option>
 						<c:forEach var="conta" items="${contas}">
 							<option value="${conta.id }" ${conta.id == contaAPagar.conta.id ? 'selected="selected"' : '' }>${conta.descricao}</option>
 						</c:forEach>
 					</select>
+					</c:if>
 		      	</div>
         	
       	</div>

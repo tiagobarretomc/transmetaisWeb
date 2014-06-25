@@ -12,11 +12,12 @@
 		<priority value="INFO" />
 		<appender-ref ref="stdout" />
 	</category>
-
+<!-- 
 	<category name="org.hibernate.type">
 		<priority value="TRACE" />
 		<appender-ref ref="stdout" />
 	</category>
+ -->
 
 	<category name="org.springframework">
 		<priority value="INFO" />

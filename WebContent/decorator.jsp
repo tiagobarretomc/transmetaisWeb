@@ -189,6 +189,8 @@ form {
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Financeiro <b class="caret"></b></a>
 	          <ul class="dropdown-menu">
 	          	 <li><a href="<c:url value='/contasPagar/'/>">Contas a Pagar</a></li>
+	          	 <li><a href="<c:url value='/despesa/lista'/>">Despesas</a></li>
+	          	 <li class="divider"></li>
 	          	<li><a href="<c:url value='/contasReceber/'/>">Contas a Receber</a></li>
 	          </ul>
 	        </li>

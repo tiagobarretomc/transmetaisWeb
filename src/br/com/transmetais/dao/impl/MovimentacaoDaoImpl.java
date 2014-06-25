@@ -15,7 +15,7 @@ import br.com.transmetais.dao.commons.DAOException;
 @Component
 public class MovimentacaoDaoImpl extends CrudDAOJPA<Movimentacao> implements MovimentacaoDAO{
 	
-	public List<Movimentacao> findByFilter(Date dataInicio, Date dataFim) throws DAOException {
+	public List<Movimentacao> findByFilter(Date dataInicio, Date dataFim, Long contaId) throws DAOException {
 		EntityManager manager = factory.createEntityManager(); 
 		
 		try {
@@ -36,6 +36,13 @@ public class MovimentacaoDaoImpl extends CrudDAOJPA<Movimentacao> implements Mov
 				clausulaWhere += " m.data <= :dataFim";
 			}
 			
+			if (contaId !=null){
+				if(clausulaWhere != " WHERE "){
+					clausulaWhere += " AND ";
+				}
+				clausulaWhere += " m.conta.id = :contaId";
+			}
+			
 			
 			if (clausulaWhere != " WHERE ")
 				query += clausulaWhere;
@@ -52,6 +59,9 @@ public class MovimentacaoDaoImpl extends CrudDAOJPA<Movimentacao> implements Mov
 			if (dataFim !=null){
 				
 				hqlQuery.setParameter("dataFim", dataFim);
+			}
+			if (contaId !=null){
+				hqlQuery.setParameter("contaId", contaId);
 			}
 			
 			

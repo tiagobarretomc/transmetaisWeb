@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -30,6 +32,13 @@ public class Conta {
 	private String contaCorrente;
 	@Column(name="data_saldo_inicial")
 	private Date dataSaldoInicial;
+	@ManyToOne
+	@JoinColumn(name="fornecedor_id")
+	private Fornecedor fornecedor;
+	@ManyToOne
+	@JoinColumn(name="cliente_id")
+	private Cliente cliente;
+	
 	
 	
 	public Long getId() {
@@ -86,6 +95,18 @@ public class Conta {
 	}
 	public void setDataSaldoInicial(Date dataSaldoInicial) {
 		this.dataSaldoInicial = dataSaldoInicial;
+	}
+	public Fornecedor getFornecedor() {
+		return fornecedor;
+	}
+	public void setFornecedor(Fornecedor fornecedor) {
+		this.fornecedor = fornecedor;
+	}
+	public Cliente getCliente() {
+		return cliente;
+	}
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
 	}
 	
 	

@@ -118,7 +118,7 @@
 		<div class="row">
 			<div class="col-md-1">
         		<label for="fornecedor.nome">Código:</label>
-        		<input name="fornecedor.id" readonly="readonly" id="fornecedor.id" value="<fmt:formatNumber minIntegerDigits="4" value="${fornecedor.id}" groupingUsed="" />" class="form-control required"  placeholder=""/>
+        		<input name="fornecedor.id" readonly="readonly" id="fornecedor.id" value="<fmt:formatNumber minIntegerDigits="4" value="${fornecedor.id}" groupingUsed="" />" class="form-control "  placeholder=""/>
         	</div>
         	<div class="col-md-4">
         		<label for="fornecedor.nome">Nome:</label>

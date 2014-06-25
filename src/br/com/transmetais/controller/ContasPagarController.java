@@ -10,16 +10,19 @@ import br.com.transmetais.bean.Conta;
 import br.com.transmetais.bean.ContaAPagar;
 import br.com.transmetais.bean.ContaAPagarAdiantamento;
 import br.com.transmetais.bean.ContaAPagarCompra;
+import br.com.transmetais.bean.ContaAPagarDespesa;
 import br.com.transmetais.bean.Movimentacao;
 import br.com.transmetais.bean.MovimentacaoContasAPagar;
 import br.com.transmetais.dao.AdiantamentoDAO;
 import br.com.transmetais.dao.CompraDAO;
 import br.com.transmetais.dao.ContaAPagarDAO;
 import br.com.transmetais.dao.ContaDAO;
+import br.com.transmetais.dao.DespesaDAO;
 import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.type.SituacaoAdiantamentoEnum;
 import br.com.transmetais.type.StatusCompraEnum;
+import br.com.transmetais.type.StatusDespesaEnum;
 import br.com.transmetais.type.StatusMovimentacaoEnum;
 import br.com.transmetais.type.TipoOperacaoEnum;
 
@@ -33,15 +36,19 @@ public class ContasPagarController {
 	private ContaAPagarDAO dao;
 	private AdiantamentoDAO adiantamentoDao;
 	private CompraDAO compraDao;
+	private DespesaDAO despesaDao;
 	
 	
-	public ContasPagarController(Result result,ContaAPagarDAO dao, ContaDAO contaDao, MovimentacaoDAO movimentacaoDao, AdiantamentoDAO adiantamentoDao, CompraDAO compraDao) {
+	public ContasPagarController(Result result,ContaAPagarDAO dao, ContaDAO contaDao, 
+			MovimentacaoDAO movimentacaoDao, AdiantamentoDAO adiantamentoDao, CompraDAO compraDao, 
+			DespesaDAO despesaDao) {
 		this.dao = dao;
 		this.result = result;
 		this.contaDao = contaDao;
 		this.movimentacaoDao = movimentacaoDao;
 		this.compraDao = compraDao;
 		this.adiantamentoDao = adiantamentoDao;
+		this.despesaDao = despesaDao;
 		
 	}
 	
@@ -94,7 +101,7 @@ public class ContasPagarController {
 		contaAPagar = dao.findById(contaAPagar.getId());
 				
 		
-		result.include("contas",contaDao.obterContasFinanceiras());
+		result.include("contas",contaDao.findAll());
 		
 		return contaAPagar;
 	}
@@ -105,6 +112,7 @@ public class ContasPagarController {
 		
 		ContaAPagar contaAPagarOrig = dao.findById(contaAPagar.getId());
 		
+		//setando a conta selecionada para ser
 		contaAPagarOrig.setConta(contaAPagar.getConta());
 		contaAPagarOrig.setDataPagamento(contaAPagar.getDataPagamento());
 		contaAPagarOrig.setStatus(StatusMovimentacaoEnum.P);
@@ -149,16 +157,50 @@ public class ContasPagarController {
 			contaAdiant.getAdiantamento().setSituacao(SituacaoAdiantamentoEnum.PG);
 			adiantamentoDao.updateEntity(contaAdiant.getAdiantamento());
 			
-		}else if (contaAPagarOrig instanceof ContaAPagarCompra){
+		}else if (contaAPagarOrig instanceof ContaAPagarCompra ){
 			ContaAPagarCompra contaCompra = (ContaAPagarCompra)contaAPagarOrig;
 			contaCompra.getCompra().setStatus(StatusCompraEnum.P);
 			
+			
 			compraDao.updateEntity(contaCompra.getCompra());
+			
+//			//Caso o Fornecedor trabalhe com adiantamentos devemos creditar o valor do carregamento na conta dele.
+//			if(contaCompra.getCompra().getFornecedor().getTipoFaturamento() == TipoFaturamentoEnum.ADIANT){
+//				
+//				
+//				MovimentacaoContasAPagar movimentacaoDestino = new MovimentacaoContasAPagar();
+//				movimentacaoDestino.setContaAPagar(contaAPagarOrig);
+//				movimentacaoDestino.setConta(contaCompra.getCompra().getFornecedor().getConta());
+//				
+//				movimentacaoDestino.setValor(contaAPagarOrig.getValor());
+//				movimentacaoDestino.setData(contaAPagarOrig.getDataPagamento());
+//				movimentacaoDestino.setTipoOperacao(TipoOperacaoEnum.C);
+//				
+//				movimentacaoDao.addEntity(movimentacaoDestino);
+//				
+//				//Alterar o Saldo do fornecedor
+//				Conta conta = contaCompra.getCompra().getFornecedor().getConta();
+//				conta.setSaldo(conta.getSaldo().subtract(movimentacaoDestino.getValor()));
+//				contaDao.updateEntity(conta);
+//				
+//				//Setando a registroo de compra como pago
+//				contaCompra.getCompra().setStatus(StatusCompraEnum.P);
+//				compraDao.updateEntity(contaCompra.getCompra());
+//				
+//				
+//			}
+				
+			
+		}else if (contaAPagarOrig instanceof ContaAPagarDespesa){
+			ContaAPagarDespesa contaDespesa = (ContaAPagarDespesa)contaAPagarOrig;
+			contaDespesa.getDespesa().setStatus(StatusDespesaEnum.P);
+			contaDespesa.getDespesa().setDataPagamento(contaDespesa.getDataPagamento());
+			despesaDao.updateEntity(contaDespesa.getDespesa());
 			
 		}
 				
 		
-		//result.include("contas",contaDao.obterContasFinanceiras());
+		
 		
 		result.nothing();
 	}

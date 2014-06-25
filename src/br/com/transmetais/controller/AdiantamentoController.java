@@ -117,10 +117,10 @@ public class AdiantamentoController {
 					dao.updateEntity(adiantOrig);
 					
 					ContaAPagarAdiantamento contaPagar = new ContaAPagarAdiantamento();
-					contaPagar.setDataPrevista(adiantOrig.getDataPagamento());
+					contaPagar.setDataPrevista(adiantamento.getDataPagamento());
 					contaPagar.setAdiantamento(adiantOrig);
 					contaPagar.setStatus(StatusMovimentacaoEnum.A);
-					contaPagar.setValor(adiantOrig.getValor());
+					contaPagar.setValor(adiantamento.getValor());
 					contaPagar.setDescricao("Adiantamento ao Fornecedor " + adiantOrig.getFornecedor().getApelido() + " - " +adiantOrig.getFornecedor().getNome());
 					
 					contaAPagarDAO.addEntity(contaPagar);

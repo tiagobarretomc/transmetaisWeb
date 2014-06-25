@@ -8,7 +8,6 @@ import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.CentroAplicacao;
-import br.com.transmetais.bean.ContaAPagar;
 import br.com.transmetais.bean.ContaAPagarDespesa;
 import br.com.transmetais.bean.ContaContabil;
 import br.com.transmetais.bean.Despesa;
@@ -17,6 +16,7 @@ import br.com.transmetais.dao.ContaAPagarDAO;
 import br.com.transmetais.dao.ContaContabilDAO;
 import br.com.transmetais.dao.DespesaDAO;
 import br.com.transmetais.dao.commons.DAOException;
+import br.com.transmetais.type.StatusDespesaEnum;
 import br.com.transmetais.type.StatusMovimentacaoEnum;
 
 @Resource
@@ -42,7 +42,7 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 		conta.setDescricao("Despesa " + bean.getId());
 		
 		try {
-			contaAPagarDAO.updateEntity(conta);
+			contaAPagarDAO.addEntity(conta);
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -72,7 +72,8 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 	}
 	@Override
 	protected void prePersistUpdate(Despesa bean) {
-		// TODO Auto-generated method stub
+		
+		bean.setStatus(StatusDespesaEnum.A);
 		
 	}
 	

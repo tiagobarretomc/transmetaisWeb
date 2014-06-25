@@ -7,9 +7,7 @@ import javax.persistence.EntityManager;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.DetachedCriteria;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Property;
-import org.hibernate.criterion.Subqueries;
 
 import br.com.caelum.vraptor.ioc.Component;
 import br.com.transmetais.bean.Conta;
