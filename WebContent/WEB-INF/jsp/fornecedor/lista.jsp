@@ -10,6 +10,15 @@
     		document.location.href = "${pageContext.request.contextPath}/fornecedor/novo";
     	});
     	
+    	$('.selectpicker').selectpicker({
+            //'selectedText': 'cat'
+        });
+    	
+		$("#btnFiltrar").click(function(){
+    		
+    		$("#divTabela").load( '<c:url value="/fornecedor/loadListaFornecedor"/>', $('#formFornecedor').serialize() );
+    	});
+    	
     	
     });
 </script>
@@ -21,9 +30,47 @@
 		<button type="button" id="btnAdicionar" class="btn btn-default btn-md">
 		  <span class="glyphicon glyphicon-plus-sign"></span> Adicionar
 		</button>
+		
+		
+		
+		
+		
+		
+		
+		<div class="panel panel-default">
+  	<div class="panel-body">
+		<form action="<c:url value='/fornecedor/'/>" id="formFornecedor" name="formFornecedor" method="post">
+		<input type="hidden" name="_format" value="json">
+		<div class="row">
+        	<div class="col-md-5">
+        		<label for="fornecedorId">Fornecedor:</label>
+	        	<select id="fornecedor" name="fornecedorId" class="selectpicker form-control" data-live-search="true">
+					<option value ="">Selecione</option>
+					<c:forEach var="fornecedor" items="${fornecedores}" varStatus="contador">
+						<option value ="${fornecedor.id}">${fornecedor.apelido} - ${fornecedor.nome}</option>
+					</c:forEach>	
+				</select>
+				
+				
+        	</div>
+        	
+        </div>
+        
+        <br/>
+        <button id="btnFiltrar" type="button" class="btn btn-default btn-sm">
+  		<span class="glyphicon glyphicon-filter"></span> Filtrar
+		</button>
+        </form>
+        </div>
+        </div>
+		
+		
+		
+		
 			
 		<br/>
 		<br/>		
+		<div id="divTabela">
 		<table width="1024px" class="table table-bordered table-striped">
 		
 		<thead>
@@ -67,4 +114,5 @@
 		</c:forEach>
 	</tbody>
 	</table>
+	</div>
 	</div>

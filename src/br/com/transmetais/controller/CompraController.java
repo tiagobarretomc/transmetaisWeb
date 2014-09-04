@@ -11,6 +11,7 @@ import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.Compra;
 import br.com.transmetais.bean.ContaAPagarCompra;
+import br.com.transmetais.bean.Estoque;
 import br.com.transmetais.bean.Fornecedor;
 import br.com.transmetais.bean.FornecedorMaterial;
 import br.com.transmetais.bean.ItemCompra;
@@ -18,6 +19,7 @@ import br.com.transmetais.bean.Material;
 import br.com.transmetais.dao.CompraDAO;
 import br.com.transmetais.dao.ContaAPagarDAO;
 import br.com.transmetais.dao.ContaDAO;
+import br.com.transmetais.dao.EstoqueDAO;
 import br.com.transmetais.dao.FornecedorDAO;
 import br.com.transmetais.dao.FornecedorMaterialDAO;
 import br.com.transmetais.dao.MaterialDAO;
@@ -34,18 +36,18 @@ public class CompraController {
 	private FornecedorDAO fornecedorDao;
 	private FornecedorMaterialDAO fornecedorMaterialDao;
 	private ContaAPagarDAO contaAPagarDAO;
-	
+	private EstoqueDAO estoqueDAO;
 	private MaterialDAO materialDao;
 	
 	public CompraController(Result result, CompraDAO compraDao, FornecedorDAO fornecedorDao, FornecedorMaterialDAO fornecedorMaterialDao, ContaAPagarDAO contaAPagarDAO, 
-			ContaDAO contaDao, MaterialDAO materialDao) {
+			ContaDAO contaDao, MaterialDAO materialDao, EstoqueDAO estoqueDAO) {
 		this.dao = compraDao;
 		this.fornecedorDao = fornecedorDao;
 		this.fornecedorMaterialDao = fornecedorMaterialDao;
 		this.contaAPagarDAO = contaAPagarDAO;
 		this.result = result;
-		
 		this.materialDao = materialDao;
+		this.estoqueDAO = estoqueDAO;
 	}
 	
 	//tela de listagem de compras
@@ -166,6 +168,10 @@ public class CompraController {
 				contaPagar.setDescricao("Compra Fornecedor " + compra.getFornecedor().getApelido() + " - " + compra.getFornecedor().getNome());
 				
 				contaAPagarDAO.addEntity(contaPagar);
+				
+				Estoque estoque = new Estoque();
+				
+				//estoqueDAO.find
 				
 				//compra.getConta().setSaldo(compra.getConta().getSaldo().subtract(movimentacao.getValor()));
 				//contaDao.updateEntity(compra.getConta());

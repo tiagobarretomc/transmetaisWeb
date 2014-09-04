@@ -3,6 +3,7 @@ package br.com.transmetais.controller;
 import static br.com.caelum.vraptor.view.Results.json;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.caelum.vraptor.Path;
@@ -173,5 +174,21 @@ public class FornecedorController {
 	public void loadJsonCidade(Estado estado) {
         result.use(json()).from(estado.getCidades()).serialize();
     }
+	
+	public List<Fornecedor> loadListaFornecedor(Long fornecedorId){
+		List<Fornecedor> lista = new ArrayList<Fornecedor>();
+		
+		try {
+			
+			lista.add(dao.findById(fornecedorId));
+			
+			result.include("fornecedores",lista);
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return lista;
+	}
 
 }
