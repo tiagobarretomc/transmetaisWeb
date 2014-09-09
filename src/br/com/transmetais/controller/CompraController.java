@@ -169,9 +169,32 @@ public class CompraController {
 				
 				contaAPagarDAO.addEntity(contaPagar);
 				
-				Estoque estoque = new Estoque();
+				//Adicionar no estoque.
+				for (ItemCompra item : compra.getItens()) {
+					
+					Estoque estoque = estoqueDAO.findByMaterial(item.getMaterial());
+					
+					// para o caso de nao haver nada no estoque desse material.
+					if ( estoque ==null){
+						estoque = new Estoque();
+						estoque.setQuantidade(new BigDecimal(0));
+					}
+					
+					estoque.setDataAlteracao(new Date());
+					
+					estoque.setQuantidade(estoque.getQuantidade().add(item.getQuantidade()));
+					
+					//
+					if (estoque.getId() !=null && estoque.getId() != 0){
+						estoqueDAO.updateEntity(estoque);
+					}else{
+						estoque.setMaterial(item.getMaterial());
+						estoqueDAO.addEntity(estoque);
+					}
+			
+					
+				}
 				
-				//estoqueDAO.find
 				
 				//compra.getConta().setSaldo(compra.getConta().getSaldo().subtract(movimentacao.getValor()));
 				//contaDao.updateEntity(compra.getConta());

@@ -1,7 +1,5 @@
 package br.com.transmetais.dao.impl;
 
-import java.util.List;
-
 import javax.persistence.EntityManager;
 
 import org.hibernate.Criteria;
@@ -19,19 +17,20 @@ import br.com.transmetais.dao.commons.DAOException;
 public class EstoqueDaoImpl extends CrudDAOJPA<Estoque> implements EstoqueDAO{
 	
 
-	public List<Estoque> findByMaterial(Material material) throws DAOException {
+	public Estoque findByMaterial(Material material) throws DAOException {
 		EntityManager manager = factory.createEntityManager(); 
 		
 		
 		Session session = (Session) manager.getDelegate();
 		Criteria crit = session.createCriteria(Estoque.class);
-		List<Estoque> result = null;
 		
 		crit.add(Restrictions.eq("material", material));
 		
-		result =  crit.list();
+		crit.setMaxResults(1);
+		Estoque retorno = (Estoque) crit.uniqueResult();
 		
-		return result;
+		return retorno;
+		
 	}
 	
 	
