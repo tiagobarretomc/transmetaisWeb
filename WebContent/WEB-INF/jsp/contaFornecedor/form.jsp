@@ -14,7 +14,18 @@
 			$("#formConta").submit();
 		});
 		
-		
+		$("#conta\\.bancaria").click(function(){
+			
+			
+			if($(this).is(':checked')){
+				
+				$("#divDadosBancarios").show();
+				
+			}else{
+				$("#divDadosBancarios").hide();
+				
+			}
+		});
 
 		$('#formConta').validate({
 
@@ -68,7 +79,7 @@
 					</div>
 
 				</div>
-				<div  class="row" id="divDadosBancarios">
+				<div  class="row" id="divDadosBancarios" ${conta.bancaria ? 'style="display: block;"' : 'style="display: none;"'}>
 					<div class="col-md-4">
 						<label for="conta.banco">Banco:</label> <input name="conta.banco"
 							id="conta.banco" value="${conta.banco}" class="form-control "

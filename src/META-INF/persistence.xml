@@ -17,7 +17,7 @@
          <property name="hibernate.connection.url" value="jdbc:mysql://localhost/transmetais"/>
          <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLInnoDBDialect"/>
          <property name="hibernate.format_sql" value="false" />
-         <property name="hibernate.show_sql" value="false" />
+         <property name="hibernate.show_sql" value="true" />
          <property name="hibernate.hbm2dll.auto" value="create"/> 
       </properties>
       

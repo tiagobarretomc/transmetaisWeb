@@ -71,7 +71,7 @@ public class Fornecedor {
 	private List<InformacaoBancaria> informacoesBancarias;
 	@OneToOne
 	@JoinColumn(name="conta_id")
-	private Conta conta;
+	private ContaFornecedor conta;
 	@Enumerated(EnumType.STRING)
 	@Column(name="tipo_faturamento")
 	private TipoFaturamentoEnum tipoFaturamento;
@@ -162,10 +162,10 @@ public class Fornecedor {
 	
 	
 	
-	public Conta getConta() {
+	public ContaFornecedor getConta() {
 		return conta;
 	}
-	public void setConta(Conta conta) {
+	public void setConta(ContaFornecedor conta) {
 		this.conta = conta;
 	}
 	

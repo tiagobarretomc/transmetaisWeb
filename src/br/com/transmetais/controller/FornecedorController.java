@@ -11,6 +11,8 @@ import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.Cidade;
 import br.com.transmetais.bean.Conta;
+import br.com.transmetais.bean.ContaBancaria;
+import br.com.transmetais.bean.ContaFornecedor;
 import br.com.transmetais.bean.Estado;
 import br.com.transmetais.bean.Fornecedor;
 import br.com.transmetais.bean.Material;
@@ -73,10 +75,10 @@ public class FornecedorController {
 					Fornecedor fornecedorAnterior = dao.findById(fornecedor.getId());
 					if (fornecedorAnterior.getTipoFaturamento() == null || fornecedorAnterior.getTipoFaturamento() != TipoFaturamentoEnum.ADIANT){
 						if (fornecedorAnterior.getConta() == null){
-							Conta conta = new Conta();
+							ContaFornecedor conta = new ContaFornecedor();
 							conta.setDescricao(fornecedor.getApelido() + " - " + fornecedor.getNome());
-							
-							conta.setBancaria(false);
+							conta.setFornecedor(fornecedorAnterior);
+							//conta.setBancaria(false);
 							conta.setSaldo(fornecedor.getConta().getSaldo());
 							conta.setSaldoInicial(fornecedor.getConta().getSaldo());
 							conta.setSaldoInicial(new BigDecimal(0));
@@ -103,10 +105,10 @@ public class FornecedorController {
 				if(fornecedor.getTipoFaturamento() == TipoFaturamentoEnum.ADIANT){
 					
 					//Criando a Conta do Fornecedor
-					Conta conta = new Conta();
+					ContaFornecedor conta = new ContaFornecedor();
 					conta.setDescricao(fornecedor.getApelido());
-					//conta.setFornecedor(fornecedor);
-					conta.setBancaria(false);
+					conta.setFornecedor(fornecedor);
+					//conta.setBancaria(false);
 					conta.setSaldo(contaFornec.getSaldo());
 					conta.setSaldoInicial(contaFornec.getSaldo());
 					contaDao.addEntity(conta);

@@ -1,23 +1,17 @@
 package br.com.transmetais.controller;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
-import br.com.transmetais.bean.Conta;
 import br.com.transmetais.bean.ContaAPagar;
-import br.com.transmetais.bean.Movimentacao;
-import br.com.transmetais.bean.MovimentacaoContasAPagar;
-import br.com.transmetais.bean.MovimentacaoContasAReceber;
 import br.com.transmetais.bean.Transferencia;
 import br.com.transmetais.dao.ContaDAO;
 import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.TransferenciaDAO;
 import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.type.StatusMovimentacaoEnum;
-import br.com.transmetais.type.TipoOperacaoEnum;
 
 @Resource
 public class TransferenciaController {
@@ -62,7 +56,7 @@ public class TransferenciaController {
 		return transferencia;
 	}
 	
-	@Path({"/contaBancaria/add"})
+	@Path({"/transferencia/add"})
 	public void add(Transferencia transferencia) throws DAOException {
 		try {
 			

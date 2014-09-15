@@ -7,11 +7,11 @@ import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.Conta;
+import br.com.transmetais.bean.ContaBancaria;
 import br.com.transmetais.bean.Movimentacao;
 import br.com.transmetais.dao.ContaDAO;
 import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.commons.DAOException;
-import br.com.transmetais.type.TipoOperacaoEnum;
 
 @Resource
 public class ContaBancariaController {
@@ -29,22 +29,22 @@ public class ContaBancariaController {
 	}
 	
 	@Path({"/contaBancaria/","/contaBancaria","/contaBancaria/lista"})
-	public List<Conta> lista() throws DAOException{
-		List<Conta> lista = null;
+	public List<ContaBancaria> lista() throws DAOException{
+		List<ContaBancaria> lista = null;
 		
-		lista = dao.findAll();
+		lista = dao.obterContasBancarias();
 		
 		return lista;
 	}
 	
 	
 	@Path({"/contaBancaria/{conta.id}","/contaBancaria/form","/contaBancaria/novo"})
-	public Conta form(Conta conta) throws DAOException{
+	public Conta form(ContaBancaria conta) throws DAOException{
 		
 		
 		if (conta != null && conta.getId() != null && conta.getId()>0){
 			
-			conta = dao.findById(conta.getId());
+			conta = (ContaBancaria)dao.findById(conta.getId());
 			
 		}
 		
@@ -52,13 +52,14 @@ public class ContaBancariaController {
 		return conta;
 	}
 	
+	
 	@Path({"/contaBancaria/add"})
 	public void add(Conta conta) throws DAOException {
 		try {
 			
-			if(conta.getBancaria() == null){
-				conta.setBancaria(Boolean.FALSE);
-			}
+//			if(conta.getBancaria() == null){
+//				conta.setBancaria(Boolean.FALSE);
+//			}
 			
 			if (conta.getId() != null && conta.getId()>0){
 				dao.updateEntity(conta);
@@ -69,17 +70,17 @@ public class ContaBancariaController {
 				
 				if(conta.getSaldo().compareTo(new BigDecimal(0)) != 0){
 					
-					Movimentacao movimentacao = new Movimentacao();
-					movimentacao.setConta(conta);
-					movimentacao.setData(conta.getDataSaldoInicial());
-					TipoOperacaoEnum tipoOperacao = null;
-					if(conta.getSaldo().compareTo(new BigDecimal(0)) < 0){
-						tipoOperacao = TipoOperacaoEnum.D;
-					}else if(conta.getSaldo().compareTo(new BigDecimal(0)) > 0){
-						tipoOperacao = TipoOperacaoEnum.C;
-					}
-					movimentacao.setTipoOperacao(tipoOperacao);
-					movimentacao.setValor(conta.getSaldoInicial());
+//					Movimentacao movimentacao = new Movimentacao();
+//					movimentacao.setConta(conta);
+//					movimentacao.setData(conta.getDataSaldoInicial());
+//					TipoOperacaoEnum tipoOperacao = null;
+//					if(conta.getSaldo().compareTo(new BigDecimal(0)) < 0){
+//						tipoOperacao = TipoOperacaoEnum.D;
+//					}else if(conta.getSaldo().compareTo(new BigDecimal(0)) > 0){
+//						tipoOperacao = TipoOperacaoEnum.C;
+//					}
+//					movimentacao.setTipoOperacao(tipoOperacao);
+//					movimentacao.setValor(conta.getSaldoInicial());
 					
 				}
 			}
@@ -118,11 +119,11 @@ public class ContaBancariaController {
 			
 			lista = movimentacaoDao.findByFilter(null, null, contaId);
 			
-			if (conta.getFornecedor() != null){
-				result.include("titular",conta.getFornecedor());
-			}else if (conta.getCliente()!= null){
-				result.include("titular",conta.getCliente());
-			}
+//			if (conta.getFornecedor() != null){
+//				result.include("titular",conta.getFornecedor());
+//			}else if (conta.getCliente()!= null){
+//				result.include("titular",conta.getCliente());
+//			}
 			
 			result.include("conta",conta);
 			result.include("movimentacoes",lista);

@@ -32,9 +32,7 @@
 				<th></th>
 				<th>Código</th>
 				<th>Descrição</th>
-				<th>Banco</th>
-				<th>Agência</th>
-				<th>Conta-Corrente</th>
+				
 				<th>Saldo</th>
 
 			</tr>
@@ -50,9 +48,6 @@
 					<td><fmt:formatNumber minIntegerDigits="4" value="${conta.id}"
 							groupingUsed="" /></td>
 					<td>${conta.descricao}</td>
-					<td>${conta.banco}</td>
-					<td>${conta.agencia}</td>
-					<td>${conta.contaCorrente}</td>
 					<td><fmt:formatNumber value="${conta.saldo}"
 							minFractionDigits="2" type="currency" /></td>
 
