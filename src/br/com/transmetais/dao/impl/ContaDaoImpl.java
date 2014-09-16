@@ -11,6 +11,7 @@ import org.hibernate.criterion.Restrictions;
 import br.com.caelum.vraptor.ioc.Component;
 import br.com.transmetais.bean.Conta;
 import br.com.transmetais.bean.ContaBancaria;
+import br.com.transmetais.bean.ContaFornecedor;
 import br.com.transmetais.dao.ContaDAO;
 import br.com.transmetais.dao.commons.CrudDAOJPA;
 
@@ -65,6 +66,23 @@ public class ContaDaoImpl extends CrudDAOJPA<Conta> implements ContaDAO{
 		
 		Session session = (Session) manager.getDelegate();
 		Criteria crit = session.createCriteria(ContaBancaria.class);
+		
+		//crit.add(Restrictions.isNull("fornecedor"));
+		
+		
+		
+		
+		return crit.list();
+		
+	}
+	
+	public List<ContaFornecedor> obterContasFornecedor(){
+		
+		EntityManager manager = factory.createEntityManager(); 
+		
+		
+		Session session = (Session) manager.getDelegate();
+		Criteria crit = session.createCriteria(ContaFornecedor.class);
 		
 		//crit.add(Restrictions.isNull("fornecedor"));
 		

@@ -7,7 +7,7 @@
     	
     	
     	$("#btnAdicionar").click(function(){
-    		document.location.href = "${pageContext.request.contextPath}/contaBancaria/novo";
+    		document.location.href = "${pageContext.request.contextPath}/contaFornecedor/novo";
     	});
     	
     	
@@ -16,7 +16,7 @@
 <div class="container">
 
 	<br />
-	<h2>Contas Bancárias</h2>
+	<h2>Contas de Fornecedores</h2>
 	<br>
 
 	<button type="button" id="btnAdicionar" class="btn btn-default btn-md">
@@ -31,23 +31,25 @@
 			<tr>
 				<th></th>
 				<th>Código</th>
-				<th>Descrição</th>
-				
+				<th>Fornecedor</th>
+				<th>Limite</th>
 				<th>Saldo</th>
 
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach var="conta" items="${contaBancariaList}" varStatus="contador">
+			<c:forEach var="conta" items="${contaFornecedorList}" varStatus="contador">
 
 				<tr>
-					<td><a href="<c:url value='/contaBancaria/'/>${conta.id}"><span
+					<td><a href="<c:url value='/contaFornecedor/'/>${conta.id}"><span
 							title="Alterar" class="glyphicon glyphicon-edit"></span></a> <a
-						href="<c:url value='/contaBancaria/remove/'/>${conta.id}"><span
+						href="<c:url value='/contaFornecedor/remove/'/>${conta.id}"><span
 							title="Excluir" class="glyphicon glyphicon-remove"></span></a></td>
 					<td><fmt:formatNumber minIntegerDigits="4" value="${conta.id}"
 							groupingUsed="" /></td>
-					<td>${conta.descricao}</td>
+					<td>${conta.fornecedor.apelido}</td>
+					<td><fmt:formatNumber value="${conta.limite}"
+							minFractionDigits="2" type="currency" /></td>
 					<td><fmt:formatNumber value="${conta.saldo}"
 							minFractionDigits="2" type="currency" /></td>
 

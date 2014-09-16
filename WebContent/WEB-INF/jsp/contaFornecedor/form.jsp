@@ -79,26 +79,35 @@
 					</div>
 
 				</div>
-				<div  class="row" id="divDadosBancarios" ${conta.bancaria ? 'style="display: block;"' : 'style="display: none;"'}>
+				<div  class="row" id="divDadosBancarios">
 					<div class="col-md-4">
-						<label for="conta.banco">Banco:</label> <input name="conta.banco"
-							id="conta.banco" value="${conta.banco}" class="form-control "
-							maxlength="100" />
+						<label for="conta.fornecedor">Fornecedor:</label>
+			        	<select id="conta.fornecedor" name="conta.fornecedor" class="selectpicker form-control" data-live-search="true">
+							<option value ="">Selecione</option>
+							<c:forEach var="fornecedor" items="${fornecedores}" varStatus="contador">
+								<option value ="${fornecedor.id}" ${conta.fornecedor.id eq fornecedor.id ? 'selected' : ''}>${fornecedor.apelido} - ${fornecedor.nome}</option>
+							</c:forEach>	
+						</select>
 					</div>
-					<div class="col-md-2">
-						<label for="conta.agencia">Agência:</label> <input
-							name="conta.agencia" id="conta.agencia" value="${conta.agencia}"
-							class="form-control " maxlength="6" />
+					<div class="col-md-4">
+						<label for="conta.limite">Limite de Crédito:</label> 
+						<input 
+								name="conta.limite" id="conta.limite"
+								value="<fmt:formatNumber value="${conta.limite}" minFractionDigits="2" type="number" />"
+								class="form-control " maxlength="18" />
+						
 					</div>
-					<div class="col-md-3">
-						<label for="conta.contaCorrente">Conta Corrente:</label> <input
-							name="conta.contaCorrente" id="conta.contaCorrente"
-							value="${conta.contaCorrente}" class="form-control "
-							 />
-					</div>
+					<div class="col-md-4">
+			        	<label for="conta.contaContabil.id">Conta Contábil:</label>
+			        		<select id="conta.contaContabil.id" name="conta.contaContabil.id" class="selectpicker form-control required" data-live-search="true">
+									<option value =""></option>
+									<c:forEach var="contaAux" items="${contas}" varStatus="contador">
+									
+										<option value ="${contaAux.id}" ${conta.contaContabil.id eq contaAux.id ? 'selected' : ''}>${contaAux.numero} - ${contaAux.descricao}</option>
 					
-
-
+									</c:forEach>	
+							</select>
+			        </div>
 
 				</div>
 				
@@ -111,7 +120,9 @@
 					</div>
 					<div class="col-md-2">
 						<label for="conta.dataSaldoInicial">Dt. Saldo Inicial:</label> 
-						<input name="conta.dataSaldoInicial" ${ empty conta.id ? '' : 'readonly="readonly"' } id="conta.dataSaldoInicial"value="<fmt:formatDate value="${conta.dataSaldoInicial }" type="date" pattern="dd/MM/yyyy"/>" class="datepicker form-control" data-date-format="dd/mm/yyyy" />
+						<input name="conta.dataSaldoInicial" ${ empty conta.id ? '' : 'readonly="readonly"' } 
+						id="conta.dataSaldoInicial"value="<fmt:formatDate value="${conta.dataSaldoInicial }" type="date" 
+						pattern="dd/MM/yyyy"/>" class="datepicker form-control" data-date-format="dd/mm/yyyy" />
 					</div>
 					<div class="col-md-3">
 						<label for="conta.saldo">Saldo Atual:</label> <input 
@@ -120,9 +131,6 @@
 							class="form-control " maxlength="18" />
 					</div>
 				</div>
-
-
-
 
 				<br />
 				<button type="button" id="btnAdicionar" 

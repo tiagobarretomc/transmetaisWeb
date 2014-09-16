@@ -8,6 +8,11 @@
 		options['language'] = 'pt-BR';
 		$('.datepicker').datepicker(options);
 		
+		$('.selectpicker').selectpicker({
+            //'selectedText': 'cat'
+        });
+
+		
 		$("#conta\\.dataSaldoInicial").mask('99/99/9999');
 
 		$("#btnAdicionar").click(function() {
@@ -39,7 +44,7 @@
 
 <div class="container">
 	<br>
-	<h2>Cadastro de Contas Bancárias e não Bancárias</h2>
+	<h2>Cadastro de Contas Bancárias</h2>
 	<br />
 	<div class="panel panel-default">
 		<div class="panel-body">
@@ -56,11 +61,19 @@
 							class="form-control " size="8" maxlength="4" />
 					</div>
 
-					<div class="col-md-2">
-						
-					</div>
+					<div class="col-md-4">
+			        	<label for="conta.contaContabil.id">Conta Contábil:</label>
+			        		<select id="conta.contaContabil.id" name="conta.contaContabil.id" class="selectpicker form-control required" data-live-search="true">
+									<option value =""></option>
+									<c:forEach var="contaAux" items="${contas}" varStatus="contador">
+									
+										<option value ="${contaAux.id}" ${conta.contaContabil.id eq contaAux.id ? 'selected' : ''}>${contaAux.numero} - ${contaAux.descricao}</option>
 					
-					<div class="col-md-9">
+									</c:forEach>	
+							</select>
+			        </div>
+					
+					<div class="col-md-7">
 						<label for="conta.descricao">Descrição:</label> 
 						<input name="conta.descricao"  id="conta.descricao"
 							value="${conta.descricao }"
@@ -71,18 +84,18 @@
 				<div  class="row" id="divDadosBancarios">
 					<div class="col-md-4">
 						<label for="conta.banco">Banco:</label> <input name="conta.banco"
-							id="conta.banco" value="${conta.banco}" class="form-control "
+							id="conta.banco" value="${conta.banco}" class="form-control required"
 							maxlength="100" />
 					</div>
 					<div class="col-md-2">
 						<label for="conta.agencia">Agência:</label> <input
 							name="conta.agencia" id="conta.agencia" value="${conta.agencia}"
-							class="form-control " maxlength="6" />
+							class="form-control required" maxlength="6" />
 					</div>
 					<div class="col-md-3">
 						<label for="conta.contaCorrente">Conta Corrente:</label> <input
 							name="conta.contaCorrente" id="conta.contaCorrente"
-							value="${conta.contaCorrente}" class="form-control "
+							value="${conta.contaCorrente}" class="form-control required"
 							 />
 					</div>
 					
@@ -96,11 +109,11 @@
 						<label for="conta.saldoInicial">Saldo Inicial:</label> <input ${ empty conta.id ? '' : 'readonly="readonly"' }
 							name="conta.saldoInicial" id="conta.saldoInicial"
 							value="<fmt:formatNumber value="${conta.saldoInicial}" minFractionDigits="2" type="number" />"
-							class="form-control " maxlength="18" />
+							class="form-control required" maxlength="18" />
 					</div>
 					<div class="col-md-2">
 						<label for="conta.dataSaldoInicial">Dt. Saldo Inicial:</label> 
-						<input name="conta.dataSaldoInicial" ${ empty conta.id ? '' : 'readonly="readonly"' } id="conta.dataSaldoInicial"value="<fmt:formatDate value="${conta.dataSaldoInicial }" type="date" pattern="dd/MM/yyyy"/>" class="datepicker form-control" data-date-format="dd/mm/yyyy" />
+						<input name="conta.dataSaldoInicial" ${ empty conta.id ? '' : 'readonly="readonly"' } id="conta.dataSaldoInicial"value="<fmt:formatDate value="${conta.dataSaldoInicial }" type="date" pattern="dd/MM/yyyy"/>" class="datepicker form-control required" data-date-format="dd/mm/yyyy" />
 					</div>
 					<div class="col-md-3">
 						<label for="conta.saldo">Saldo Atual:</label> <input 

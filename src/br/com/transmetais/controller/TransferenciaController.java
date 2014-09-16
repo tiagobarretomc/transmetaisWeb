@@ -108,7 +108,7 @@ public class TransferenciaController {
 	  }
 	
 	
-	@Path("/contaBancaria/remove/{conta.id}")
+	@Path("/transferencia/remove/{conta.id}")
 	public void remove(Transferencia transferencia) throws DAOException {
 		
 		if (transferencia.getId() != null && transferencia.getId()>0){
