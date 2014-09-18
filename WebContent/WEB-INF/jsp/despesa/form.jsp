@@ -23,8 +23,52 @@
 	   	$('.selectpicker').selectpicker({
             //'selectedText': 'cat'
         });
+	    $("#qtdParcelas").blur(function(){
+	    	var qtdParcelas = $('#qtdParcelas').val();
+	    	var strLinha;
+	    	for(i = 0; i < qtdParcelas; i++){
+	    		adicionarParcela(i);
+	    	}
+	    	
+    	});
+	    $("#btnAdicionarRegra").click(function(){
+	    	var qtdParcelas = $("tr[id^='parcela_']").size();
+			adicionarParcela(qtdParcelas);
+			$("#qtdParcelas").val($("tr[id^='parcela_']").size());
+			$('.datepicker').datepicker(options);
+		   	 
+		 	$('.selectpicker').selectpicker({
+		             //'selectedText': 'cat'
+		     });
+	    });
+	    $('.datepicker').datepicker(options);
+	   	 
+ 	   	$('.selectpicker').selectpicker({
+             //'selectedText': 'cat'
+         });
 		
 	});
+	function adicionarParcela(i){
+		strLinha = '<tr id="parcela_' + i + '">';
+		strLinha += '<td style="vertical-align: middle;"><span title="Excluir" class="glyphicon glyphicon-remove" onclick="removerParcela(' + i +')"></span></td>';
+		strLinha += '<td style="max-width:130px"><input name="parcelas[' + i + '].data" id="dataParcela' + i + '" data-date-format="dd/mm/yyyy" value="${parcelas[' + i + '].data}" class="form-control required datepicker" size="8" maxlength="8"/></td>';
+		strLinha += '<td style="max-width:130px"><input name="parcelas[' + i + '].valor" id="valorParcela' + i + '" value="<fmt:formatNumber value="${parcelas[' + i + '].valor}" minFractionDigits="2" type="currency"/>" class="form-control required"  maxlength="18"/></td>';
+		strLinha += '</tr>';
+		$('#tabelaParcelas > tbody:last').append(strLinha);
+		$("#dataParcela" + i).mask('99/99/9999');
+		$("#valorParcela" + i).priceFormat({
+	        prefix: '',
+	        centsSeparator: ',',
+	        thousandsSeparator: '.',
+	        limit: 12
+	        
+	    });
+		
+	}
+	function removerParcela(id){
+    	$("#parcela_" + id).remove();
+    	$("#qtdParcelas").val($("tr[id^='parcela_']").size());
+    }
 	        
 </script>
 
@@ -41,21 +85,19 @@
 		<div class="row">
 			<div class="col-md-6">
         		<label for="bean.descricao">Descrição:</label>
-        		<input name="bean.descricao" id="bean.descricao" value="${bean.descricao}" class="form-control required" size="45" maxlength="45"/>
+        		<input name="bean.descricao" id="bean.descricao" value="${bean.descricao}" class="form-control required"  maxlength="45"/>
         	</div>
         	<div class="col-md-2">
         		<label for="bean.valor">Valor:</label>
         		<input name="bean.valor" id="valor" value="<fmt:formatNumber value="${bean.valor}" minFractionDigits="2" type="currency"/>" class="form-control required"  maxlength="18"/>
         	</div>
-        	<div class="col-md-2">
-        		<label for="bean.dataCompetencia">Data Competência:</label>
-        		<input name="bean.dataCompetencia" id="bean.dataCompetencia" data-date-format="dd/mm/yyyy" value="${bean.dataCompetencia}" class="form-control required datepicker" size="8" maxlength="8"/>
-        	</div>
-        	<div class="col-md-2">
-        		<label for="bean.dataVencimento">Data Vencimento:</label>
-        		<input name="bean.dataVencimento" id="bean.dataVencimento" data-date-format="dd/mm/yyyy" value="${bean.dataVencimento}" class="form-control required datepicker" size="8" maxlength="8"/>
-        	</div>
         	
+        	<div class="row">
+        	<div class="col-md-2">Forma de Pagamento: <br/>
+				<input type="radio" name="formaPagamento" value="V" id="optPagamentoAVista"/>&nbsp;À vista&nbsp;
+				<input type="radio" name="formaPagamento" value="P" id="optPagamentoAPrazo"/>&nbsp;À prazo&nbsp;</div>
+        	
+        </div>
         	
         	
       	</div>
@@ -82,12 +124,50 @@
 						</c:forEach>	
 				</select>
         	</div>
-				
-        	<div class="col-md-4">
-        		
+        	<div class="col-md-2">
+        		<label for="bean.dataCompetencia">Data Competência:</label>
+        		<input name="bean.dataCompetencia" id="bean.dataCompetencia" data-date-format="dd/mm/yyyy" value="${bean.dataCompetencia}" class="form-control required datepicker" size="8" maxlength="8"/>
         	</div>
+        	<div class="col-md-2">
+        		<label for="bean.dataVencimento">Data Vencimento:</label>
+        		<input name="bean.dataVencimento" id="bean.dataVencimento" data-date-format="dd/mm/yyyy" value="${bean.dataVencimento}" class="form-control required datepicker" size="8" maxlength="8"/>
+        	</div>
+				
         	
       	</div>
+      	<div class="row">
+      	<div class="col-md-2">Quantidade de Parcelas:<br/>
+        		<input id="qtdParcelas" value="${quantidadeParcelas}" size="10" class="form-control "/>
+        	</div>
+      	</div>
+      	
+        <br/>
+        <div class="panel panel-default" >
+        	<div class="panel-body">
+        	<h4>Parcelas</h4>
+				<button type="button" id="btnAdicionarRegra" class="btn btn-default btn-md">
+				  <span class="glyphicon glyphicon-plus-sign"></span> Adicionar
+				</button>
+				<br/>
+				<br/>
+				<div id="divTabela">
+				<table  class="table table-bordered table-striped" id="tabelaParcelas">
+				
+				<thead>
+			<tr>
+				<th ></th>
+				<th >Data</th>
+				<th >Valor</th>
+				
+				
+			</tr>
+			</thead>
+			<tbody>
+			</tbody>
+			</table>
+			</div>
+        	</div>
+        </div>
       	<br/>
       	
       	

@@ -10,6 +10,9 @@
 		
 		$("#conta\\.dataSaldoInicial").mask('99/99/9999');
 
+		
+		$('.selectpicker').selectpicker({});
+		
 		$("#btnAdicionar").click(function() {
 			$("#formConta").submit();
 		});
@@ -42,6 +45,15 @@
 
 		});
 		
+		$("#conta\\.limite").priceFormat({
+			prefix : '',
+			centsSeparator : ',',
+			thousandsSeparator : '.',
+			allowNegative: true,
+			limit : 12
+
+		});
+		
 		
 		
 
@@ -50,11 +62,11 @@
 
 <div class="container">
 	<br>
-	<h2>Cadastro de Contas Bancárias e não Bancárias</h2>
+	<h2>Cadastro de Contas de Fornecedores</h2>
 	<br />
 	<div class="panel panel-default">
 		<div class="panel-body">
-			<form action="<c:url value='/contaBancaria/add'/>" id="formConta"
+			<form action="<c:url value='/contaFornecedor/add'/>" id="formConta"
 				name="formConta" method="post">
 
 
@@ -67,11 +79,19 @@
 							class="form-control " size="8" maxlength="4" />
 					</div>
 
-					<div class="col-md-2">
-						
-					</div>
+					<div class="col-md-4">
+			        	<label for="conta.contaContabil.id">Conta Contábil:</label>
+			        		<select id="conta.contaContabil.id" name="conta.contaContabil.id" class="selectpicker form-control required" data-live-search="true">
+									<option value ="">Selecione</option>
+									<c:forEach var="contaAux" items="${contas}" varStatus="contador">
+									
+										<option value ="${contaAux.id}" ${conta.contaContabil.id eq contaAux.id ? 'selected' : ''}>${contaAux.numero} - ${contaAux.descricao}</option>
 					
-					<div class="col-md-9">
+									</c:forEach>	
+							</select>
+			        </div>
+					
+					<div class="col-md-7">
 						<label for="conta.descricao">Descrição:</label> 
 						<input name="conta.descricao"  id="conta.descricao"
 							value="${conta.descricao }"
@@ -82,7 +102,7 @@
 				<div  class="row" id="divDadosBancarios">
 					<div class="col-md-4">
 						<label for="conta.fornecedor">Fornecedor:</label>
-			        	<select id="conta.fornecedor" name="conta.fornecedor" class="selectpicker form-control" data-live-search="true">
+			        	<select id="conta.fornecedor.id" name="conta.fornecedor.id" class="selectpicker form-control" data-live-search="true">
 							<option value ="">Selecione</option>
 							<c:forEach var="fornecedor" items="${fornecedores}" varStatus="contador">
 								<option value ="${fornecedor.id}" ${conta.fornecedor.id eq fornecedor.id ? 'selected' : ''}>${fornecedor.apelido} - ${fornecedor.nome}</option>
@@ -97,17 +117,7 @@
 								class="form-control " maxlength="18" />
 						
 					</div>
-					<div class="col-md-4">
-			        	<label for="conta.contaContabil.id">Conta Contábil:</label>
-			        		<select id="conta.contaContabil.id" name="conta.contaContabil.id" class="selectpicker form-control required" data-live-search="true">
-									<option value =""></option>
-									<c:forEach var="contaAux" items="${contas}" varStatus="contador">
-									
-										<option value ="${contaAux.id}" ${conta.contaContabil.id eq contaAux.id ? 'selected' : ''}>${contaAux.numero} - ${contaAux.descricao}</option>
 					
-									</c:forEach>	
-							</select>
-			        </div>
 
 				</div>
 				
@@ -126,7 +136,7 @@
 					</div>
 					<div class="col-md-3">
 						<label for="conta.saldo">Saldo Atual:</label> <input 
-							name="conta.saldo" id="conta.saldoInicial" readonly="readonly"
+							name="conta.saldo" id="conta.saldo" readonly="readonly"
 							value="<fmt:formatNumber value="${conta.saldo}" minFractionDigits="2" type="number" />"
 							class="form-control " maxlength="18" />
 					</div>

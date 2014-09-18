@@ -37,6 +37,21 @@ public class FornecedorDaoImpl extends CrudDAOJPA<Fornecedor> implements Fornece
 		}
 	}
 	
+	
+	public List<Fornecedor> obterTodosSemConta() throws DAOException {
+		EntityManager manager = factory.createEntityManager(); 
+		try {
+			String query = "from " + Fornecedor.class.getSimpleName() + " as f WHERE f.conta = null ORDER BY f.nome ASC";
+			return manager.createQuery(query).getResultList();
+		} catch (Exception e) {
+		    throw new DAOException(e);
+		} finally {
+			if (manager != null) {
+				manager.close();
+			}
+		}
+	}
+	
 	public List<Fornecedor> obterComRotativo() throws DAOException {
 		EntityManager manager = factory.createEntityManager(); 
 		try {

@@ -9,5 +9,7 @@ import br.com.transmetais.dao.commons.DAOException;
 public interface FornecedorDAO extends CrudDAO<Fornecedor>{
 	
 	public List<Fornecedor> obterComRotativo() throws DAOException;
+	
+	public List<Fornecedor> obterTodosSemConta() throws DAOException;
 
 }

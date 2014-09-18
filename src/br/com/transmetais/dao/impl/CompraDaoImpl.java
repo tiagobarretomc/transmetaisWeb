@@ -8,7 +8,6 @@ import javax.persistence.Query;
 
 import br.com.caelum.vraptor.ioc.Component;
 import br.com.transmetais.bean.Compra;
-import br.com.transmetais.bean.ItemCompra;
 import br.com.transmetais.dao.CompraDAO;
 import br.com.transmetais.dao.commons.CrudDAOJPA;
 import br.com.transmetais.dao.commons.DAOException;
@@ -33,6 +32,7 @@ public class CompraDaoImpl extends CrudDAOJPA<Compra> implements CompraDAO{
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	public List<Compra> findByFilter(Long fornecedorId, Date dataInicio, Date dataFim, List<TipoFreteEnum> tiposFretes, List<Long> materiaisIds,List<StatusCompraEnum> statusCompraLista) throws DAOException {
 		EntityManager manager = factory.createEntityManager(); 
 		

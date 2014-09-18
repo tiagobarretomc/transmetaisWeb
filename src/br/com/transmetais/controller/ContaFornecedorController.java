@@ -55,7 +55,7 @@ public class ContaFornecedorController {
 			
 		}
 		
-		List<Fornecedor> fornecedores = fornecedorDAO.findAll();
+		List<Fornecedor> fornecedores = fornecedorDAO.obterTodosSemConta();
 		
 		result.include("fornecedores",fornecedores);
 		
@@ -84,10 +84,18 @@ public class ContaFornecedorController {
 				contaAnt.setSaldoInicial(conta.getSaldoInicial());
 				
 				dao.updateEntity(contaAnt);
+				
 			}else{
 				//Adicionar Movimentacao com o valor do saldo inicial e setar o saldo = saldo inicial
 				conta.setSaldo(conta.getSaldoInicial());
+				Fornecedor fornecedor = fornecedorDAO.findById(conta.getFornecedor().getId());
+				
+				
 				dao.addEntity(conta);
+				
+				fornecedor.setConta(conta);
+				
+				fornecedorDAO.updateEntity(fornecedor);
 			}
 		
 		result.redirectTo(ContaFornecedorController.class).lista();

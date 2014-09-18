@@ -117,7 +117,7 @@
 					</div>
 					<div class="col-md-3">
 						<label for="conta.saldo">Saldo Atual:</label> <input 
-							name="conta.saldo" id="conta.saldoInicial" readonly="readonly"
+							name="conta.saldo" id="conta.saldo" readonly="readonly"
 							value="<fmt:formatNumber value="${conta.saldo}" minFractionDigits="2" type="number" />"
 							class="form-control " maxlength="18" />
 					</div>
