@@ -12,6 +12,7 @@ import br.com.caelum.vraptor.ioc.Component;
 import br.com.transmetais.bean.Conta;
 import br.com.transmetais.bean.ContaBancaria;
 import br.com.transmetais.bean.ContaFornecedor;
+import br.com.transmetais.bean.ContaFundoFixo;
 import br.com.transmetais.dao.ContaDAO;
 import br.com.transmetais.dao.commons.CrudDAOJPA;
 
@@ -59,7 +60,7 @@ public class ContaDaoImpl extends CrudDAOJPA<Conta> implements ContaDAO{
 		
 	}
 	
-	public List<ContaBancaria> obterContasBancarias(){
+	public List<Conta> obterContasBancarias(){
 		
 		EntityManager manager = factory.createEntityManager(); 
 		
@@ -76,7 +77,24 @@ public class ContaDaoImpl extends CrudDAOJPA<Conta> implements ContaDAO{
 		
 	}
 	
-	public List<ContaFornecedor> obterContasFornecedor(){
+	public List<Conta> obterContasFundoFixo(){
+		
+		EntityManager manager = factory.createEntityManager(); 
+		
+		
+		Session session = (Session) manager.getDelegate();
+		Criteria crit = session.createCriteria(ContaFundoFixo.class);
+		
+		//crit.add(Restrictions.isNull("fornecedor"));
+		
+		
+		
+		
+		return crit.list();
+		
+	}
+	
+	public List<Conta> obterContasFornecedor(){
 		
 		EntityManager manager = factory.createEntityManager(); 
 		

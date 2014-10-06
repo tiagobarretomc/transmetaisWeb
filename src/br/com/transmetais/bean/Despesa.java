@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,7 +15,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import br.com.transmetais.type.FormaPagamentoEnum;
 import br.com.transmetais.type.StatusDespesaEnum;
+import br.com.transmetais.type.TipoPagamentoEnum;
 
 @Entity
 @Table(name="despesa")
@@ -38,6 +41,14 @@ public class Despesa {
 	@ManyToOne
 	@JoinColumn(name="conta_contabil_id")
 	private ContaContabil contaContabil;
+	@Enumerated(EnumType.STRING)
+	@Column(name="forma_pagamento")
+	private TipoPagamentoEnum formaPagamento;
+	@Column(name="modalidade_pagamento")
+	private FormaPagamentoEnum modalidadePagamento;
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="conta_id")
+	protected Conta conta;
 	public Long getId() {
 		return id;
 	}
@@ -91,6 +102,18 @@ public class Despesa {
 	}
 	public void setContaContabil(ContaContabil contaContabil) {
 		this.contaContabil = contaContabil;
+	}
+	public TipoPagamentoEnum getFormaPagamento() {
+		return formaPagamento;
+	}
+	public void setFormaPagamento(TipoPagamentoEnum formaPagamento) {
+		this.formaPagamento = formaPagamento;
+	}
+	public FormaPagamentoEnum getModalidadePagamento() {
+		return modalidadePagamento;
+	}
+	public void setModalidadePagamento(FormaPagamentoEnum modalidadePagamento) {
+		this.modalidadePagamento = modalidadePagamento;
 	}
 	
 	

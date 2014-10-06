@@ -1,12 +1,12 @@
 package br.com.transmetais.type;
 
-public enum FormaPagamentoEnum {
+public enum TipoPagamentoEnum {
 	
-	D("Dinheiro"), C("Cheque"), T("Transação Bancária"), B("Boleto Bancário");
+	V("A Vista"), P("A Prazo");
 	
 	private String descricao;
-	FormaPagamentoEnum tipo;
-	private FormaPagamentoEnum(String descricao) {
+	TipoPagamentoEnum tipo;
+	private TipoPagamentoEnum(String descricao) {
 		this.setDescricao(descricao);
 		
 	}
