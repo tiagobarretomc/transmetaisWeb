@@ -36,8 +36,8 @@ public class ContaFornecedorController {
 	}
 	
 	@Path({"/contaFornecedor/","/contaFornecedor","/contaFornecedor/lista"})
-	public List<ContaFornecedor> lista() throws DAOException{
-		List<ContaFornecedor> lista = null;
+	public List<Conta> lista() throws DAOException{
+		List<Conta> lista = null;
 		
 		lista = dao.obterContasFornecedor();
 		

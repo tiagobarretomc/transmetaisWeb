@@ -18,7 +18,20 @@
 		
 		var options = new Array();
 	   	 options['language'] = 'pt-BR';
-	   	 $('.datepicker').datepicker(options);
+	   	//$('.datepicker').datepicker(options);
+	   	$(".datepicker").datepicker({
+        format: "dd/mm/yyyy",
+        endDate: "-2d"
+    })
+
+    .on('changeDate', function(ev){
+        var dateData = new Date(ev.date);  // this is the change
+        
+        if($('input[name=bean\\.formaPagamento]:checked').val() == 'V'){
+			$("#bean\\.dataVencimento").val($("#bean\\.dataCompetencia").val());
+		}
+        
+    });
 	   	 
 	   	$('.selectpicker').selectpicker({
             //'selectedText': 'cat'
@@ -45,6 +58,7 @@
 	    $("#optPagamentoAVista").click(function(){
 	    	$('#bean\\.dataVencimento').attr('disabled', true);
 	    	$("#bean\\.conta\\.id").attr('disabled', false);
+	    	$("#qtdParcelas").attr('readonly', true);
 	    	
 	    	atualizaModalidades($(this).val());
 	    	
@@ -53,13 +67,17 @@
 	    $("#optPagamentoAPrazo").click(function(){
 	    	$('#bean\\.dataVencimento').attr('disabled', false);
 	    	$("#bean\\.conta\\.id").attr('disabled', true);
+	    	$("#qtdParcelas").attr('readonly', false);
 	    	
+	   
+	    	
+	    	$('#bean\\.conta\\.id').children('option').remove();
 	    	
 	    	atualizaModalidades($(this).val());
 	    	
 	    });
 	    
-	    $('.datepicker').datepicker(options);
+	    
 	   	 
  	   	$('.selectpicker').selectpicker({
              //'selectedText': 'cat'
@@ -73,14 +91,15 @@
 	        url: '${pageContext.request.contextPath}/despesa/loadModalidades?_format=json',
 	        data:	{tipoPagamento: forma},
 	 	    success: function(json){
-	 	    	//alert(json);
+	 	    	
 	 	    	var jsonObject = eval(json);
-	 	    	//alert(jsonObject);
+	 	    	
 	 	    	var modalidades = jsonObject.map;
-	 	    	//alert(cidades); 
+	 	    	
 	 	    	
 	 	    	var html = "";  
-	 	       html += "<select name='bean.modalidadePagamento' class='selectpicker form-control' onchange='jsFunction()'>" ;  
+	 	       html += "<select name='bean.modalidadePagamento' id='bean.modalidadePagamento' class='selectpicker form-control' onchange='atualizaContas()'>" ;  
+	 	      html += "<option value=''>Selecione</option>";
 	 	       for(i=0;i<modalidades.length;i++) {  
 	 	           html += "<option value='"+modalidades[i][0] +"'>"+modalidades[i][1]+"</option>";                           
 	 	       }  
@@ -90,7 +109,7 @@
 	 	      $('.selectpicker').selectpicker();
 	 	      
 	 	     	$('#bean\\.modalidadePagamento').change(function(){
-	 	    		alert('teste');
+	 	    		
 	     	 	});
 	 	        
 
@@ -106,33 +125,58 @@
         
         		
     		//alert($('input[name=formaPagamento]:checked', '#formDespesa').val());
-    		alert('teste');
+    		//alert('teste');
     	
     	
        
     });
 	
+	/* $("#bean\\.dataCompetencia").change(function(){
+		
+		alert($("#bean\\.dataCompetencia"));
+		if($('input[name=formaPagamento]:checked').val() == 'V'){
+			$("#bean\\.dataVencimento").val($("#bean\\.dataCompetencia").val());
+		}
+	}); */
+	
+	/* $(".datepicker").on('change', function(ev){
+		
+		alert('funcionou');
+	    var dateData = $(this).val();
+	    window.location.href = "?day=" + dateData ;
+	}); */
+	
+	
+
+    
+	
+	
+	
+	
+	
 	function atualizaContas(){
 		
-		/* 
-		if($(this).val()) {
+		
+		if($('input[name=bean\\.formaPagamento]:checked').val()) {
     		$.ajax({
 	        type: 'GET',
 	        url: '${pageContext.request.contextPath}/despesa/loadContas?_format=json',
-	        data:	{tipoPagamento: $("#tipoPagamento\\.modalidadePagamento").val()},
+	        data:	{formaPagamento: $('#bean\\.modalidadePagamento').val(), tipoPagamento: $('input[name=bean\\.formaPagamento]:checked').val()},
 	 	    success: function(json){
 	 	    	
 	 	    	var jsonObject = eval(json);
 	 	    	
 	 	    	var contas = jsonObject.list;
 	 	    	
-	 	    	
 	 	    	var html = "";  
-	 	       html += "<select name='bean.conta.id' class='selectpicker form-control' data-live-search='true'>" ;  
+	 	       html += "<select name='bean.conta.id' id='bean.conta.id' class='selectpicker form-control' data-live-search='true'>" ; 
+	 	      html += "<option value=''>Selecione</option>";
 	 	       for(i=0;i<contas.length;i++) {  
 	 	           html += "<option value='"+contas[i].id +"'>"+contas[i].descricao+"</option>";                           
 	 	       }  
-	 	       html += "</select> " ;  
+	 	       html += "</select> " ; 
+	 	       
+	 	       
 	 	       var div = document.getElementById("divCboContas");  
 	 	       div.innerHTML = html; 
 	 	      $('.selectpicker').selectpicker();
@@ -146,15 +190,15 @@
 	
 	
 	
-    	}  */
+    	}  
 		
 	}
 	
 	function adicionarParcela(i){
 		strLinha = '<tr id="parcela_' + i + '">';
 		strLinha += '<td style="vertical-align: middle;"><span title="Excluir" class="glyphicon glyphicon-remove" onclick="removerParcela(' + i +')"></span></td>';
-		strLinha += '<td style="max-width:130px"><input name="parcelas[' + i + '].data" id="dataParcela' + i + '" data-date-format="dd/mm/yyyy" value="${parcelas[' + i + '].data}" class="form-control required datepicker" size="8" maxlength="8"/></td>';
-		strLinha += '<td style="max-width:130px"><input name="parcelas[' + i + '].valor" id="valorParcela' + i + '" value="<fmt:formatNumber value="${parcelas[' + i + '].valor}" minFractionDigits="2" type="currency"/>" class="form-control required"  maxlength="18"/></td>';
+		strLinha += '<td style="max-width:130px"><input name="bean.parcelas[' + i + '].dataVencimento" id="dataParcela' + i + '" data-date-format="dd/mm/yyyy" value="${parcelas[' + i + '].data}" class="form-control required datepicker" size="8" maxlength="8"/></td>';
+		strLinha += '<td style="max-width:130px"><input name="bean.parcelas[' + i + '].valor" id="valorParcela' + i + '" value="<fmt:formatNumber value="${parcelas[' + i + '].valor}" minFractionDigits="2" type="currency"/>" class="form-control required"  maxlength="18"/></td>';
 		strLinha += '</tr>';
 		$('#tabelaParcelas > tbody:last').append(strLinha);
 		$("#dataParcela" + i).mask('99/99/9999');
@@ -171,6 +215,8 @@
     	$("#parcela_" + id).remove();
     	$("#qtdParcelas").val($("tr[id^='parcela_']").size());
     }
+	
+	//$('.datepicker').datepicker(options);
 	        
 </script>
 
@@ -196,8 +242,8 @@
         	
         	
         	<div class="col-md-2"><label for="optPagamentoAVista">Forma Pagamento:</label><br/>
-				<input type="radio" name="formaPagamento" value="V" id="optPagamentoAVista"/>&nbsp;À vista&nbsp;
-				<input type="radio" name="formaPagamento" value="P" id="optPagamentoAPrazo"/>&nbsp;À prazo&nbsp;</div>
+				<input type="radio" name="bean.formaPagamento" value="V" id="optPagamentoAVista"/>&nbsp;À vista&nbsp;
+				<input type="radio" name="bean.formaPagamento" value="P" id="optPagamentoAPrazo"/>&nbsp;À prazo&nbsp;</div>
         	
 	       <div class="col-md-2">
 	        		<label for="bean.modalidadePagamento">Modalidade Pag.:</label>
@@ -258,11 +304,11 @@
       	<div class="row">
       	<div class="col-md-2">
         		<label for="bean.dataCompetencia">Data Competência:</label>
-        		<input name="bean.dataCompetencia" id="bean.dataCompetencia" data-date-format="dd/mm/yyyy" value="${bean.dataCompetencia}" class="form-control required datepicker" size="8" maxlength="8"/>
+        		<input name="bean.dataCompetencia" id="bean.dataCompetencia" value="${bean.dataCompetencia}" class="form-control required datepicker" size="8" maxlength="8"/>
         	</div>
         	<div class="col-md-2">
         		<label for="bean.dataVencimento">Data Vencimento:</label>
-        		<input name="bean.dataVencimento" id="bean.dataVencimento" data-date-format="dd/mm/yyyy" value="${bean.dataVencimento}" class="form-control required datepicker" size="8" maxlength="8"/>
+        		<input name="bean.dataVencimento" id="bean.dataVencimento"  value="${bean.dataVencimento}" class="form-control required datepicker" size="8" maxlength="8"/>
         	</div>
       	<div class="col-md-2">
       			<label for="qtdParcelas">Qtd.Parcelas:</label>

@@ -2,7 +2,9 @@ package br.com.transmetais.bean;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -13,7 +15,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import br.com.transmetais.type.FormaPagamentoEnum;
 import br.com.transmetais.type.StatusDespesaEnum;
@@ -49,6 +55,11 @@ public class Despesa {
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="conta_id")
 	protected Conta conta;
+	
+	@OneToMany(mappedBy="despesa", fetch = FetchType.LAZY, cascade = CascadeType.ALL,orphanRemoval=true)
+	private List<Parcela> parcelas;
+	
+	
 	public Long getId() {
 		return id;
 	}
@@ -114,6 +125,18 @@ public class Despesa {
 	}
 	public void setModalidadePagamento(FormaPagamentoEnum modalidadePagamento) {
 		this.modalidadePagamento = modalidadePagamento;
+	}
+	public Conta getConta() {
+		return conta;
+	}
+	public void setConta(Conta conta) {
+		this.conta = conta;
+	}
+	public List<Parcela> getParcelas() {
+		return parcelas;
+	}
+	public void setParcelas(List<Parcela> parcelas) {
+		this.parcelas = parcelas;
 	}
 	
 	

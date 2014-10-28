@@ -40,7 +40,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<c:forEach var="conta" items="${contaBancariaList}" varStatus="contador">
+			<c:forEach var="conta" items="${contaList}" varStatus="contador">
 
 				<tr>
 					<td><a href="<c:url value='/contaBancaria/'/>${conta.id}"><span

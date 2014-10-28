@@ -32,8 +32,8 @@ public class ContaBancariaController {
 	}
 	
 	@Path({"/contaBancaria/","/contaBancaria","/contaBancaria/lista"})
-	public List<ContaBancaria> lista() throws DAOException{
-		List<ContaBancaria> lista = null;
+	public List<Conta> lista() throws DAOException{
+		List<Conta> lista = null;
 		
 		lista = dao.obterContasBancarias();
 		

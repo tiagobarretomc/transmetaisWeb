@@ -16,6 +16,7 @@ import br.com.transmetais.bean.Conta;
 import br.com.transmetais.bean.ContaAPagarDespesa;
 import br.com.transmetais.bean.ContaContabil;
 import br.com.transmetais.bean.Despesa;
+import br.com.transmetais.bean.Parcela;
 import br.com.transmetais.dao.CentroAplicacaoDAO;
 import br.com.transmetais.dao.ContaAPagarDAO;
 import br.com.transmetais.dao.ContaContabilDAO;
@@ -43,6 +44,16 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 	}
 	@Override
 	protected void postPersistUpdate(Despesa bean, Result result) {
+		
+		//Caso se trate de pagamento a Vista
+		if (bean.getFormaPagamento() == TipoPagamentoEnum.V ){
+			
+			
+			
+		}else{
+			
+		}
+		
 		ContaAPagarDespesa conta = new ContaAPagarDespesa();
 		conta.setDataPrevista(bean.getDataVencimento());
 		conta.setStatus(StatusMovimentacaoEnum.A);
@@ -83,6 +94,11 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 	protected void prePersistUpdate(Despesa bean) {
 		
 		bean.setStatus(StatusDespesaEnum.A);
+		
+		//Atualizando a despesa de cada parcela 
+		for (Parcela parcela : bean.getParcelas()) {
+			parcela.setDespesa(bean);
+		}
 		
 	}
 	
@@ -133,7 +149,7 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 	}
 	
 	
-public void loadContas(TipoPagamentoEnum tipoPagamento, FormaPagamentoEnum formaPagamento) throws Exception{
+	public void loadContas(TipoPagamentoEnum tipoPagamento, FormaPagamentoEnum formaPagamento) throws Exception{
 		
 	
 		List<Conta> lista = null;
@@ -142,17 +158,18 @@ public void loadContas(TipoPagamentoEnum tipoPagamento, FormaPagamentoEnum forma
 		if (tipoPagamento == TipoPagamentoEnum.V){
 			// se for pagamento em dinheiro carregar contas de fundo fixo
 			if (formaPagamento == FormaPagamentoEnum.D){
-				lista = (List<Conta>)contaDAO.obterContasBancarias();
+				lista = (List<Conta>)contaDAO.obterContasFundoFixo();
 				
 			}
 			//se nao for pagamento em dinheiro carregar as contas bancárias
 			else{
 				
-				lista = (List<Conta>)contaDAO.obterContasFundoFixo();
+				lista = (List<Conta>)contaDAO.obterContasBancarias();
 			}
 		}
 		
-		result.use(json()).from(lista).serialize();
+		if (lista != null)
+			result.use(json()).from(lista).serialize();
 		
 		result.nothing();
 		
