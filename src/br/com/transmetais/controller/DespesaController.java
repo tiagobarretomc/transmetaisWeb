@@ -14,18 +14,22 @@ import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.CentroAplicacao;
 import br.com.transmetais.bean.Conta;
 import br.com.transmetais.bean.ContaAPagarDespesa;
+import br.com.transmetais.bean.ContaAPagarParcela;
 import br.com.transmetais.bean.ContaContabil;
 import br.com.transmetais.bean.Despesa;
+import br.com.transmetais.bean.MovimentacaoDespesa;
 import br.com.transmetais.bean.Parcela;
 import br.com.transmetais.dao.CentroAplicacaoDAO;
 import br.com.transmetais.dao.ContaAPagarDAO;
 import br.com.transmetais.dao.ContaContabilDAO;
 import br.com.transmetais.dao.ContaDAO;
 import br.com.transmetais.dao.DespesaDAO;
+import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.type.FormaPagamentoEnum;
 import br.com.transmetais.type.StatusDespesaEnum;
 import br.com.transmetais.type.StatusMovimentacaoEnum;
+import br.com.transmetais.type.TipoOperacaoEnum;
 import br.com.transmetais.type.TipoPagamentoEnum;
 
 @Resource
@@ -36,6 +40,8 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 	private ContaContabilDAO contaContabilDAO;
 	private ContaAPagarDAO contaAPagarDAO;
 	private ContaDAO contaDAO;
+	private MovimentacaoDAO movimentacaoDAO;
+	
 	
 	
 	@Override
@@ -48,25 +54,83 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 		//Caso se trate de pagamento a Vista
 		if (bean.getFormaPagamento() == TipoPagamentoEnum.V ){
 			
+			//Setando os dados da Movimentacao.
+			MovimentacaoDespesa movimentacao = new MovimentacaoDespesa();
+			movimentacao.setDespesa(bean);
+			movimentacao.setData(bean.getDataCompetencia());
+			movimentacao.setTipoOperacao(TipoOperacaoEnum.D);
+			movimentacao.setValor(bean.getValor());
+			movimentacao.setConta(bean.getConta());
+			
+			try {
+				
+				//inserindo a movimentacao no vanco de dados
+				movimentacaoDAO.addEntity(movimentacao);
+				
+				//Obter a conta que sera debitado o valor da despesa
+				Conta conta = contaDAO.findById(bean.getConta().getId());
+				
+				//Atualizando o Saldo da conta subtrainda o valor da despesa
+				conta.setSaldo(conta.getSaldo().subtract(bean.getValor()));
+				
+				//persistindo na base de dados
+				contaDAO.updateEntity(conta);
+				
+			} catch (DAOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			
-		}else{
+		}
+		// Caso a forma de pagamento for à prazo
+		else{
+			
+			//Verificando se trata-se de uma compra a prazo parcelada.
+			if(bean.getParcelas() != null && bean.getParcelas().size()>0){
+				
+				for (Parcela parcela : bean.getParcelas()) {
+					
+					ContaAPagarParcela contaApagar = new ContaAPagarParcela();
+					contaApagar.setParcela(parcela);
+					contaApagar.setConta(null);
+					contaApagar.setDataPrevista(parcela.getDataVencimento());
+					contaApagar.setDescricao("Parcela da Despesa - " +bean.getId().toString() + " - " + bean.getDescricao());
+					contaApagar.setStatus(StatusMovimentacaoEnum.A);
+					contaApagar.setValor(parcela.getValor());
+					
+					try {
+						contaAPagarDAO.addEntity(contaApagar);
+					} catch (DAOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+				}
+				
+			}
+			//Caso a compra for à prazo e não for parcelada.
+			else{
+				
+				ContaAPagarDespesa conta = new ContaAPagarDespesa();
+				conta.setDataPrevista(bean.getDataVencimento());
+				conta.setStatus(StatusMovimentacaoEnum.A);
+				conta.setValor(bean.getValor());
+				conta.setDespesa(bean);
+				conta.setDescricao("Despesa " + bean.getId() + " - " + bean.getDescricao());
+				
+				try {
+					contaAPagarDAO.addEntity(conta);
+				} catch (DAOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
 			
 		}
 		
-		ContaAPagarDespesa conta = new ContaAPagarDespesa();
-		conta.setDataPrevista(bean.getDataVencimento());
-		conta.setStatus(StatusMovimentacaoEnum.A);
-		conta.setValor(bean.getValor());
-		conta.setDespesa(bean);
-		conta.setDescricao("Despesa " + bean.getId());
 		
-		try {
-			contaAPagarDAO.addEntity(conta);
-		} catch (DAOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 	}
 	@Override
@@ -121,6 +185,12 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 	@Autowired
 	public void setContaDAO(ContaDAO contaDAO){
 		this.contaDAO = contaDAO;
+	}
+	
+	
+	@Autowired
+	public void setMovimentacaoDAO(MovimentacaoDAO movimentacaoDAO) {
+		this.movimentacaoDAO = movimentacaoDAO;
 	}
 	
 	

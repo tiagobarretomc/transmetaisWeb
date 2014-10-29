@@ -8,26 +8,25 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name="contaapagar_despesa")
+@Table(name="contaapagar_parcela")
 @PrimaryKeyJoinColumn(name="contaapagar_id")
-public class ContaAPagarDespesa extends ContaAPagar{
+public class ContaAPagarParcela extends ContaAPagar{
+	
 	
 	
 	@ManyToOne
-	@JoinColumn(name="despesa_id")
-	private Despesa despesa;
-	
+	@JoinColumn(name="parcela_id")
+	private Parcela parcela;
+
 	
 
-	public Despesa getDespesa() {
-		return despesa;
+	public Parcela getParcela() {
+		return parcela;
 	}
 
-	public void setDespesa(Despesa despesa) {
-		this.despesa = despesa;
+	public void setParcela(Parcela parcela) {
+		this.parcela = parcela;
 	}
-
-	
 	
 	
 	

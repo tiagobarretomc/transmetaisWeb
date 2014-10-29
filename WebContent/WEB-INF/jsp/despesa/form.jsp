@@ -104,6 +104,7 @@
 	 	           html += "<option value='"+modalidades[i][0] +"'>"+modalidades[i][1]+"</option>";                           
 	 	       }  
 	 	       html += "</select> " ;  
+	 	       alert(html);
 	 	       var div = document.getElementById("ajaxResultDiv");  
 	 	       div.innerHTML = html; 
 	 	      $('.selectpicker').selectpicker();

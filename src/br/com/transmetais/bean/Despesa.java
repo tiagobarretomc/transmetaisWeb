@@ -18,9 +18,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-
 import br.com.transmetais.type.FormaPagamentoEnum;
 import br.com.transmetais.type.StatusDespesaEnum;
 import br.com.transmetais.type.TipoPagamentoEnum;
@@ -50,6 +47,7 @@ public class Despesa {
 	@Enumerated(EnumType.STRING)
 	@Column(name="forma_pagamento")
 	private TipoPagamentoEnum formaPagamento;
+	@Enumerated(EnumType.STRING)
 	@Column(name="modalidade_pagamento")
 	private FormaPagamentoEnum modalidadePagamento;
 	@ManyToOne(fetch=FetchType.LAZY)

@@ -1,9 +1,5 @@
 ALTER TABLE `transmetais`.`contaapagar_despesa` 
-ADD COLUMN `parcela_id` INT(11) NULL AFTER `despesa_id`,
-ADD INDEX `fk_contaapagar_despesa_parcela_idx` (`parcela_id` ASC);
+DROP FOREIGN KEY `fk_contaapagar_despesa_parcela`;
 ALTER TABLE `transmetais`.`contaapagar_despesa` 
-ADD CONSTRAINT `fk_contaapagar_despesa_parcela`
-  FOREIGN KEY (`parcela_id`)
-  REFERENCES `transmetais`.`parcela` (`id`)
-  ON DELETE NO ACTION
-  ON UPDATE NO ACTION;
+DROP COLUMN `parcela_id`,
+DROP INDEX `fk_contaapagar_despesa_parcela_idx` ;
