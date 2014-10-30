@@ -41,7 +41,8 @@
 	src="/transmetaisWeb/javascripts/jquery.price_format.2.0.min.js" /></script>
 <script type="text/javascript"
 	src="/transmetaisWeb/javascripts/scripts.js" /></script>
-
+<script type="text/javascript"
+	src="/transmetaisWeb/javascripts/date.js" /></script>
 <!-- 
 		<script type="text/javascript" src="/transmetaisWeb/javascripts/jquery.puts.js"></script>
 		 -->

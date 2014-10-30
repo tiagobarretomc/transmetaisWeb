@@ -20,9 +20,9 @@
 	   	 options['language'] = 'pt-BR';
 	   	//$('.datepicker').datepicker(options);
 	   	$(".datepicker").datepicker({
-        format: "dd/mm/yyyy",
-        endDate: "-2d"
-    })
+       	 format: "dd/mm/yyyy",
+       	 endDate: "-2d"
+    	})
 
     .on('changeDate', function(ev){
         var dateData = new Date(ev.date);  // this is the change
@@ -36,10 +36,25 @@
 	   	$('.selectpicker').selectpicker({
             //'selectedText': 'cat'
         });
-	    $("#qtdParcelas").blur(function(){
+	    $("#qtdParcelas").change(function(){
 	    	var qtdParcelas = $('#qtdParcelas').val();
 	    	var strLinha;
+	    	
+	    	if ($("#tabelaParcelas tr").length > 1){
+	    		
+	    		var linhas = $("#tabelaParcelas tr").length;
+	    		
+	    		for(j=0; j< linhas; j++){
+	
+	    			//$('#tabelaParcelas > tbody:last').remove();
+	    			$("#parcela_" + j).remove();
+	    			
+	    		}
+	    		
+	    	}
+	    	
 	    	for(i = 0; i < qtdParcelas; i++){
+	    		
 	    		adicionarParcela(i);
 	    	}
 	    	
@@ -59,6 +74,18 @@
 	    	$('#bean\\.dataVencimento').attr('disabled', true);
 	    	$("#bean\\.conta\\.id").attr('disabled', false);
 	    	$("#qtdParcelas").attr('readonly', true);
+	    	$("#qtdParcelas").val('');
+	    	
+	    	var linhas = $("#tabelaParcelas tr").length;
+    		
+    		for(j=0; j< linhas; j++){
+
+    			//$('#tabelaParcelas > tbody:last').remove();
+    			$("#parcela_" + j).remove();
+    			
+    		}
+    		
+    		$("#divPainelParcelas").hide();
 	    	
 	    	atualizaModalidades($(this).val());
 	    	
@@ -73,17 +100,27 @@
 	    	
 	    	$('#bean\\.conta\\.id').children('option').remove();
 	    	
+	    	$("#divPainelParcelas").show();
+	    	
 	    	atualizaModalidades($(this).val());
 	    	
 	    });
 	    
 	    
+	    
+	    $("input[id^='valorParcela']").priceFormat({
+	        prefix: '',
+	        centsSeparator: ',',
+	        thousandsSeparator: '.',
+	        limit: 12
+	        
+	    });
 	   	 
  	   	$('.selectpicker').selectpicker({
              //'selectedText': 'cat'
          });
 		
-	});
+	
 	
 	function atualizaModalidades(forma){
 		$.ajax({
@@ -104,7 +141,7 @@
 	 	           html += "<option value='"+modalidades[i][0] +"'>"+modalidades[i][1]+"</option>";                           
 	 	       }  
 	 	       html += "</select> " ;  
-	 	       alert(html);
+	 	       
 	 	       var div = document.getElementById("ajaxResultDiv");  
 	 	       div.innerHTML = html; 
 	 	      $('.selectpicker').selectpicker();
@@ -122,38 +159,10 @@
 	}
 	
 	$('#bean\\.modalidadePagamento').change(function(){
-    	
         
-        		
-    		//alert($('input[name=formaPagamento]:checked', '#formDespesa').val());
-    		//alert('teste');
-    	
-    	
-       
     });
 	
-	/* $("#bean\\.dataCompetencia").change(function(){
 		
-		alert($("#bean\\.dataCompetencia"));
-		if($('input[name=formaPagamento]:checked').val() == 'V'){
-			$("#bean\\.dataVencimento").val($("#bean\\.dataCompetencia").val());
-		}
-	}); */
-	
-	/* $(".datepicker").on('change', function(ev){
-		
-		alert('funcionou');
-	    var dateData = $(this).val();
-	    window.location.href = "?day=" + dateData ;
-	}); */
-	
-	
-
-    
-	
-	
-	
-	
 	
 	function atualizaContas(){
 		
@@ -195,11 +204,64 @@
 		
 	}
 	
+	function float2moeda(num) {
+
+		   x = 0;
+
+		   if(num<0) {
+		      num = Math.abs(num);
+		      x = 1;
+		   }
+		   if(isNaN(num)) num = "0";
+		      cents = Math.floor((num*100+0.5)%100);
+
+		   num = Math.floor((num*100+0.5)/100).toString();
+
+		   if(cents < 10) cents = "0" + cents;
+		      for (var i = 0; i < Math.floor((num.length-(1+i))/3); i++)
+		         num = num.substring(0,num.length-(4*i+3))+'.'
+		               +num.substring(num.length-(4*i+3));
+		      ret = num + ',' + cents;
+		      
+		      if (x == 1) ret = ' - ' + ret;return ret;
+
+	}
+	
+	function moeda2float(moeda){
+		   var retorno = moeda.replace(".","");
+		  
+		   retorno = retorno.replace(",",".");
+
+		   return parseFloat(retorno);
+
+		}
+	function roundNumber (rnum) {
+
+		   return Math.round(rnum*Math.pow(10,2))/Math.pow(10,2);
+
+		}
+	
+	function adicionaMonth(data, qtdMeses) {  
+        var now = new Date();  
+        alert('Now is ' + now);  
+        var month = now.getMonth();  
+        now.setMonth(month + 2);  
+        alert(now);  
+    }  
+	
 	function adicionarParcela(i){
+		//alert($("#bean\\.valor").val());
+		//alert($("#qtdParcelas").val());
+		
+		var parcela =  float2moeda(roundNumber(moeda2float($('#valor').val()) / moeda2float($('#qtdParcelas').val())));
+		//var parcela = "0,00";
+		var dataParcela = Date.parseExact($('#bean\\.dataVencimento').val(),'dd/MM/yyyy').addMonths(i);
 		strLinha = '<tr id="parcela_' + i + '">';
 		strLinha += '<td style="vertical-align: middle;"><span title="Excluir" class="glyphicon glyphicon-remove" onclick="removerParcela(' + i +')"></span></td>';
-		strLinha += '<td style="max-width:130px"><input name="bean.parcelas[' + i + '].dataVencimento" id="dataParcela' + i + '" data-date-format="dd/mm/yyyy" value="${parcelas[' + i + '].data}" class="form-control required datepicker" size="8" maxlength="8"/></td>';
-		strLinha += '<td style="max-width:130px"><input name="bean.parcelas[' + i + '].valor" id="valorParcela' + i + '" value="<fmt:formatNumber value="${parcelas[' + i + '].valor}" minFractionDigits="2" type="currency"/>" class="form-control required"  maxlength="18"/></td>';
+		
+		strLinha += '<td style="max-width:130px"><input name="bean.parcelas[' + i + '].dataVencimento" id="dataParcela' + i + '" data-date-format="dd/mm/yyyy" value="' + dataParcela.toString('dd/MM/yyyy') + '" class="form-control required datepicker" size="8" maxlength="8"/></td>';
+		strLinha += '<td style="max-width:130px"><input name="bean.parcelas[' + i + '].valor" id="valorParcela' + i + '" value="' + parcela + '" class="form-control required"  maxlength="18"/></td>';
+		//strLinha += '<td style="max-width:130px"><input name="bean.parcelas[' + i + '].valor" id="valorParcela' + i + '" value="<fmt:formatNumber value="${parcelas[' + i + '].valor}" minFractionDigits="2" type="currency"/>" class="form-control required"  maxlength="18"/></td>';
 		strLinha += '</tr>';
 		$('#tabelaParcelas > tbody:last').append(strLinha);
 		$("#dataParcela" + i).mask('99/99/9999');
@@ -217,8 +279,10 @@
     	$("#qtdParcelas").val($("tr[id^='parcela_']").size());
     }
 	
+	
+	
 	//$('.datepicker').datepicker(options);
-	        
+	});       
 </script>
 
     <div class="container">
@@ -305,20 +369,20 @@
       	<div class="row">
       	<div class="col-md-2">
         		<label for="bean.dataCompetencia">Data Competência:</label>
-        		<input name="bean.dataCompetencia" id="bean.dataCompetencia" value="${bean.dataCompetencia}" class="form-control required datepicker" size="8" maxlength="8"/>
+        		<input name="bean.dataCompetencia" id="bean.dataCompetencia" value=" <fmt:formatDate value="${bean.dataCompetencia }" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" size="8" maxlength="8" />
         	</div>
         	<div class="col-md-2">
         		<label for="bean.dataVencimento">Data Vencimento:</label>
-        		<input name="bean.dataVencimento" id="bean.dataVencimento"  value="${bean.dataVencimento}" class="form-control required datepicker" size="8" maxlength="8"/>
+        		<input name="bean.dataVencimento" id="bean.dataVencimento"  value="<fmt:formatDate value="${bean.dataVencimento }" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" size="8" maxlength="8" />
         	</div>
       	<div class="col-md-2">
       			<label for="qtdParcelas">Qtd.Parcelas:</label>
-        		<input id="qtdParcelas" value="${quantidadeParcelas}" size="10" class="form-control "/>
+        		<input id="qtdParcelas" value="${fn:length(bean.parcelas)}" size="10" class="form-control "/>
         	</div>
       	</div>
       	
         <br/>
-        <div class="panel panel-default" >
+        <div class="panel panel-default" id="divPainelParcelas">
         	<div class="panel-body">
         	<h4>Parcelas</h4>
 				<button type="button" id="btnAdicionarRegra" class="btn btn-default btn-md">
@@ -339,6 +403,18 @@
 			</tr>
 			</thead>
 			<tbody>
+			<c:forEach var="parcela" items="${bean.parcelas}" varStatus="contador">
+
+				
+				<tr id="parcela_${contador.index }">
+				
+					<td style="vertical-align: middle;"><span title="Excluir" class="glyphicon glyphicon-remove" onclick="removerParcela(${contador.index})"></span></td>
+					<td style="max-width:130px"><input name="bean.parcelas[${contador.index}].dataVencimento" id="dataParcela${contador.index}" data-date-format="dd/mm/yyyy" value="<fmt:formatDate value="${parcela.dataVencimento }" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" size="8" maxlength="8"/></td>
+					<td style="max-width:130px"><input name="bean.parcelas[${contador.index}].valor" id="valorParcela${contador.index}" value="<fmt:formatNumber value="${parcela.valor}" minFractionDigits="2" type="currency"/>" class="form-control required"  maxlength="18"/></td>
+			
+		
+				</tr>
+			</c:forEach>
 			</tbody>
 			</table>
 			</div>

@@ -117,7 +117,10 @@
 							<b>Adiantamento <fmt:formatNumber minIntegerDigits="4" value="${conta.adiantamento.id}" groupingUsed="" /></b> Fornecedor: ${conta.adiantamento.fornecedor.apelido } - ${conta.adiantamento.fornecedor.nome }
 						</c:if>
 						<c:if test="${conta.class.name  == 'br.com.transmetais.bean.ContaAPagarDespesa'}">
-							${conta.despesa.descricao }
+							${conta.descricao }
+						</c:if>
+						<c:if test="${conta.class.name  == 'br.com.transmetais.bean.ContaAPagarParcela'}">
+							${conta.descricao }
 						</c:if>
 					 
 				</td>
