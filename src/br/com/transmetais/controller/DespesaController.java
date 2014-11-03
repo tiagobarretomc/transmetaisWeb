@@ -14,7 +14,6 @@ import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.CentroAplicacao;
 import br.com.transmetais.bean.Conta;
 import br.com.transmetais.bean.ContaAPagarDespesa;
-import br.com.transmetais.bean.ContaAPagarParcela;
 import br.com.transmetais.bean.ContaContabil;
 import br.com.transmetais.bean.Despesa;
 import br.com.transmetais.bean.MovimentacaoDespesa;
@@ -91,13 +90,14 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 				
 				for (Parcela parcela : bean.getParcelas()) {
 					
-					ContaAPagarParcela contaApagar = new ContaAPagarParcela();
+					ContaAPagarDespesa contaApagar = new ContaAPagarDespesa();
 					contaApagar.setParcela(parcela);
 					contaApagar.setConta(null);
 					contaApagar.setDataPrevista(parcela.getDataVencimento());
 					contaApagar.setDescricao("Parcela da Despesa - " +bean.getId().toString() + " - " + bean.getDescricao());
 					contaApagar.setStatus(StatusMovimentacaoEnum.A);
 					contaApagar.setValor(parcela.getValor());
+					contaApagar.setDespesa(bean);
 					
 					try {
 						contaAPagarDAO.addEntity(contaApagar);
@@ -118,6 +118,8 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 				conta.setValor(bean.getValor());
 				conta.setDespesa(bean);
 				conta.setDescricao("Despesa " + bean.getId() + " - " + bean.getDescricao());
+				//Se nao há parcelas o campo fica null
+				conta.setParcela(null);
 				
 				try {
 					contaAPagarDAO.addEntity(conta);
@@ -159,9 +161,18 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 		
 		bean.setStatus(StatusDespesaEnum.A);
 		
-		//Atualizando a despesa de cada parcela 
-		for (Parcela parcela : bean.getParcelas()) {
-			parcela.setDespesa(bean);
+		
+		if (bean.getParcelas() != null){
+			//Atualizando a despesa de cada parcela 
+			for (Parcela parcela : bean.getParcelas()) {
+				parcela.setDespesa(bean);
+			}
+			
+		}
+		
+		//Quando se tratar de despesa/compra a vista a data de vencimento é a mesma data da competencia
+		if (bean.getFormaPagamento() == TipoPagamentoEnum.V){
+			bean.setDataVencimento(bean.getDataCompetencia());
 		}
 		
 	}

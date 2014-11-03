@@ -25,6 +25,7 @@
     	})
 
     .on('changeDate', function(ev){
+    	
         var dateData = new Date(ev.date);  // this is the change
         
         if($('input[name=bean\\.formaPagamento]:checked').val() == 'V'){
@@ -36,7 +37,22 @@
 	   	$('.selectpicker').selectpicker({
             //'selectedText': 'cat'
         });
-	    $("#qtdParcelas").change(function(){
+	    $("#btnGerarParcelas").click(function(){
+	    	
+	    	if ($('#qtdParcelas').val() == '' || $('#qtdParcelas').val()=='0'){
+	    		alert('Informe a quantidade de parcelas!');
+	    		return;
+	    	}
+	    	
+	    	
+	    	
+	    	 if ($('#bean\\.dataVencimento').val() == '') {
+	    		 alert('Informe a Data de Vencimento da primeira parcela!');
+		    		return;
+	    		  }
+	    	
+	    
+	    	
 	    	var qtdParcelas = $('#qtdParcelas').val();
 	    	var strLinha;
 	    	
@@ -115,12 +131,80 @@
 	        limit: 12
 	        
 	    });
+	    
+	    //qualquer parcela quendo alterar o valor da mesma alterar o valor total da despesa.
+	    $("input[id^='valorParcela']").change(function(){
+	    	
+	    	var valorTotal=0.00;
+	    	
+	    	$("input[id^='valorParcela']").each(function(){
+	    		 valorTotal += moeda2float($(this).val()); 
+	    		 
+	    	});
+	    	
+	    	
+	    	$("#valor").val(float2moeda(valorTotal));
+	    	
+	    	
+	    	
+	    });
+	    
+	    $("#valor").change(function(){
+	    	
+	    	var parcela =  float2moeda(roundNumber(moeda2float($(this).val()) / moeda2float($('#qtdParcelas').val())));
+	    	
+	    	$("input[id^='valorParcela']").each(function(){
+	    		 $(this).val(parcela); 
+	    		 
+	    	});
+	    	
+	    	
+	    });
 	   	 
  	   	$('.selectpicker').selectpicker({
              //'selectedText': 'cat'
          });
 		
 	
+ 	   $('#formDespesa').validate({
+ 		   
+ 		  rules: {  
+ 			 "bean.conta.id" : {  
+ 	               required: function(element) {  
+ 	            	   //Caso a Forma de Pagamento for a vista o campo Conta financeira torna-se obrigatório.
+ 	            	   return $('input[name=bean\\.formaPagamento]:checked').val() == 'V'; 
+ 	               }  
+ 	         	}
+ 	          },
+       	ignore: ':not(select:hidden, input:visible, textarea:visible)',
+       	
+        errorPlacement: function (error, element) {
+               if ($(element).is('select')) {
+                   element.next().after(error); // special placement for select elements
+               } else {
+                   error.insertAfter(element);  // default placement for everything else
+               }
+           },
+           
+       
+   	});
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	});
 	
 	function atualizaModalidades(forma){
 		$.ajax({
@@ -157,12 +241,6 @@
 				    }
 	    });
 	}
-	
-	$('#bean\\.modalidadePagamento').change(function(){
-        
-    });
-	
-		
 	
 	function atualizaContas(){
 		
@@ -259,9 +337,8 @@
 		strLinha = '<tr id="parcela_' + i + '">';
 		strLinha += '<td style="vertical-align: middle;"><span title="Excluir" class="glyphicon glyphicon-remove" onclick="removerParcela(' + i +')"></span></td>';
 		
-		strLinha += '<td style="max-width:130px"><input name="bean.parcelas[' + i + '].dataVencimento" id="dataParcela' + i + '" data-date-format="dd/mm/yyyy" value="' + dataParcela.toString('dd/MM/yyyy') + '" class="form-control required datepicker" size="8" maxlength="8"/></td>';
+		strLinha += '<td style="max-width:130px"><input name="bean.parcelas[' + i + '].dataVencimento" id="dataParcela' + i + '" data-date-format="dd/mm/yyyy" value="' + dataParcela.toString('dd/MM/yyyy') + '" class="form-control required datepicker" size="8" maxlength="10"/></td>';
 		strLinha += '<td style="max-width:130px"><input name="bean.parcelas[' + i + '].valor" id="valorParcela' + i + '" value="' + parcela + '" class="form-control required"  maxlength="18"/></td>';
-		//strLinha += '<td style="max-width:130px"><input name="bean.parcelas[' + i + '].valor" id="valorParcela' + i + '" value="<fmt:formatNumber value="${parcelas[' + i + '].valor}" minFractionDigits="2" type="currency"/>" class="form-control required"  maxlength="18"/></td>';
 		strLinha += '</tr>';
 		$('#tabelaParcelas > tbody:last').append(strLinha);
 		$("#dataParcela" + i).mask('99/99/9999');
@@ -273,16 +350,30 @@
 	        
 	    });
 		
+		$("input[id^='valorParcela']").change(function(){
+	    	
+	    	var valorTotal=0.00;
+	    	
+	    	$("input[id^='valorParcela']").each(function(){
+	    		 valorTotal += moeda2float($(this).val()); 
+	    		 
+	    	});
+	    	
+	    	
+	    	$("#valor").val(float2moeda(valorTotal));
+	    	
+	    	
+	    	
+	    });
+		
 	}
 	function removerParcela(id){
+		
     	$("#parcela_" + id).remove();
     	$("#qtdParcelas").val($("tr[id^='parcela_']").size());
     }
 	
 	
-	
-	//$('.datepicker').datepicker(options);
-	});       
 </script>
 
     <div class="container">
@@ -291,14 +382,14 @@
 	<br/>
 	<div class="panel panel-default">
 	<div class="panel-body">
-	<form action="<c:url value='/despesa/add'/>" id="formDespesa" name="formProduto" method="post">
+	<form action="<c:url value='/despesa/add'/>" id="formDespesa" name="formDespesa" method="post">
 		<input type="hidden" id="despesa.id" name="bean.id" value="${bean.id}"/>
 		
 		
 		<div class="row">
 			<div class="col-md-6">
         		<label for="bean.descricao">Descrição:</label>
-        		<input name="bean.descricao" id="bean.descricao" value="${bean.descricao}" class="form-control required"  maxlength="45"/>
+        		<input name="bean.descricao" id="bean.descricao" value="${bean.descricao}" class="form-control required"  maxlength="255"/>
         	</div>
         	<div class="col-md-2">
         		<label for="bean.valor">Valor:</label>
@@ -307,8 +398,8 @@
         	
         	
         	<div class="col-md-2"><label for="optPagamentoAVista">Forma Pagamento:</label><br/>
-				<input type="radio" name="bean.formaPagamento" value="V" id="optPagamentoAVista"/>&nbsp;À vista&nbsp;
-				<input type="radio" name="bean.formaPagamento" value="P" id="optPagamentoAPrazo"/>&nbsp;À prazo&nbsp;</div>
+				<input type="radio" name="bean.formaPagamento" value="V" id="optPagamentoAVista" ${bean.formaPagamento.name == 'V' ? 'checked="checked"' : '' }/>&nbsp;À vista&nbsp;
+				<input type="radio" name="bean.formaPagamento" value="P" id="optPagamentoAPrazo" ${bean.formaPagamento.name == 'P' ? 'checked="checked"' : '' }/>&nbsp;À prazo&nbsp;</div>
         	
 	       <div class="col-md-2">
 	        		<label for="bean.modalidadePagamento">Modalidade Pag.:</label>
@@ -330,7 +421,7 @@
 			<div class="col-md-4">
         		<label for="bean.contaContabil.id">Conta Financeira:</label>
 				<div id="divCboContas">
-	        		<select id="bean.conta.id" name="bean.conta.id" class=" required form-control selectpicker" >
+	        		<select id="bean.conta.id" name="bean.conta.id" class=" form-control selectpicker" >
 							<option value ="">Selecione</option>
 							<c:forEach var="conta" items="${contasFinanceiras}" varStatus="contador">
 							
@@ -369,17 +460,24 @@
       	<div class="row">
       	<div class="col-md-2">
         		<label for="bean.dataCompetencia">Data Competência:</label>
-        		<input name="bean.dataCompetencia" id="bean.dataCompetencia" value=" <fmt:formatDate value="${bean.dataCompetencia }" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" size="8" maxlength="8" />
+        		<input name="bean.dataCompetencia" id="bean.dataCompetencia" value=" <fmt:formatDate value="${bean.dataCompetencia }" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" size="8" maxlength="10" />
         	</div>
         	<div class="col-md-2">
         		<label for="bean.dataVencimento">Data Vencimento:</label>
-        		<input name="bean.dataVencimento" id="bean.dataVencimento"  value="<fmt:formatDate value="${bean.dataVencimento }" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" size="8" maxlength="8" />
+        		<input name="bean.dataVencimento" id="bean.dataVencimento"  value="<fmt:formatDate value="${bean.dataVencimento }" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" size="8" maxlength="10" />
         	</div>
       	<div class="col-md-2">
       			<label for="qtdParcelas">Qtd.Parcelas:</label>
         		<input id="qtdParcelas" value="${fn:length(bean.parcelas)}" size="10" class="form-control "/>
         	</div>
+        	
+        	<div class="col-md-2"><br/>
+      			<button type="button" id="btnGerarParcelas" class="btn btn-default btn-md" style="margin-top: 4px;">
+				  Gerar Parcelas
+				</button>
       	</div>
+      	</div>
+      	
       	
         <br/>
         <div class="panel panel-default" id="divPainelParcelas">
@@ -408,8 +506,8 @@
 				
 				<tr id="parcela_${contador.index }">
 				
-					<td style="vertical-align: middle;"><span title="Excluir" class="glyphicon glyphicon-remove" onclick="removerParcela(${contador.index})"></span></td>
-					<td style="max-width:130px"><input name="bean.parcelas[${contador.index}].dataVencimento" id="dataParcela${contador.index}" data-date-format="dd/mm/yyyy" value="<fmt:formatDate value="${parcela.dataVencimento }" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" size="8" maxlength="8"/></td>
+					<td style="vertical-align: middle;"><a href="#" onclick="removerParcela(${contador.index}); return false;"><span title="Excluir" class="glyphicon glyphicon-remove" ></span></a></td>
+					<td style="max-width:130px"><input name="bean.parcelas[${contador.index}].dataVencimento" id="dataParcela${contador.index}" data-date-format="dd/mm/yyyy" value="<fmt:formatDate value="${parcela.dataVencimento }" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" size="8" maxlength="10"/></td>
 					<td style="max-width:130px"><input name="bean.parcelas[${contador.index}].valor" id="valorParcela${contador.index}" value="<fmt:formatNumber value="${parcela.valor}" minFractionDigits="2" type="currency"/>" class="form-control required"  maxlength="18"/></td>
 			
 		
@@ -424,8 +522,8 @@
       	
       	
       	<br/>
-		<button type="submit" id="btnAdicionar" class="btn btn-default btn-md">
-		  <span class="glyphicon glyphicon-floppy-disk"></span> Salvar
+		<button type="submit" id="btnAdicionar" class="btn btn-default btn-md"   ${empty bean.id  ? '' : 'style="display: none;"' }>
+		  <span class="glyphicon glyphicon-floppy-disk"></span> Salvar${bean.id}
 		</button>
 		</form>
 </div>

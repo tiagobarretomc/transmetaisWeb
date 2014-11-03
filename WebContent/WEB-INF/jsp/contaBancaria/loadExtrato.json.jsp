@@ -76,6 +76,11 @@
 					
 					
 					</c:if>
+					<c:if test="${movimentacao.class.name  == 'br.com.transmetais.bean.MovimentacaoDespesa'}">
+						
+							Despesa - ${movimentacao.despesa.id} - ${movimentacao.despesa.descricao}
+						
+					</c:if>
 				</td>
 				
 				<td >

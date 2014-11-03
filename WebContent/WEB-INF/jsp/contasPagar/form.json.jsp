@@ -5,6 +5,9 @@
 
     $(document).ready(function(){
     	
+    	
+    	
+    	
     	$("#btnConfirmar").click(function(){
     		//alert("salvar a parada doida!");
     		
@@ -27,17 +30,51 @@
     	$("#movimentacao\\.dataPagamento").mask("99/99/9999");
     	
     	
+    	//var startDate = new Date('10/10/2014');
+    	//var FromEndDate = new Date();
+    	//var ToEndDate = new Date();
+    	
+    	//alert(startDate);
+    	//alert(ToEndDate);
+    	//ToEndDate.setDate(ToEndDate.getDate()+1);
+    	
 	   	 $('.datepicker').datepicker({
-	   		'language' : 'pt-BR',
-	   		'autoclose' : true
+	   		language : 'pt-BR',
+	   		autoclose : true,
+	   		format : 'dd/mm/yyyy'
+	   	 	//startDate: startDate,
+	        //endDate: ToEndDate
 	   	});
     	
     	
-    	
-        $('#formMovimentacao').validate({
-            
+
+	   	
+	   	
         
-    	});
+        
+        $('#formMovimentacao').validate({
+  		   
+   		  rules: {  
+   			 "contaAPagar.dataPagamento" :  {
+   				 
+   				dateLessThanToday: [1,"sddff"]
+   			 }
+   	                
+   	         	
+   	          },
+        
+   	      ignore: ':not(select:hidden, input:visible, textarea:visible)',
+         	
+          errorPlacement: function (error, element) {
+                 if ($(element).is('select')) {
+                     element.next().after(error); // special placement for select elements
+                 } else {
+                     error.insertAfter(element);  // default placement for everything else
+                 }
+             },
+             
+         
+     	});
     	
     	
         
@@ -103,7 +140,7 @@
 	      	<div class="col-md-2">
 	      	<c:set var="now" value="<%=new java.util.Date()%>" />
         		<label for="contaAPagar.dataPagamento">Data Pagamento:</label>
-        		<input name="contaAPagar.dataPagamento"  id="contaAPagar.dataPagamento" value="<fmt:formatDate value="${now}" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" data-date-format="dd/mm/yyyy" />
+        		<input name="contaAPagar.dataPagamento"  id="contaAPagar.dataPagamento" value="<fmt:formatDate value="${now}" type="date" pattern="dd/MM/yyyy"/>" class="form-control dateLessThanToday required datepicker" data-date-format="dd/mm/yyyy" />
         	</div>
         	
 	        	<div class="col-md-4">

@@ -75,7 +75,12 @@
 								.format("Please enter a value less than or equal to {0}."),
 						min : jQuery.validator
 								.format("Please enter a value greater than or equal to {0}.")
-					});
+					}
+					
+					
+			);
+	
+	
 </script>
 
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>

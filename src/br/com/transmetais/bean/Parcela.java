@@ -5,6 +5,8 @@ import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import br.com.transmetais.type.StatusDespesaEnum;
 
 
 @Entity
@@ -34,6 +38,12 @@ public class Parcela {
 	
 	@Column(name="numero_cheque")
 	private String numeroCheque;
+	
+	@Enumerated(EnumType.STRING)
+	private StatusDespesaEnum status;
+	
+	@Column(name="data_pagamento")
+	private Date dataPagamento;
 
 	public Long getId() {
 		return id;
@@ -75,6 +85,20 @@ public class Parcela {
 		this.numeroCheque = numeroCheque;
 	}
 	
+	public StatusDespesaEnum getStatus() {
+		return status;
+	}
 	
+	public void setStatus(StatusDespesaEnum status) {
+		this.status = status;
+	}
+	
+	public Date getDataPagamento() {
+		return dataPagamento;
+	}
+	
+	public void setDataPagamento(Date dataPagamento) {
+		this.dataPagamento = dataPagamento;
+	}
 
 }

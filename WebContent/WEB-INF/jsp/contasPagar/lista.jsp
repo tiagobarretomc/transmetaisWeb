@@ -6,13 +6,32 @@
 
     $(document).ready(function(){
     	
+    	$.validator.addMethod( "dateLessThanToday", function( value, element, options ) {
+	   	    /* ... regra de validação ... */
+	   	    var isValid = false;
+	   	    /*
+	   	    alert(value);
+	   	 	var dataPagamento = Date.parseExact(value,'dd/MM/yyyy');
+	   	 	
+	   	 	
+	   	 	
+	   	 	if(Date.compare(dataPagamento, Date.today()) <= 0 ){
+	   	 		isValid = true;
+	   	 	}
+	   	 	*/
+	   	 	return false;
+	   	 	
+	   	    return this.optional(element) || isValid;
+	   	 
+	   	}, "A Data de pagamento deve ser menor ou igual a data atual." );
+    	
     	function exibir(movimentacaoId){
     		alert(movimentacaoId);
     		
     		
     	}
     	
-    	jQuery(".btnDetalhe").on("click",function(event){
+    	$(".btnDetalhe").on("click",function(event){
     		var indiceCampo = $(this).attr('id').split("_")[1];
     		$("#divResultado").load( '<c:url value="/contasPagar/"/>' + indiceCampo, {'_format':'json'});
     		$('#myModal').modal('show');
@@ -21,9 +40,12 @@
     	$("#dataInicio").mask('99/99/9999');
     	$("#dataFim").mask('99/99/9999');
     	
-    	var options = new Array();
-    	 options['language'] = 'pt-BR';
-    	 $('.datepicker').datepicker(options);
+    	$('.datepicker').datepicker({
+	   		language : 'pt-BR',
+	   		autoclose : true,
+	   		format : 'dd/mm/yyyy'
+	   	 	
+	   	});
     	
     	$("#btnFiltrar").click(function(){
     		
@@ -119,9 +141,7 @@
 						<c:if test="${conta.class.name  == 'br.com.transmetais.bean.ContaAPagarDespesa'}">
 							${conta.descricao }
 						</c:if>
-						<c:if test="${conta.class.name  == 'br.com.transmetais.bean.ContaAPagarParcela'}">
-							${conta.descricao }
-						</c:if>
+						
 					 
 				</td>
 				
