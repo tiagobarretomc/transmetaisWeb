@@ -102,12 +102,20 @@
 				<div  class="row" id="divDadosBancarios">
 					<div class="col-md-4">
 						<label for="conta.fornecedor">Fornecedor:</label>
+						<c:if test="${ empty conta.id }">
 			        	<select id="conta.fornecedor.id" name="conta.fornecedor.id" class="selectpicker form-control" data-live-search="true">
 							<option value ="">Selecione</option>
 							<c:forEach var="fornecedor" items="${fornecedores}" varStatus="contador">
 								<option value ="${fornecedor.id}" ${conta.fornecedor.id eq fornecedor.id ? 'selected' : ''}>${fornecedor.apelido} - ${fornecedor.nome}</option>
 							</c:forEach>	
 						</select>
+						</c:if>
+						<c:if test="${not empty conta.id }">
+							<input type="text" value="${conta.fornecedor.apelido } - ${conta.fornecedor.nome }" disabled="disabled" class="form-control"/>
+							<input type="hidden" id="conta.fornecedor.id" name="conta.fornecedor.id" value="${conta.fornecedor.id }"/>
+							
+						</c:if>
+						
 					</div>
 					<div class="col-md-4">
 						<label for="conta.limite">Limite de Crédito:</label> 

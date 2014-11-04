@@ -6,22 +6,23 @@
 
     $(document).ready(function(){
     	
-    	$.validator.addMethod( "dateLessThanToday", function( value, element, options ) {
+    	$.validator.addMethod( "dateLessThanToday", function( value, element ) {
 	   	    /* ... regra de validação ... */
 	   	    var isValid = false;
-	   	    /*
-	   	    alert(value);
-	   	 	var dataPagamento = Date.parseExact(value,'dd/MM/yyyy');
-	   	 	
-	   	 	
-	   	 	
-	   	 	if(Date.compare(dataPagamento, Date.today()) <= 0 ){
-	   	 		isValid = true;
+	   	    
+	   	   var dataPagamento = Date.parseExact(value,'dd/MM/yyyy');
+	   	   var hoje = Date.today();
+	   	  
+	   	  
+	   	 	if(dataPagamento.compareTo(hoje) <= 0){
+	   	 		return true;
+	   	 	}else{
+	   	 		return false;
 	   	 	}
-	   	 	*/
-	   	 	return false;
 	   	 	
-	   	    return this.optional(element) || isValid;
+	   	 	//alert(dataPagamento <= hoje );
+	   	 	
+	   	    return  isValid;
 	   	 
 	   	}, "A Data de pagamento deve ser menor ou igual a data atual." );
     	
@@ -40,12 +41,13 @@
     	$("#dataInicio").mask('99/99/9999');
     	$("#dataFim").mask('99/99/9999');
     	
-    	$('.datepicker').datepicker({
+    	
+    	/* $('.datepicker').datepicker({
 	   		language : 'pt-BR',
 	   		autoclose : true,
 	   		format : 'dd/mm/yyyy'
 	   	 	
-	   	});
+	   	}); */
     	
     	$("#btnFiltrar").click(function(){
     		

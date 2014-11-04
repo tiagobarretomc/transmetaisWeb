@@ -11,40 +11,36 @@
     	$("#btnConfirmar").click(function(){
     		//alert("salvar a parada doida!");
     		
+    		if($("#formMovimentacao").valid()){
+    			
     		
-    		$.ajax({
-		        type: 'POST',
-		        url: "${pageContext.request.contextPath}/contasPagar/confirmar",
-		        data:	$( "#formMovimentacao" ).serialize(),
-		 	    success: function(json){
-		 	    	$("#divTabela").load( '<c:url value="/contasPagar/loadListaMovimentacao"/>', $('#formCompra').serialize() );
-		 	    	$('#myModal').modal('hide');
-
-				},
-			    error: function(xhr){
-			    	alert('erro!');
-					    }
-		    });
+	    		$.ajax({
+			        type: 'POST',
+			        url: "${pageContext.request.contextPath}/contasPagar/confirmar",
+			        data:	$( "#formMovimentacao" ).serialize(),
+			 	    success: function(json){
+			 	    	$("#divTabela").load( '<c:url value="/contasPagar/loadListaMovimentacao"/>', $('#formCompra').serialize() );
+			 	    	$('#myModal').modal('hide');
+	
+					},
+				    error: function(xhr){
+				    	alert('erro!');
+						    }
+			    });
+    		}
     	});
     
     	$("#movimentacao\\.dataPagamento").mask("99/99/9999");
     	
     	
-    	//var startDate = new Date('10/10/2014');
-    	//var FromEndDate = new Date();
-    	//var ToEndDate = new Date();
+    
     	
-    	//alert(startDate);
-    	//alert(ToEndDate);
-    	//ToEndDate.setDate(ToEndDate.getDate()+1);
-    	
-	   	 $('.datepicker').datepicker({
+	   	  $('.datepicker').datepicker({
 	   		language : 'pt-BR',
 	   		autoclose : true,
 	   		format : 'dd/mm/yyyy'
-	   	 	//startDate: startDate,
-	        //endDate: ToEndDate
-	   	});
+	   	 	
+	   	}); 
     	
     	
 
@@ -57,7 +53,7 @@
    		  rules: {  
    			 "contaAPagar.dataPagamento" :  {
    				 
-   				dateLessThanToday: [1,"sddff"]
+   				dateLessThanToday: true
    			 }
    	                
    	         	

@@ -166,6 +166,7 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 			//Atualizando a despesa de cada parcela 
 			for (Parcela parcela : bean.getParcelas()) {
 				parcela.setDespesa(bean);
+				parcela.setStatus(StatusDespesaEnum.A);
 			}
 			
 		}

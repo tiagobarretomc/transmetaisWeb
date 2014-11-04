@@ -210,7 +210,7 @@ public class ContasPagarController {
 				boolean despesaQuitada = true;
 				for (Parcela parcela : contaDespesa.getDespesa().getParcelas()) {
 					
-					if(parcela.getStatus() == StatusDespesaEnum.A){
+					if(parcela.getStatus() != StatusDespesaEnum.P){
 						despesaQuitada = false;
 						break;
 					}
