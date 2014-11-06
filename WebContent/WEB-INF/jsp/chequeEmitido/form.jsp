@@ -44,7 +44,7 @@
 
 <div class="container">
 	<br>
-	<h2>Cadastro de Contas de Fundo Fixo</h2>
+	<h2>Cheques Emitidos</h2>
 	<br />
 	<div class="panel panel-default">
 		<div class="panel-body">

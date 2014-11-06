@@ -60,6 +60,10 @@ public class ContaFundoFixoController extends BaseController<ContaFundoFixo, Con
 	@Override
 	protected void prePersistUpdate(ContaFundoFixo bean) {
 		
+		//Caso trate-se de uma inclusao, o Saldo será setado igual ao saldo inicial.
+		if(bean.getId() == null){
+			bean.setSaldo(bean.getSaldoInicial());
+		}
 		
 		
 	}

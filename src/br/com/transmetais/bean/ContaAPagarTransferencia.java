@@ -25,9 +25,4 @@ public class ContaAPagarTransferencia extends ContaAPagar{
 	}
 
 	
-	
-	
-	
-
-	
 }

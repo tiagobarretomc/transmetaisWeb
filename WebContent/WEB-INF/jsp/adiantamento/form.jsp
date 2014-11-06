@@ -40,6 +40,8 @@
     	
     	
     });
+    
+    
 </script>
 
     <div class="container">
@@ -75,7 +77,7 @@
         	</div>
         	<div class="col-md-2">
         		<label for="adiantamento.data">Data:</label>
-        		<input name="adiantamento.data" id="adiantamento.data" value="<fmt:formatDate value="${adiantamento.data}" type="date" pattern="dd/MM/yyyy"/>" class="form-control required" />
+        		<input name="adiantamento.data" id="adiantamento.data" value="<fmt:formatDate value="${adiantamento.data}" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" />
         	</div>
         	
       	</div>

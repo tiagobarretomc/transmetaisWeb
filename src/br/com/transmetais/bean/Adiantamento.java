@@ -38,6 +38,10 @@ public class Adiantamento {
 	@ManyToOne
 	@JoinColumn(name="fornecedor_id")
 	private Fornecedor fornecedor;
+	@ManyToOne
+	@JoinColumn(name="conta_id")
+	private Conta conta;
+	
 	private Date data;
 	
 	public Long getId() {
@@ -89,6 +93,12 @@ public class Adiantamento {
 		this.data = data;
 	}
 	
+	public Conta getConta() {
+		return conta;
+	}
 	
+	public void setConta(Conta conta) {
+		this.conta = conta;
+	}
 
 }

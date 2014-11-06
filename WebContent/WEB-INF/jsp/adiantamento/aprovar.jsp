@@ -33,19 +33,69 @@
             
         });
         
+        $("#adiantamento\\.tipoPagamento").change(function(){
+        	
+        	if ($(this).val() == 'C'){
+        		$("#divCheque").show();
+        	}else{
+        		$("#divCheque").hide();
+        	}
+        	
+        	
+        });
+        $('.selectpicker').selectpicker();
+        
+        $("#adiantamento\\.tipoPagamento").change(function(){
+        	atualizaContas();
+        });
     	
     	
     });
+    
+	function atualizaContas(){
+		
+			$.ajax({
+	        type: 'GET',
+	        url: '${pageContext.request.contextPath}/adiantamento/loadContas?_format=json',
+	        data:	{tipoPagamento: $('#adiantamento\\.tipoPagamento').val()},
+	 	    success: function(json){
+	 	    	
+	 	    	var jsonObject = eval(json);
+	 	    	
+	 	    	var contas = jsonObject.list;
+	 	    	
+	 	    	var html = "";  
+	 	    	        
+	 	       html += "<select name='adiantamento.conta.id' id='adiantamento.conta.id' class='selectpicker form-control' data-live-search='true'>" ; 
+	 	      html += "<option value=''>Selecione</option>";
+	 	       for(i=0;i<contas.length;i++) {  
+	 	           html += "<option value='"+contas[i].id +"'>"+contas[i].descricao+"</option>";                           
+	 	       }  
+	 	       html += "</select> " ; 
+	 	       
+	 	       
+	 	       var div = document.getElementById("divCboContas");  
+	 	       div.innerHTML = html; 
+	 	      $('.selectpicker').selectpicker();
+	 	        
+
+			},
+		    error: function(xhr){
+		    	alert('erro!');
+				    }
+	    });
+	
+	}
 </script>
 
     <div class="container">
     <br>
-	<h2>Aprovação de Adiantamentos</h2>
+	<h2>Efetivação de Adiantamentos</h2>
 	<br/>
 	<div class="panel panel-default">
 	<div class="panel-body">
 	<form action="<c:url value='/adiantamento/confirmar'/>" id="formAdiantamento" name="formAdiantamento" method="post">
-		
+	
 		
 		
 		<div class="row">
@@ -72,16 +122,21 @@
         	
       	</div>
       	<div class="row">
-	      	<div class="col-md-4">
+	      	<div class="col-md-2">
 	      		<label for="adiantamento.tipoPagamento">Forma Pagamento:</label>
         		
-				<select  id="adiantamento.tipoPagamento" name="adiantamento.tipoPagamento" class=" form-control required" >
+				<select  id="adiantamento.tipoPagamento" name="adiantamento.tipoPagamento" class=" form-control required selectpicker" >
 					<option value="" >--Selecione--</option>
 					<c:forEach var="tipo" items="${tiposPagamentos}">
 						<option value="${tipo.name }" >${tipo.descricao}</option>
 					</c:forEach>
 				</select>
 	      	</div>
+	      	<div class="col-md-2" id="divCheque" style="display:none;">
+	      	
+        		<label for="">Número Cheque:</label>
+        		<input name="cheque.numeroCheque"  id="cheque.numeroCheque" value="" class="form-control required " maxlength="15"  />
+        	</div>
 	      	<div class="col-md-2">
 	      	<c:set var="now" value="<%=new java.util.Date()%>" />
         		<label for="adiantamento.dataPagamento">Data Pagamento:</label>
@@ -89,13 +144,14 @@
         	</div>
         	<div class="col-md-4">
 	      		<label for="contaSacada">Conta sacada:</label>
-        		
-				<select  id="contaOrigem.id" name="contaOrigem.id" class=" form-control required" >
-					<option value="" >--Selecione--</option>
-					<c:forEach var="conta" items="${contas}">
-						<option value="${conta.id }" >${conta.descricao}</option>
-					</c:forEach>
-				</select>
+        		<div id="divCboContas">
+					<select  id="adiantamento.conta.id" name="adiantamento.conta.id" class=" form-control required selectpicker" >
+						<option value="" >--Selecione--</option>
+						<c:forEach var="conta" items="${contas}">
+							<option value="${conta.id }" ${adiantamento.conta.id eq conta.id ? 'selected' : ''} >${conta.descricao}</option>
+						</c:forEach>
+					</select>
+        		</div>
 	      	</div>
       	</div>
 		

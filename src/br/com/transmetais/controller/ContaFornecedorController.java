@@ -15,6 +15,7 @@ import br.com.transmetais.dao.ContaDAO;
 import br.com.transmetais.dao.FornecedorDAO;
 import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.commons.DAOException;
+import br.com.transmetais.type.TipoFaturamentoEnum;
 
 @Resource
 public class ContaFornecedorController {
@@ -94,6 +95,7 @@ public class ContaFornecedorController {
 				dao.addEntity(conta);
 				
 				fornecedor.setConta(conta);
+				fornecedor.setTipoFaturamento(TipoFaturamentoEnum.ADIANT);
 				
 				fornecedorDAO.updateEntity(fornecedor);
 			}
@@ -104,8 +106,16 @@ public class ContaFornecedorController {
 	
 	@Path("/contaFornecedor/remove/{conta.id}")
 	public void remove(ContaFornecedor conta) throws DAOException {
+		Fornecedor fornecedor = conta.getFornecedor(); 
 		
 		if (conta.getId() != null && conta.getId()>0){
+			
+			//Alterar o Fornecedor para não trabalhar mais com adiantamentos
+			fornecedor.setConta(null);
+			fornecedor.setTipoFaturamento(TipoFaturamentoEnum.AVISTA);
+			fornecedorDAO.updateEntity(fornecedor);
+			
+			//remover a conta
 			dao.removeEntity(conta);
 		
 		}

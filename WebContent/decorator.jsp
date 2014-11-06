@@ -199,6 +199,7 @@ form {
 	          <ul class="dropdown-menu">
 	          	 <li><a href="<c:url value='/contasPagar/'/>">Contas a Pagar</a></li>
 	          	 <li><a href="<c:url value='/despesa/lista'/>">Despesas</a></li>
+	          	 <li><a href="<c:url value='/chequeEmitido/lista'/>">Cheque Emitido</a></li>
 	          	 <li class="divider"></li>
 	          	<li><a href="<c:url value='/contasReceber/'/>">Contas a Receber</a></li>
 	          </ul>
