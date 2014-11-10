@@ -131,11 +131,11 @@ public class ChequeEmitidoController extends BaseController<ChequeEmitido, Chequ
 	
 	public void aprovar(ChequeEmitido bean) throws DAOException {
 		
-		Date dataCompensacao = bean.getDataCompensacao();
+		Date dataCompensacao = bean.getDataStatus();
 		
 		bean = dao.findById(bean.getId());
 		
-		bean.setDataCompensacao(dataCompensacao);
+		bean.setDataStatus(dataCompensacao);
 		
 		bean.setStatus(SituacaoChequeEnum.C);
 		
@@ -148,7 +148,7 @@ public class ChequeEmitidoController extends BaseController<ChequeEmitido, Chequ
 			MovimentacaoAdiantamento movimentacaoOrigem = new MovimentacaoAdiantamento();
 			movimentacaoOrigem.setAdiantamento(adiantamento);
 			movimentacaoOrigem.setConta(adiantamento.getConta());
-			movimentacaoOrigem.setData(bean.getDataCompensacao());
+			movimentacaoOrigem.setData(bean.getDataStatus());
 			movimentacaoOrigem.setTipoOperacao(TipoOperacaoEnum.D);
 			movimentacaoOrigem.setValor(adiantamento.getValor());
 			
@@ -163,7 +163,7 @@ public class ChequeEmitidoController extends BaseController<ChequeEmitido, Chequ
 			MovimentacaoAdiantamento movimentacaoDestino = new MovimentacaoAdiantamento();
 			movimentacaoDestino.setAdiantamento(adiantamento);
 			movimentacaoDestino.setConta(adiantamento.getFornecedor().getConta());
-			movimentacaoDestino.setData(bean.getDataCompensacao());
+			movimentacaoDestino.setData(bean.getDataStatus());
 			movimentacaoDestino.setTipoOperacao(TipoOperacaoEnum.C);
 			movimentacaoDestino.setValor(adiantamento.getValor());
 			movimentacaoDao.addEntity(movimentacaoDestino);
@@ -176,19 +176,21 @@ public class ChequeEmitidoController extends BaseController<ChequeEmitido, Chequ
 		
 		
 		result.include("mensagem", "Confirmação da compensação do cheque efetuado com sucesso!");
-		result.forwardTo(this.getClass()).lista(null,null,null);
+		result.redirectTo(this.getClass()).lista(null,null,null);
 		
 	  }
 	
-	public void confirmarCancelamento(ChequeEmitido bean) throws DAOException {
+	public void confirmarCancelamento(ChequeEmitido bean)  {
 		
-		Date dataCompensacao = bean.getDataCompensacao();
+		Date dataCancelamento = bean.getDataStatus();
 		
 		String motivo = bean.getMotivoCancelamento();
 		
+		try{
+			
 		bean = dao.findById(bean.getId());
 		
-		bean.setDataCompensacao(dataCompensacao);
+		bean.setDataStatus(dataCancelamento);
 		
 		bean.setStatus(SituacaoChequeEnum.K);
 		
@@ -203,9 +205,13 @@ public class ChequeEmitidoController extends BaseController<ChequeEmitido, Chequ
 			adiantamentoDao.updateEntity(adiantamento);
 			
 		}
+		}
+		catch (Exception ex){
+			ex.printStackTrace();
+		}
 		
 		result.include("mensagem", "Cancelamento do Cheque efetuado com sucesso!");
-		result.forwardTo(this.getClass()).lista(null,null,null);
+		result.redirectTo(this.getClass()).lista(null,null,null);
 	}
 	
 		

@@ -4,7 +4,7 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 
-		$("#bean\\.dataCompensacao").mask('99/99/9999');
+		$("#bean\\.dataStatus").mask('99/99/9999');
 		
 		$(".datepicker").datepicker({
 	       	 format: "dd/mm/yyyy",
@@ -40,23 +40,23 @@
 				<div class="row">
 						<div class="col-md-1">
 							<label for="bean.adiantamento.id">Cód.:</label> 
-						<input name="bean.adiantamento.id" id="bean.adiantamento.id" value="${bean.adiantamento.id }" class="form-control "  maxlength="10" readonly="readonly"/>
+						<input name="" id="bean.adiantamento.id" value="${bean.adiantamento.id }" class="form-control "  maxlength="10" readonly="readonly"/>
 						</div>
 						<div class="col-md-4">
 							<label for="bean.adiantamento.fornecedor.nome">Fornecedor:</label> 
-						<input name="bean.adiantamento.fornecedor.nome" id="bean.adiantamento.fornecedor.nome" value="${bean.adiantamento.fornecedor.apelido} - ${bean.adiantamento.fornecedor.nome}" class="form-control "  maxlength="10" readonly="readonly"/>
+						<input name="" id="bean.adiantamento.fornecedor.nome" value="${bean.adiantamento.fornecedor.apelido} - ${bean.adiantamento.fornecedor.nome}" class="form-control "  maxlength="10" readonly="readonly"/>
 						</div>
 						<div class="col-md-2">
 							<label for="bean.adiantamento.valor">Valor:</label> 
-						<input name="bean.adiantamento.valor" id="bean.adiantamento.valor" value="<fmt:formatNumber value="${bean.adiantamento.valor}" minFractionDigits="2" type="currency"/>" class="form-control "  maxlength="10" readonly="readonly"/>
+						<input name="" id="bean.adiantamento.valor" value="<fmt:formatNumber value="${bean.adiantamento.valor}" minFractionDigits="2" type="currency"/>" class="form-control "  maxlength="10" readonly="readonly"/>
 						</div>
 						<div class="col-md-2">
 							<label for="bean.adiantamento.dataInclusao">Dt Inclusão:</label> 
-						<input name="bean.adiantamento.dataInclusao" id="bean.adiantamento.dataInclusao" value="<fmt:formatDate value="${bean.adiantamento.dataInclusao}" type="date" pattern="dd/MM/yyyy"/>" class="form-control "  maxlength="10" readonly="readonly"/>
+						<input name="" id="bean.adiantamento.dataInclusao" value="<fmt:formatDate value="${bean.adiantamento.dataInclusao}" type="date" pattern="dd/MM/yyyy"/>" class="form-control "  maxlength="10" readonly="readonly"/>
 						</div>
 						<div class="col-md-2">
 							<label for="bean.adiantamento.dataPagamento">Dt Pagamento:</label> 
-						<input name="bean.adiantamento.dataPagamento" id="bean.adiantamento.dataPagamento" value="<fmt:formatDate value="${bean.adiantamento.dataPagamento}" type="date" pattern="dd/MM/yyyy"/>" class="form-control "  maxlength="10" readonly="readonly"/>
+						<input name="" id="bean.adiantamento.dataPagamento" value="<fmt:formatDate value="${bean.adiantamento.dataPagamento}" type="date" pattern="dd/MM/yyyy"/>" class="form-control "  maxlength="10" readonly="readonly"/>
 						</div>
 				</div>
 		</c:if>
@@ -75,32 +75,32 @@
 				<div class="row">
 				<div class="col-md-2">
 						<label for="bean.id">Número Cheque:</label> 
-						<input name="bean.numeroCheque" id="bean.numeroCheque" value="${bean.numeroCheque }" class="form-control "  readonly="readonly" />
+						<input name="" id="bean.numeroCheque" value="${bean.numeroCheque }" class="form-control "  readonly="readonly" />
 							
 							
 					</div>
 					<div class="col-md-2">
 						<label for="bean.id">Conta Bancária:</label> 
-						<input name="bean.conta.descricao" id="bean.conta.descricao" value="${bean.conta.descricao }" class="form-control "  readonly="readonly" />
+						<input name="" id="bean.conta.descricao" value="${bean.conta.descricao }" class="form-control "  readonly="readonly" />
 							
 							
 					</div>
 					<div class="col-md-2">
 						<label for="bean.id">Data Emissão:</label> 
-						<input name="bean.data" id="bean.data" value='<fmt:formatDate value="${bean.data}" type="date" pattern="dd/MM/yyyy" />' class="form-control "  readonly="readonly" />
+						<input name="" id="bean.data" value='<fmt:formatDate value="${bean.data}" type="date" pattern="dd/MM/yyyy" />' class="form-control "  readonly="readonly" />
 							
 							
 					</div>
 					
 					<div class="col-md-2">
 						<label for="bean.id">Valor do Cheque:</label> 
-						<input name="bean.valor" id="bean.valor" value="<fmt:formatNumber value="${bean.valor }" minFractionDigits="2" type="currency" />" class="form-control "  readonly="readonly" />
+						<input name="" id="bean.valor" value="<fmt:formatNumber value="${bean.valor }" minFractionDigits="2" type="currency" />" class="form-control "  readonly="readonly" />
 							
 							
 					</div>
 					<div class="col-md-2">
 						<label for="bean.id">Data Cancelamento:</label> 
-						<input name="bean.dataCompensacao" id="bean.dataCompensacao" value="" class="form-control datepicker required"  maxlength="10" />
+						<input name="bean.dataStatus" id="bean.dataStatus" value="" class="form-control datepicker required"  maxlength="10" />
 							
 							
 					</div>

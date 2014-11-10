@@ -85,12 +85,20 @@
 					</div>
 					<div class="col-md-2">
 						<label for="bean.id">Data Cancelamento:</label> 
-						<input name="bean.dataCompensacao" id="bean.dataCompensacao" value="<fmt:formatDate value="${bean.dataCompensacao}" type="date" pattern="dd/MM/yyyy" />" readonly="readonly" class="form-control datepicker required"  maxlength="10" />
+						<input name="bean.dataStatus" id="bean.dataStatus" value="<fmt:formatDate value="${bean.dataStatus}" type="date" pattern="dd/MM/yyyy" />" readonly="readonly" class="form-control datepicker required"  maxlength="10" />
+							
+							
+					</div>
+					
+					<div class="col-md-2">
+						<label for="bean.id">Situação:</label> 
+						<input name="bean.status" id="bean.status" value="${bean.status.descricao }" readonly="readonly" class="form-control "   />
 							
 							
 					</div>
 					</div>
 					
+					<c:if test="${not empty bean.motivoCancelamento }">
 					<div class="row">
 					<div class="col-md-8">
 						<label for="bean.motivoCancelamento">Motivo Cancelamento:</label> 
@@ -99,6 +107,7 @@
 							
 					</div>
 					</div>
+					</c:if>
 					
 
 				

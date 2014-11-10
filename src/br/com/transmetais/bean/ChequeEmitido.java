@@ -35,8 +35,8 @@ public class ChequeEmitido {
 	private String numeroCheque;
 	@Enumerated(EnumType.STRING)
 	private SituacaoChequeEnum status;
-	@Column(name="data_compensacao")
-	private Date dataCompensacao;
+	@Column(name="data_status")
+	private Date dataStatus;
 	@Column(name="motivo_cancelamento")
 	private String motivoCancelamento;
 	
@@ -79,12 +79,12 @@ public class ChequeEmitido {
 		this.status = status;
 	}
 	
-	public Date getDataCompensacao() {
-		return dataCompensacao;
+	public Date getDataStatus() {
+		return dataStatus;
 	}
 	
-	public void setDataCompensacao(Date dataCompensacao) {
-		this.dataCompensacao = dataCompensacao;
+	public void setDataStatus(Date dataStatus) {
+		this.dataStatus = dataStatus;
 	}
 	
 	public String getMotivoCancelamento() {
