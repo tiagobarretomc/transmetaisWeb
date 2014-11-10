@@ -3,8 +3,34 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <script type="text/javascript">
 	$(document).ready(function() {
+		
+		$.validator.addMethod( "dateLessThanToday", function( value, element ) {
+	   	    /* ... regra de validação ... */
+	   	    var isValid = false;
+	   	    
+	   	   var dataPagamento = Date.parseExact(value,'dd/MM/yyyy');
+	   	   var hoje = Date.today();
+	   	  
+	   	  
+	   	 	if(dataPagamento.compareTo(hoje) <= 0){
+	   	 		return true;
+	   	 	}else{
+	   	 		return false;
+	   	 	}
+	   	 	
+	   	 	//alert(dataPagamento <= hoje );
+	   	 	
+	   	    return  isValid;
+	   	 
+	   	}, "A Data de compensação deve ser menor ou igual a data atual." );
 
 		$("#bean\\.dataStatus").mask('99/99/9999');
+		
+		$("#btnVoltar").click(function(){
+			
+			window.location.href = "<c:url value='/chequeEmitido/lista'/>";
+			
+		});
 		
 		$(".datepicker").datepicker({
 	       	 format: "dd/mm/yyyy",
@@ -102,7 +128,7 @@
 					<div class="row">
 					<div class="col-md-2">
 						<label for="bean.id">Data Compensação:</label> 
-						<input name="bean.dataStatus" id="bean.dataStatus" value="" class="form-control datepicker required"  maxlength="10" />
+						<input name="bean.dataStatus" id="bean.dataStatus" value="" class="form-control datepicker required dateLessThanToday"  maxlength="10" />
 							
 							
 					</div>
@@ -122,6 +148,10 @@
 				<button type="submit" id="btnSalvar" 
 					class="btn btn-default btn-md">
 					<span class="glyphicon glyphicon-floppy-disk"></span> Confirmar
+				</button>
+				<button type="button" id="btnVoltar" 
+					class="btn btn-default btn-md">
+					Voltar
 				</button>
 			</form>
 		</div>

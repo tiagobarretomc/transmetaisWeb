@@ -6,7 +6,7 @@
 
 		$("#btnVoltar").click(function(){
 			
-			history.back();
+			window.location.href = "<c:url value='/chequeEmitido/lista'/>";
 			
 		});
 	
@@ -51,8 +51,7 @@
 	<div class="panel panel-default">
 		
 		<div class="panel-body">
-			<form action="<c:url value='/chequeEmitido/confirmarCancelamento'/>" id="formCheque"
-				name="formCheque" method="post">
+			
 				
 				<input type="hidden" name="bean.id" value="${bean.id }"/>
 
@@ -116,11 +115,11 @@
 
 
 				<br />
-				<button type="submit" id="btnVoltar" 
+				<button type="button" id="btnVoltar" 
 					class="btn btn-default btn-md">
-					<span class="glyphicon glyphicon-floppy-disk"></span> Voltar
+					Voltar
 				</button>
-			</form>
+			
 		</div>
 	</div>
 </div>
