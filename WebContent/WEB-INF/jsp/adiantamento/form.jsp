@@ -8,9 +8,12 @@
     
     	$("#adiantamento\\.data").mask("99/99/9999");
     	
-    	var options = new Array();
-	   	 options['language'] = 'pt-BR';
-	   	 $('.datepicker').datepicker(options);
+    	$('.datepicker').datepicker({
+	   		language : 'pt-BR',
+	   		autoclose : true,
+	   		format : 'dd/mm/yyyy'
+	   	 	
+	   	}); 
     	
     	$("#btnAdicionar").click(function(){
     		$("#formAdiantamento").submit();

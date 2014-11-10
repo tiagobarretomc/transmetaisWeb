@@ -38,6 +38,9 @@ public class ContaAPagar {
 	@Enumerated(EnumType.STRING)
 	protected StatusMovimentacaoEnum status;
 	protected String descricao;
+	protected BigDecimal juros;
+	@Column(name="valor_total")
+	protected BigDecimal valorTotal;
 	
 	public Integer getId() {
 		return id;
@@ -85,6 +88,19 @@ public class ContaAPagar {
 		this.dataPrevista = dataPrevista;
 	}
 
+	public BigDecimal getJuros() {
+		return juros;
+	}
+	public void setJuros(BigDecimal juros) {
+		this.juros = juros;
+	}
 	
+	public BigDecimal getValorTotal() {
+		return valorTotal;
+	}
+	
+	public void setValorTotal(BigDecimal valorTotal) {
+		this.valorTotal = valorTotal;
+	}
 	
 }
