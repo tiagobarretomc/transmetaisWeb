@@ -6,9 +6,12 @@
     $(document).ready(function(){
     	
     	
-    	/* $("#btnAdicionar").click(function(){
-    		document.location.href = "${pageContext.request.contextPath}/contaFundoFixo/novo";
-    	}); */
+    	$(".datepicker").datepicker({
+	       	 format: "dd/mm/yyyy",
+	       	 laguage: "pt-BR"
+	    	});
+    	
+    	$(".datepicker").mask('99/99/9999');
     	
     	$('#formCheque').validate({
   		   
@@ -114,7 +117,16 @@
 			<c:forEach var="cheq" items="${beanList}" varStatus="contador">
 
 				<tr>
-					<td></td>
+					<td>
+						<c:if test="${cheq.status eq 'A' }">
+							<a  href="<c:url value='/chequeEmitido/'/>${cheq.id}"><span title="Confirmar" class="glyphicon glyphicon-ok"></span></a>
+							<a  href="<c:url value='/chequeEmitido/cancelar/'/>${cheq.id}"><span title="Cancelar" class="glyphicon glyphicon-remove"></span></a>
+						</c:if>
+						<c:if test="${cheq.status eq 'C' || cheq.status eq 'K'}">
+							<a href="${pageContext.request.contextPath}/chequeEmitido/detalhar/${cheq.id}"><span title="Detalhar" style="color: black;" class="glyphicon glyphicon-search"></span></a>
+						</c:if>
+						
+					</td>
 					<td><fmt:formatDate value="${cheq.data}" type="date" pattern="dd/MM/yyyy"/></td>
 					<td>${cheq.numeroCheque}</td>
 					<td>${cheq.conta.descricao}</td>

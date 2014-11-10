@@ -198,6 +198,8 @@ public class AdiantamentoController {
 		result.redirectTo(AdiantamentoController.class).lista();
 	  }
 	
+	
+	
 	@Path({"/adiantamento/cancelar/{adiantamento.id}"}) 
 	public void cancelar(Adiantamento adiantamento) throws DAOException {
 		

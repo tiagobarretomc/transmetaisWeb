@@ -31,7 +31,7 @@
 
 <div class="container">
 	<br>
-	<h2>Confirmação de Cheques Emitidos Compensados</h2>
+	<h2>Cancelamento de Cheques Emitidos</h2>
 	<br />
 	<div class="panel panel-default">
   	<div class="panel-body">
@@ -66,7 +66,7 @@
 	<div class="panel panel-default">
 		
 		<div class="panel-body">
-			<form action="<c:url value='/chequeEmitido/aprovar'/>" id="formCheque"
+			<form action="<c:url value='/chequeEmitido/confirmarCancelamento'/>" id="formCheque"
 				name="formCheque" method="post">
 				
 				<input type="hidden" name="bean.id" value="${bean.id }"/>
@@ -98,12 +98,18 @@
 							
 							
 					</div>
-					</div>
-					<div class="row">
 					<div class="col-md-2">
-						<label for="bean.id">Data Compensação:</label> 
+						<label for="bean.id">Data Cancelamento:</label> 
 						<input name="bean.dataCompensacao" id="bean.dataCompensacao" value="" class="form-control datepicker required"  maxlength="10" />
 							
+							
+					</div>
+					</div>
+					<div class="row">
+					<div class="col-md-8">
+						<label for="bean.motivoCancelamento">Motivo Cancelamento:</label> 
+						
+						<textarea rows="4"   name="bean.motivoCancelamento" id="bean.motivoCancelamento" class="form-control required"></textarea>	
 							
 					</div>
 

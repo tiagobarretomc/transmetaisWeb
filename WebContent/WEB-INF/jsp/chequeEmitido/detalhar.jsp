@@ -4,34 +4,19 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 
-		$("#bean\\.dataCompensacao").mask('99/99/9999');
-		
-		$(".datepicker").datepicker({
-	       	 format: "dd/mm/yyyy",
-	       	 laguage: "pt-BR"
-	    	});
-		
-		$('#formCheque').validate({
-	  		
-			ignore: ':not(select:hidden, input:visible, textarea:visible)',
-         	
-          	errorPlacement: function (error, element) {
-                 if ($(element).is('select')) {
-                     element.next().after(error); // special placement for select elements
-                 } else {
-                     error.insertAfter(element);  // default placement for everything else
-                 }
-             },
-             
-         
-     	});
+		$("#btnVoltar").click(function(){
+			
+			history.back();
+			
+		});
+	
 	
 	});
 </script>
 
 <div class="container">
 	<br>
-	<h2>Confirmação de Cheques Emitidos Compensados</h2>
+	<h2>Detalhe do Cheque Emitido</h2>
 	<br />
 	<div class="panel panel-default">
   	<div class="panel-body">
@@ -66,7 +51,7 @@
 	<div class="panel panel-default">
 		
 		<div class="panel-body">
-			<form action="<c:url value='/chequeEmitido/aprovar'/>" id="formCheque"
+			<form action="<c:url value='/chequeEmitido/confirmarCancelamento'/>" id="formCheque"
 				name="formCheque" method="post">
 				
 				<input type="hidden" name="bean.id" value="${bean.id }"/>
@@ -98,20 +83,23 @@
 							
 							
 					</div>
-					</div>
-					<div class="row">
 					<div class="col-md-2">
-						<label for="bean.id">Data Compensação:</label> 
-						<input name="bean.dataCompensacao" id="bean.dataCompensacao" value="" class="form-control datepicker required"  maxlength="10" />
+						<label for="bean.id">Data Cancelamento:</label> 
+						<input name="bean.dataCompensacao" id="bean.dataCompensacao" value="<fmt:formatDate value="${bean.dataCompensacao}" type="date" pattern="dd/MM/yyyy" />" readonly="readonly" class="form-control datepicker required"  maxlength="10" />
 							
 							
 					</div>
-
+					</div>
 					
+					<div class="row">
+					<div class="col-md-8">
+						<label for="bean.motivoCancelamento">Motivo Cancelamento:</label> 
+						
+						<textarea rows="4"   name="bean.motivoCancelamento" id="bean.motivoCancelamento"  class="form-control required" readonly="readonly">${bean.motivoCancelamento }</textarea>	
+							
+					</div>
+					</div>
 					
-					
-
-				</div>
 
 				
 				
@@ -119,9 +107,9 @@
 
 
 				<br />
-				<button type="submit" id="btnSalvar" 
+				<button type="submit" id="btnVoltar" 
 					class="btn btn-default btn-md">
-					<span class="glyphicon glyphicon-floppy-disk"></span> Confirmar
+					<span class="glyphicon glyphicon-floppy-disk"></span> Voltar
 				</button>
 			</form>
 		</div>

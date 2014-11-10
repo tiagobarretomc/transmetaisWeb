@@ -10,18 +10,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.transmetais.bean.Adiantamento;
 import br.com.transmetais.bean.ChequeEmitido;
+import br.com.transmetais.bean.ChequeEmitidoAdiantamento;
 import br.com.transmetais.bean.Conta;
+import br.com.transmetais.bean.MovimentacaoAdiantamento;
+import br.com.transmetais.dao.AdiantamentoDAO;
 import br.com.transmetais.dao.ChequeEmitidoDAO;
 import br.com.transmetais.dao.ContaDAO;
+import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.commons.DAOException;
+import br.com.transmetais.type.SituacaoAdiantamentoEnum;
 import br.com.transmetais.type.SituacaoChequeEnum;
+import br.com.transmetais.type.TipoOperacaoEnum;
 
 @Resource
 @Path("/chequeEmitido")
 public class ChequeEmitidoController extends BaseController<ChequeEmitido, ChequeEmitidoDAO>{
 	
 	private ContaDAO contaDao;
+	private MovimentacaoDAO movimentacaoDao;
+	private AdiantamentoDAO adiantamentoDao;
 
 	@Override
 	protected ChequeEmitido createInstance() {
@@ -80,44 +89,127 @@ public class ChequeEmitidoController extends BaseController<ChequeEmitido, Chequ
 		return lista;
 	}
 	
+	@Path({"/cancelar/{id}","/cancelar/{id}/"})
+	public ChequeEmitido cancelar(Long id) throws DAOException{
+		ChequeEmitido bean = null;
+		
+		
+		if (id != null){
+			
+			bean = dao.findById(id);
+			
+		}else{
+			bean = createInstance();
+		}
+		
+		initForm(bean);
+		
+		result.include("bean",bean);
+		
+		return bean;
+	}
 	
-//	public List<ChequeEmitido> loadLista(Long fornecedorId, Date dataInicio, Date dataFim, List<TipoFreteEnum> tiposFretes, List<Long> materiaisSelecionados, List<StatusCompraEnum> statusCompas){
-//		List<Compra> lista = null;
-//		
-//		try {
-//			
-//			
-//			lista = dao.findByFilter(fornecedorId, dataInicio, dataFim, tiposFretes, materiaisSelecionados, statusCompas);
-//			BigDecimal valorTotal = new BigDecimal(0);
-//			BigDecimal quantidade = new BigDecimal(0);
-//			for (Compra compra : lista) {
-//				for(ItemCompra item : compra.getItens()){
-//					valorTotal = valorTotal.add( item.getValor());
-//					quantidade = quantidade.add( item.getQuantidade());
-//					
-//				}
-//			}
-//			
-//			
-//			BigDecimal precoMedio =  new BigDecimal(0);
-//			
-//			if(valorTotal.compareTo(new BigDecimal(0)) != 0 && quantidade.compareTo(new BigDecimal(0)) != 0){
-//				
-//				precoMedio = valorTotal.divide(quantidade, BigDecimal.ROUND_HALF_DOWN);
-//			}
-//			
-//			result.include("valorTotal", valorTotal);
-//			result.include("quantidade", quantidade);
-//			result.include("precoMedio", precoMedio);
-//			
-//			result.include("compras",lista);
-//		} catch (DAOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//		return lista;
-//	}
+	@Path({"/detalhar/{id}","/detalhar/{id}/"})
+	public ChequeEmitido detalhar(Long id) throws DAOException{
+		ChequeEmitido bean = null;
+		
+		
+		if (id != null){
+			
+			bean = dao.findById(id);
+			
+		}else{
+			bean = createInstance();
+		}
+		
+		initForm(bean);
+		
+		result.include("bean",bean);
+		
+		return bean;
+	}
+	
+	public void aprovar(ChequeEmitido bean) throws DAOException {
+		
+		Date dataCompensacao = bean.getDataCompensacao();
+		
+		bean = dao.findById(bean.getId());
+		
+		bean.setDataCompensacao(dataCompensacao);
+		
+		bean.setStatus(SituacaoChequeEnum.C);
+		
+		dao.updateEntity(bean);
+		
+		if(bean instanceof ChequeEmitidoAdiantamento){
+			Adiantamento adiantamento = ((ChequeEmitidoAdiantamento)bean).getAdiantamento();
+			
+			//Criar a Movimentacao origem do recurso a ser transferido para a conta do fornecedor
+			MovimentacaoAdiantamento movimentacaoOrigem = new MovimentacaoAdiantamento();
+			movimentacaoOrigem.setAdiantamento(adiantamento);
+			movimentacaoOrigem.setConta(adiantamento.getConta());
+			movimentacaoOrigem.setData(bean.getDataCompensacao());
+			movimentacaoOrigem.setTipoOperacao(TipoOperacaoEnum.D);
+			movimentacaoOrigem.setValor(adiantamento.getValor());
+			
+			movimentacaoDao.addEntity(movimentacaoOrigem);
+			
+			//Atualizando saldo da conta origem
+			Conta contaOrigem = adiantamento.getConta();
+			contaOrigem.setSaldo(contaOrigem.getSaldo().subtract(adiantamento.getValor()));
+			contaDao.updateEntity(contaOrigem);
+			
+			//Criar a Movimentacao de Destivo na Conta do Fornecedor
+			MovimentacaoAdiantamento movimentacaoDestino = new MovimentacaoAdiantamento();
+			movimentacaoDestino.setAdiantamento(adiantamento);
+			movimentacaoDestino.setConta(adiantamento.getFornecedor().getConta());
+			movimentacaoDestino.setData(bean.getDataCompensacao());
+			movimentacaoDestino.setTipoOperacao(TipoOperacaoEnum.C);
+			movimentacaoDestino.setValor(adiantamento.getValor());
+			movimentacaoDao.addEntity(movimentacaoDestino);
+			
+			//Atualizando saldo da conta destino
+			Conta contaDestino = adiantamento.getFornecedor().getConta();
+			contaDestino.setSaldo(contaDestino.getSaldo().add(adiantamento.getValor()));
+			contaDao.updateEntity(contaDestino);
+		}
+		
+		
+		result.include("mensagem", "Confirmação da compensação do cheque efetuado com sucesso!");
+		result.forwardTo(this.getClass()).lista(null,null,null);
+		
+	  }
+	
+	public void confirmarCancelamento(ChequeEmitido bean) throws DAOException {
+		
+		Date dataCompensacao = bean.getDataCompensacao();
+		
+		String motivo = bean.getMotivoCancelamento();
+		
+		bean = dao.findById(bean.getId());
+		
+		bean.setDataCompensacao(dataCompensacao);
+		
+		bean.setStatus(SituacaoChequeEnum.K);
+		
+		bean.setMotivoCancelamento(motivo);
+		
+		dao.updateEntity(bean);
+		
+		if(bean instanceof ChequeEmitidoAdiantamento){
+			Adiantamento adiantamento = ((ChequeEmitidoAdiantamento)bean).getAdiantamento();
+			
+			adiantamento.setSituacao(SituacaoAdiantamentoEnum.C);
+			adiantamentoDao.updateEntity(adiantamento);
+			
+		}
+		
+		result.include("mensagem", "Cancelamento do Cheque efetuado com sucesso!");
+		result.forwardTo(this.getClass()).lista(null,null,null);
+	}
+	
+		
+
 	
 	@Override
 	protected void postPersistUpdate(ChequeEmitido bean, Result result) {
@@ -142,6 +234,16 @@ public class ChequeEmitidoController extends BaseController<ChequeEmitido, Chequ
 	@Autowired
 	public void setContaDao(ContaDAO contaDao) {
 		this.contaDao = contaDao;
+	}
+	
+	@Autowired
+	public void setMovimentacaoDao(MovimentacaoDAO movimentacaoDao) {
+		this.movimentacaoDao = movimentacaoDao;
+	}
+	
+	@Autowired
+	public void setAdiantamentoDao(AdiantamentoDAO adiantamentoDao) {
+		this.adiantamentoDao = adiantamentoDao;
 	}
 
 }

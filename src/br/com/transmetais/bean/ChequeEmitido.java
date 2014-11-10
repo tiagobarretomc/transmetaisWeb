@@ -35,6 +35,10 @@ public class ChequeEmitido {
 	private String numeroCheque;
 	@Enumerated(EnumType.STRING)
 	private SituacaoChequeEnum status;
+	@Column(name="data_compensacao")
+	private Date dataCompensacao;
+	@Column(name="motivo_cancelamento")
+	private String motivoCancelamento;
 	
 	public Long getId() {
 		return id;
@@ -75,7 +79,19 @@ public class ChequeEmitido {
 		this.status = status;
 	}
 	
+	public Date getDataCompensacao() {
+		return dataCompensacao;
+	}
 	
+	public void setDataCompensacao(Date dataCompensacao) {
+		this.dataCompensacao = dataCompensacao;
+	}
 	
-
+	public String getMotivoCancelamento() {
+		return motivoCancelamento;
+	}
+	
+	public void setMotivoCancelamento(String motivoCancelamento) {
+		this.motivoCancelamento = motivoCancelamento;
+	}
 }
