@@ -44,6 +44,9 @@ public class Parcela {
 	
 	@Column(name="data_pagamento")
 	private Date dataPagamento;
+	
+	
+	private Integer numero;
 
 	public Long getId() {
 		return id;
@@ -99,6 +102,14 @@ public class Parcela {
 	
 	public void setDataPagamento(Date dataPagamento) {
 		this.dataPagamento = dataPagamento;
+	}
+	
+	public Integer getNumero() {
+		return numero;
+	}
+	
+	public void setNumero(Integer numero) {
+		this.numero = numero;
 	}
 
 }

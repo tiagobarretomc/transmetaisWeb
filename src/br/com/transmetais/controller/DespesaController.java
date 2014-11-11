@@ -2,10 +2,13 @@ package br.com.transmetais.controller;
 
 import static br.com.caelum.vraptor.view.Results.json;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.ComparatorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.caelum.vraptor.Path;
@@ -161,12 +164,21 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 		
 		bean.setStatus(StatusDespesaEnum.A);
 		
+		Collections.sort(bean.getParcelas(), new Comparator<Parcela>() {
+			  public int compare(Parcela o1, Parcela o2) {
+			      return o1.getDataVencimento().compareTo(o2.getDataVencimento());
+			  }
+			});
+		
+		int numero =1;
 		
 		if (bean.getParcelas() != null){
 			//Atualizando a despesa de cada parcela 
 			for (Parcela parcela : bean.getParcelas()) {
 				parcela.setDespesa(bean);
 				parcela.setStatus(StatusDespesaEnum.A);
+				parcela.setNumero(numero);
+				numero++;
 			}
 			
 		}
@@ -175,6 +187,10 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 		if (bean.getFormaPagamento() == TipoPagamentoEnum.V){
 			bean.setDataVencimento(bean.getDataCompetencia());
 		}
+		
+		
+		
+		
 		
 	}
 	

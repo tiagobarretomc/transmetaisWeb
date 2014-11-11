@@ -8,13 +8,11 @@ import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.Conta;
 import br.com.transmetais.bean.ContaAPagar;
-import br.com.transmetais.bean.ContaAPagarAdiantamento;
 import br.com.transmetais.bean.ContaAPagarCompra;
 import br.com.transmetais.bean.ContaAPagarDespesa;
 import br.com.transmetais.bean.Movimentacao;
 import br.com.transmetais.bean.MovimentacaoContasAPagar;
 import br.com.transmetais.bean.Parcela;
-import br.com.transmetais.dao.AdiantamentoDAO;
 import br.com.transmetais.dao.CompraDAO;
 import br.com.transmetais.dao.ContaAPagarDAO;
 import br.com.transmetais.dao.ContaDAO;
@@ -22,7 +20,6 @@ import br.com.transmetais.dao.DespesaDAO;
 import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.ParcelaDAO;
 import br.com.transmetais.dao.commons.DAOException;
-import br.com.transmetais.type.SituacaoAdiantamentoEnum;
 import br.com.transmetais.type.StatusCompraEnum;
 import br.com.transmetais.type.StatusDespesaEnum;
 import br.com.transmetais.type.StatusMovimentacaoEnum;
@@ -36,21 +33,20 @@ public class ContasPagarController {
 	private ContaDAO contaDao;
 	private MovimentacaoDAO movimentacaoDao;
 	private ContaAPagarDAO dao;
-	private AdiantamentoDAO adiantamentoDao;
 	private CompraDAO compraDao;
 	private DespesaDAO despesaDao;
 	private ParcelaDAO parcelaDao;
 	
 	
 	public ContasPagarController(Result result,ContaAPagarDAO dao, ContaDAO contaDao, 
-			MovimentacaoDAO movimentacaoDao, AdiantamentoDAO adiantamentoDao, CompraDAO compraDao, 
+			MovimentacaoDAO movimentacaoDao, CompraDAO compraDao, 
 			DespesaDAO despesaDao, ParcelaDAO parcelaDao) {
 		this.dao = dao;
 		this.result = result;
 		this.contaDao = contaDao;
 		this.movimentacaoDao = movimentacaoDao;
 		this.compraDao = compraDao;
-		this.adiantamentoDao = adiantamentoDao;
+		
 		this.despesaDao = despesaDao;
 		this.parcelaDao = parcelaDao;
 		
@@ -105,7 +101,7 @@ public class ContasPagarController {
 		contaAPagar = dao.findById(contaAPagar.getId());
 				
 		
-		result.include("contas",contaDao.findAll());
+		//result.include("contas",contaDao.findAll());
 		
 		return contaAPagar;
 	}
@@ -138,30 +134,7 @@ public class ContasPagarController {
 		contaDao.updateEntity(contaSacada);
 		
 		
-		//Quando se tratar de adiantamento será inserido a movimentacao de crédito na conta do fornecedor
-		if (contaAPagarOrig instanceof ContaAPagarAdiantamento){
-			
-			ContaAPagarAdiantamento contaAdiant = (ContaAPagarAdiantamento) contaAPagarOrig;
-			
-			MovimentacaoContasAPagar movimentacaoDestino = new MovimentacaoContasAPagar();
-			movimentacaoDestino.setContaAPagar(contaAPagarOrig);
-			movimentacaoDestino.setConta(contaAdiant.getAdiantamento().getFornecedor().getConta());
-			
-			movimentacaoDestino.setValor(contaAPagarOrig.getValor());
-			movimentacaoDestino.setData(contaAPagarOrig.getDataPagamento());
-			movimentacaoDestino.setTipoOperacao(TipoOperacaoEnum.C);
-			
-			movimentacaoDao.addEntity(movimentacaoDestino);
-			
-			//Alterar o Saldo do fornecedor
-			Conta conta = contaAdiant.getAdiantamento().getFornecedor().getConta();
-			conta.setSaldo(conta.getSaldo().add(movimentacaoDestino.getValor()));
-			contaDao.updateEntity(conta);
-			
-			contaAdiant.getAdiantamento().setSituacao(SituacaoAdiantamentoEnum.PG);
-			adiantamentoDao.updateEntity(contaAdiant.getAdiantamento());
-			
-		}else if (contaAPagarOrig instanceof ContaAPagarCompra ){
+		if (contaAPagarOrig instanceof ContaAPagarCompra ){
 			ContaAPagarCompra contaCompra = (ContaAPagarCompra)contaAPagarOrig;
 			contaCompra.getCompra().setStatus(StatusCompraEnum.P);
 			

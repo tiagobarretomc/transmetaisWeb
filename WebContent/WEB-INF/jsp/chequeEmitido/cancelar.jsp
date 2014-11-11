@@ -139,17 +139,7 @@
 							
 					</div>
 
-					
-					
-					
-
 				</div>
-
-				
-				
-
-
-
 				<br />
 				<button type="submit" id="btnSalvar" 
 					class="btn btn-default btn-md">

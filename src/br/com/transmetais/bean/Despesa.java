@@ -53,6 +53,9 @@ public class Despesa {
 	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="conta_id")
 	protected Conta conta;
+	@ManyToOne
+	@JoinColumn(name="fornecedor_id")
+	private Fornecedor fornecedor;
 	
 	@OneToMany(mappedBy="despesa", fetch = FetchType.LAZY, cascade = CascadeType.ALL,orphanRemoval=true)
 	private List<Parcela> parcelas;
@@ -137,6 +140,12 @@ public class Despesa {
 		this.parcelas = parcelas;
 	}
 	
+	public Fornecedor getFornecedor() {
+		return fornecedor;
+	}
 	
+	public void setFornecedor(Fornecedor fornecedor) {
+		this.fornecedor = fornecedor;
+	}
 
 }
