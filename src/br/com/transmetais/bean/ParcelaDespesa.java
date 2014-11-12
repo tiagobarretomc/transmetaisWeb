@@ -3,6 +3,7 @@ package br.com.transmetais.bean;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -13,14 +14,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import br.com.transmetais.type.StatusDespesaEnum;
 
 
 @Entity
-@Table(name="parcela")
-public class Parcela {
+@Table(name="parcela_despesa")
+public class ParcelaDespesa {
 	
 	@Id 
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -36,9 +38,6 @@ public class Parcela {
 	@Column(name="valor")
 	private BigDecimal valor;
 	
-	@Column(name="numero_cheque")
-	private String numeroCheque;
-	
 	@Enumerated(EnumType.STRING)
 	private StatusDespesaEnum status;
 	
@@ -47,6 +46,9 @@ public class Parcela {
 	
 	
 	private Integer numero;
+	
+	@OneToOne(mappedBy="parcela", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+	private ChequeEmitidoDespesa chequeEmitidoParcela;
 
 	public Long getId() {
 		return id;
@@ -80,13 +82,7 @@ public class Parcela {
 		this.valor = valor;
 	}
 
-	public String getNumeroCheque() {
-		return numeroCheque;
-	}
-
-	public void setNumeroCheque(String numeroCheque) {
-		this.numeroCheque = numeroCheque;
-	}
+	
 	
 	public StatusDespesaEnum getStatus() {
 		return status;
@@ -110,6 +106,14 @@ public class Parcela {
 	
 	public void setNumero(Integer numero) {
 		this.numero = numero;
+	}
+
+	public ChequeEmitidoDespesa getChequeEmitidoParcela() {
+		return chequeEmitidoParcela;
+	}
+
+	public void setChequeEmitidoParcela(ChequeEmitidoDespesa chequeEmitidoParcela) {
+		this.chequeEmitidoParcela = chequeEmitidoParcela;
 	}
 
 }

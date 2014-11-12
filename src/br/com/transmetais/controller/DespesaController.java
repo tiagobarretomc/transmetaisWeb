@@ -4,11 +4,11 @@ import static br.com.caelum.vraptor.view.Results.json;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.collections.ComparatorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.caelum.vraptor.Path;
@@ -20,7 +20,7 @@ import br.com.transmetais.bean.ContaAPagarDespesa;
 import br.com.transmetais.bean.ContaContabil;
 import br.com.transmetais.bean.Despesa;
 import br.com.transmetais.bean.MovimentacaoDespesa;
-import br.com.transmetais.bean.Parcela;
+import br.com.transmetais.bean.ParcelaDespesa;
 import br.com.transmetais.dao.CentroAplicacaoDAO;
 import br.com.transmetais.dao.ContaAPagarDAO;
 import br.com.transmetais.dao.ContaContabilDAO;
@@ -29,6 +29,7 @@ import br.com.transmetais.dao.DespesaDAO;
 import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.type.FormaPagamentoEnum;
+import br.com.transmetais.type.SituacaoChequeEnum;
 import br.com.transmetais.type.StatusDespesaEnum;
 import br.com.transmetais.type.StatusMovimentacaoEnum;
 import br.com.transmetais.type.TipoOperacaoEnum;
@@ -56,32 +57,37 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 		//Caso se trate de pagamento a Vista
 		if (bean.getFormaPagamento() == TipoPagamentoEnum.V ){
 			
-			//Setando os dados da Movimentacao.
-			MovimentacaoDespesa movimentacao = new MovimentacaoDespesa();
-			movimentacao.setDespesa(bean);
-			movimentacao.setData(bean.getDataCompetencia());
-			movimentacao.setTipoOperacao(TipoOperacaoEnum.D);
-			movimentacao.setValor(bean.getValor());
-			movimentacao.setConta(bean.getConta());
-			
-			try {
+			//Caso o pagamento for em cheque. o saldo só devera ser atualizado e a movimentacao gerada quando o cheque tiver a sua compensação confirmada.
+			if(bean.getModalidadePagamento() != FormaPagamentoEnum.C){
 				
-				//inserindo a movimentacao no vanco de dados
-				movimentacaoDAO.addEntity(movimentacao);
+				//Setando os dados da Movimentacao.
+				MovimentacaoDespesa movimentacao = new MovimentacaoDespesa();
+				movimentacao.setDespesa(bean);
+				movimentacao.setData(bean.getDataCompetencia());
+				movimentacao.setTipoOperacao(TipoOperacaoEnum.D);
+				movimentacao.setValor(bean.getValor());
+				movimentacao.setConta(bean.getConta());
 				
-				//Obter a conta que sera debitado o valor da despesa
-				Conta conta = contaDAO.findById(bean.getConta().getId());
-				
-				//Atualizando o Saldo da conta subtrainda o valor da despesa
-				conta.setSaldo(conta.getSaldo().subtract(bean.getValor()));
-				
-				//persistindo na base de dados
-				contaDAO.updateEntity(conta);
-				
-			} catch (DAOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				try {
+					
+					//inserindo a movimentacao no vanco de dados
+					movimentacaoDAO.addEntity(movimentacao);
+					
+					//Obter a conta que sera debitado o valor da despesa
+					Conta conta = contaDAO.findById(bean.getConta().getId());
+					
+					//Atualizando o Saldo da conta subtrainda o valor da despesa
+					conta.setSaldo(conta.getSaldo().subtract(bean.getValor()));
+					
+					//persistindo na base de dados
+					contaDAO.updateEntity(conta);
+					
+				} catch (DAOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
+			
 			
 			
 		}
@@ -91,7 +97,7 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 			//Verificando se trata-se de uma compra a prazo parcelada.
 			if(bean.getParcelas() != null && bean.getParcelas().size()>0){
 				
-				for (Parcela parcela : bean.getParcelas()) {
+				for (ParcelaDespesa parcela : bean.getParcelas()) {
 					
 					ContaAPagarDespesa contaApagar = new ContaAPagarDespesa();
 					contaApagar.setParcela(parcela);
@@ -162,23 +168,53 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 	@Override
 	protected void prePersistUpdate(Despesa bean) {
 		
+		if(bean.getModalidadePagamento() == FormaPagamentoEnum.C && bean.getParcelas() == null){
+			if(bean.getChequeEmitido() != null){
+				bean.getChequeEmitido().setConta(bean.getConta());
+				bean.getChequeEmitido().setData(bean.getDataVencimento());
+				bean.getChequeEmitido().setDespesa(bean);
+				bean.getChequeEmitido().setValor(bean.getValor());
+				bean.getChequeEmitido().setStatus(SituacaoChequeEnum.A);
+				bean.getChequeEmitido().setDataStatus(new Date());
+				
+				//chequeEmitidoDao.addEntity(cheque);
+				
+			}
+		}else if(bean.getModalidadePagamento() == FormaPagamentoEnum.C && bean.getParcelas() != null){
+			bean.setChequeEmitidoList(null);
+		}
+		
+		
 		bean.setStatus(StatusDespesaEnum.A);
-		
-		Collections.sort(bean.getParcelas(), new Comparator<Parcela>() {
-			  public int compare(Parcela o1, Parcela o2) {
-			      return o1.getDataVencimento().compareTo(o2.getDataVencimento());
-			  }
+		if(bean.getParcelas()!=null){
+			Collections.sort(bean.getParcelas(), new Comparator<ParcelaDespesa>() {
+				  public int compare(ParcelaDespesa o1, ParcelaDespesa o2) {
+				      return o1.getDataVencimento().compareTo(o2.getDataVencimento());
+				  }
 			});
-		
+		}
 		int numero =1;
 		
 		if (bean.getParcelas() != null){
 			//Atualizando a despesa de cada parcela 
-			for (Parcela parcela : bean.getParcelas()) {
+			for (ParcelaDespesa parcela : bean.getParcelas()) {
 				parcela.setDespesa(bean);
 				parcela.setStatus(StatusDespesaEnum.A);
 				parcela.setNumero(numero);
 				numero++;
+				
+				
+				if(bean.getModalidadePagamento() == FormaPagamentoEnum.C && bean.getParcelas() != null){
+					
+					parcela.getChequeEmitidoParcela().setConta(bean.getConta());
+					parcela.getChequeEmitidoParcela().setData(parcela.getDataVencimento());
+					parcela.getChequeEmitidoParcela().setDespesa(bean);
+					parcela.getChequeEmitidoParcela().setValor(parcela.getValor());
+					parcela.getChequeEmitidoParcela().setStatus(SituacaoChequeEnum.A);
+					parcela.getChequeEmitidoParcela().setParcela(parcela);
+					parcela.getChequeEmitidoParcela().setDataStatus(new Date());
+					
+				}
 			}
 			
 		}
@@ -231,6 +267,7 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 			mapa.put(FormaPagamentoEnum.D.getName(), FormaPagamentoEnum.D.getDescricao());
 			mapa.put(FormaPagamentoEnum.C.getName(), FormaPagamentoEnum.C.getDescricao());
 			mapa.put(FormaPagamentoEnum.T.getName(), FormaPagamentoEnum.T.getDescricao());
+			mapa.put(FormaPagamentoEnum.B.getName(), FormaPagamentoEnum.B.getDescricao());
 			
 			
 		}else{
@@ -259,11 +296,18 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 				lista = (List<Conta>)contaDAO.obterContasFundoFixo();
 				
 			}
+			else if(formaPagamento == FormaPagamentoEnum.B){
+				lista = (List<Conta>)contaDAO.obterContasFinanceiras();
+			}
 			//se nao for pagamento em dinheiro carregar as contas bancárias
 			else{
 				
-				lista = (List<Conta>)contaDAO.obterContasBancarias();
+					
+					lista = (List<Conta>)contaDAO.obterContasBancarias();
+				
 			}
+		}else if(formaPagamento == FormaPagamentoEnum.C){
+			lista = (List<Conta>)contaDAO.obterContasBancarias();
 		}
 		
 		if (lista != null)

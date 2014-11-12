@@ -1,6 +1,7 @@
 package br.com.transmetais.bean;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -56,9 +57,13 @@ public class Despesa {
 	@ManyToOne
 	@JoinColumn(name="fornecedor_id")
 	private Fornecedor fornecedor;
+	@OneToMany(mappedBy="despesa", fetch=FetchType.LAZY)
+	private List<ChequeEmitidoDespesa> chequeEmitidoList;
+	
+	
 	
 	@OneToMany(mappedBy="despesa", fetch = FetchType.LAZY, cascade = CascadeType.ALL,orphanRemoval=true)
-	private List<Parcela> parcelas;
+	private List<ParcelaDespesa> parcelas;
 	
 	
 	public Long getId() {
@@ -133,10 +138,10 @@ public class Despesa {
 	public void setConta(Conta conta) {
 		this.conta = conta;
 	}
-	public List<Parcela> getParcelas() {
+	public List<ParcelaDespesa> getParcelas() {
 		return parcelas;
 	}
-	public void setParcelas(List<Parcela> parcelas) {
+	public void setParcelas(List<ParcelaDespesa> parcelas) {
 		this.parcelas = parcelas;
 	}
 	
@@ -146,6 +151,25 @@ public class Despesa {
 	
 	public void setFornecedor(Fornecedor fornecedor) {
 		this.fornecedor = fornecedor;
+	}
+	public List<ChequeEmitidoDespesa> getChequeEmitidoList() {
+		return chequeEmitidoList;
+	}
+	public void setChequeEmitidoList(List<ChequeEmitidoDespesa> chequeEmitidoList) {
+		this.chequeEmitidoList = chequeEmitidoList;
+	}
+	
+	public ChequeEmitidoDespesa getChequeEmitido(){
+		if(chequeEmitidoList != null && !chequeEmitidoList.isEmpty()){
+			return chequeEmitidoList.get(0);
+		}
+		return null;
+	}
+	public void setChequeEmitido(ChequeEmitidoDespesa chequeEmitido){
+		if(chequeEmitidoList == null){
+			chequeEmitidoList = new ArrayList<ChequeEmitidoDespesa>();
+		}
+		chequeEmitidoList.add(chequeEmitido);
 	}
 
 }

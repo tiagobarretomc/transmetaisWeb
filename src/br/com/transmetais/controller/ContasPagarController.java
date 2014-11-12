@@ -12,7 +12,7 @@ import br.com.transmetais.bean.ContaAPagarCompra;
 import br.com.transmetais.bean.ContaAPagarDespesa;
 import br.com.transmetais.bean.Movimentacao;
 import br.com.transmetais.bean.MovimentacaoContasAPagar;
-import br.com.transmetais.bean.Parcela;
+import br.com.transmetais.bean.ParcelaDespesa;
 import br.com.transmetais.dao.CompraDAO;
 import br.com.transmetais.dao.ContaAPagarDAO;
 import br.com.transmetais.dao.ContaDAO;
@@ -20,6 +20,7 @@ import br.com.transmetais.dao.DespesaDAO;
 import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.ParcelaDAO;
 import br.com.transmetais.dao.commons.DAOException;
+import br.com.transmetais.type.FormaPagamentoEnum;
 import br.com.transmetais.type.StatusCompraEnum;
 import br.com.transmetais.type.StatusDespesaEnum;
 import br.com.transmetais.type.StatusMovimentacaoEnum;
@@ -99,7 +100,31 @@ public class ContasPagarController {
 		
 		
 		contaAPagar = dao.findById(contaAPagar.getId());
+		
+		
+		if (contaAPagar instanceof ContaAPagarDespesa){
+			ContaAPagarDespesa contaApagarDespesa = (ContaAPagarDespesa)contaAPagar;
+			
+			//Verificando se tratar-se de pagamento em cheque
+			if(contaApagarDespesa.getDespesa().getModalidadePagamento() == FormaPagamentoEnum.C){
 				
+				//Trata-se de uma despesa não parcelada
+				if(contaApagarDespesa.getParcela() == null){
+				
+					if(contaApagarDespesa.getDespesa().getChequeEmitidoList()!=null && contaApagarDespesa.getDespesa().getChequeEmitidoList().size()>0){
+						result.include("cheque", contaApagarDespesa.getDespesa().getChequeEmitidoList().get(0));
+					}
+				
+				//Se for parcelado
+				}else{
+					if(contaApagarDespesa.getParcela().getChequeEmitidoParcela()!=null){
+						result.include("cheque", contaApagarDespesa.getParcela().getChequeEmitidoParcela());
+					}
+				}
+				
+			}
+			
+		}
 		
 		//result.include("contas",contaDao.findAll());
 		
@@ -181,7 +206,7 @@ public class ContasPagarController {
 				//verificar se as demais parcelas
 				
 				boolean despesaQuitada = true;
-				for (Parcela parcela : contaDespesa.getDespesa().getParcelas()) {
+				for (ParcelaDespesa parcela : contaDespesa.getDespesa().getParcelas()) {
 					
 					if(parcela.getStatus() != StatusDespesaEnum.P){
 						despesaQuitada = false;

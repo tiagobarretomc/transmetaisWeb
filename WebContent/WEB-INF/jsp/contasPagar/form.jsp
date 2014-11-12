@@ -148,13 +148,9 @@
 							</div>
 							
 						</div>
-				
-		</c:if>
-		
-	</div>
-	</div>
-	
-	<c:if test="${not empty contaAPagar.parcela}">
+						
+						<c:if test="${not empty contaAPagar.parcela}">
+						<br/>
 		<div class="panel panel-default">
   			<div class="panel-body">
   				<div class="row">
@@ -179,6 +175,13 @@
 		
 							
 	</c:if>
+				
+		</c:if>
+		
+	</div>
+	</div>
+	
+	
 	
 	<div class="panel panel-default">
 		
