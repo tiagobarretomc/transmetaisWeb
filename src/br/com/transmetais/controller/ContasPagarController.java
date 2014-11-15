@@ -100,31 +100,38 @@ public class ContasPagarController {
 		
 		
 		contaAPagar = dao.findById(contaAPagar.getId());
-		
-		
-		if (contaAPagar instanceof ContaAPagarDespesa){
-			ContaAPagarDespesa contaApagarDespesa = (ContaAPagarDespesa)contaAPagar;
-			
-			//Verificando se tratar-se de pagamento em cheque
-			if(contaApagarDespesa.getDespesa().getModalidadePagamento() == FormaPagamentoEnum.C){
-				
-				//Trata-se de uma despesa não parcelada
-				if(contaApagarDespesa.getParcela() == null){
-				
-					if(contaApagarDespesa.getDespesa().getChequeEmitidoList()!=null && contaApagarDespesa.getDespesa().getChequeEmitidoList().size()>0){
-						result.include("cheque", contaApagarDespesa.getDespesa().getChequeEmitidoList().get(0));
-					}
-				
-				//Se for parcelado
-				}else{
-					if(contaApagarDespesa.getParcela().getChequeEmitidoParcela()!=null){
-						result.include("cheque", contaApagarDespesa.getParcela().getChequeEmitidoParcela());
-					}
-				}
-				
-			}
-			
+		List<Conta> contas = null;
+		if (contaAPagar.getModalidadePagamento() == FormaPagamentoEnum.T){
+			contas = contaDao.obterContasBancarias();
+		}else{
+			contas = contaDao.obterContasFinanceiras();
 		}
+		result.include("contas", contas);
+		
+		
+//		if (contaAPagar instanceof ContaAPagarDespesa){
+//			ContaAPagarDespesa contaApagarDespesa = (ContaAPagarDespesa)contaAPagar;
+//			
+////			//Verificando se tratar-se de pagamento em cheque
+////			if(contaApagarDespesa.getDespesa().getModalidadePagamento() == FormaPagamentoEnum.C){
+////				
+////				//Trata-se de uma despesa não parcelada
+////				if(contaApagarDespesa.getParcela() == null){
+////				
+////					if(contaApagarDespesa.getDespesa().getChequeEmitidoList()!=null && contaApagarDespesa.getDespesa().getChequeEmitidoList().size()>0){
+////						result.include("cheque", contaApagarDespesa.getDespesa().getChequeEmitidoList().get(0));
+////					}
+////				
+////				//Se for parcelado
+////				}else{
+////					if(contaApagarDespesa.getParcela().getChequeEmitidoParcela()!=null){
+////						result.include("cheque", contaApagarDespesa.getParcela().getChequeEmitidoParcela());
+////					}
+////				}
+////				
+////			}
+//			
+//		}
 		
 		//result.include("contas",contaDao.findAll());
 		

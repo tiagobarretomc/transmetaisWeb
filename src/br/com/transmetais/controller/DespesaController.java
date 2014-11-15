@@ -22,6 +22,7 @@ import br.com.transmetais.bean.Despesa;
 import br.com.transmetais.bean.MovimentacaoDespesa;
 import br.com.transmetais.bean.ParcelaDespesa;
 import br.com.transmetais.dao.CentroAplicacaoDAO;
+import br.com.transmetais.dao.ChequeEmitidoDAO;
 import br.com.transmetais.dao.ContaAPagarDAO;
 import br.com.transmetais.dao.ContaContabilDAO;
 import br.com.transmetais.dao.ContaDAO;
@@ -44,6 +45,7 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 	private ContaAPagarDAO contaAPagarDAO;
 	private ContaDAO contaDAO;
 	private MovimentacaoDAO movimentacaoDAO;
+	private ChequeEmitidoDAO chequeEmitidoDao;
 	
 	
 	
@@ -53,6 +55,15 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 	}
 	@Override
 	protected void postPersistUpdate(Despesa bean, Result result) {
+		
+		if (bean.getModalidadePagamento() == FormaPagamentoEnum.C && bean.getChequeEmitido() != null){
+			try{
+				chequeEmitidoDao.addEntity(bean.getChequeEmitido());
+			}catch(DAOException ex){
+				ex.printStackTrace();
+				result.include("erro", ex.getMessage());
+			}
+		}
 		
 		//Caso se trate de pagamento a Vista
 		if (bean.getFormaPagamento() == TipoPagamentoEnum.V ){
@@ -107,6 +118,7 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 					contaApagar.setStatus(StatusMovimentacaoEnum.A);
 					contaApagar.setValor(parcela.getValor());
 					contaApagar.setDespesa(bean);
+					//contaApagar.setModalidadePagamento(bean.getModalidadePagamento());
 					
 					try {
 						contaAPagarDAO.addEntity(contaApagar);
@@ -129,6 +141,7 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 				conta.setDescricao("Despesa " + bean.getId() + " - " + bean.getDescricao());
 				//Se nao há parcelas o campo fica null
 				conta.setParcela(null);
+				//conta.setModalidadePagamento(bean.getModalidadePagamento());
 				
 				try {
 					contaAPagarDAO.addEntity(conta);
@@ -171,7 +184,7 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 		if(bean.getModalidadePagamento() == FormaPagamentoEnum.C && bean.getParcelas() == null){
 			if(bean.getChequeEmitido() != null){
 				bean.getChequeEmitido().setConta(bean.getConta());
-				bean.getChequeEmitido().setData(bean.getDataVencimento());
+				bean.getChequeEmitido().setData(bean.getDataCompetencia());
 				bean.getChequeEmitido().setDespesa(bean);
 				bean.getChequeEmitido().setValor(bean.getValor());
 				bean.getChequeEmitido().setStatus(SituacaoChequeEnum.A);
@@ -255,6 +268,11 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 	@Autowired
 	public void setMovimentacaoDAO(MovimentacaoDAO movimentacaoDAO) {
 		this.movimentacaoDAO = movimentacaoDAO;
+	}
+	
+	@Autowired
+	public void setChequeEmitidoDao(ChequeEmitidoDAO chequeEmitidoDao) {
+		this.chequeEmitidoDao = chequeEmitidoDao;
 	}
 	
 	

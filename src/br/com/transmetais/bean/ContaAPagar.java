@@ -17,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import br.com.transmetais.type.FormaPagamentoEnum;
 import br.com.transmetais.type.StatusMovimentacaoEnum;
 
 @Entity
@@ -39,8 +40,10 @@ public class ContaAPagar {
 	protected StatusMovimentacaoEnum status;
 	protected String descricao;
 	protected BigDecimal juros;
+	protected BigDecimal multa;
 	@Column(name="valor_total")
 	protected BigDecimal valorTotal;
+	
 	
 	public Integer getId() {
 		return id;
@@ -102,5 +105,24 @@ public class ContaAPagar {
 	public void setValorTotal(BigDecimal valorTotal) {
 		this.valorTotal = valorTotal;
 	}
+	
+	public BigDecimal getMulta() {
+		return multa;
+	}
+	
+	public void setMulta(BigDecimal multa) {
+		this.multa = multa;
+	}
+	
+	public FormaPagamentoEnum getModalidadePagamento() {
+		if (this instanceof ContaAPagarDespesa){
+			return ((ContaAPagarDespesa)this).getDespesa().getModalidadePagamento();
+		}else if(this instanceof ContaAPagarCompra){
+			return ((ContaAPagarCompra)this).getCompra().getModalidadePagamento();
+		}
+		return null;
+	}
+	
+	
 	
 }

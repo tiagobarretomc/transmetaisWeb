@@ -18,6 +18,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import br.com.transmetais.type.FormaPagamentoEnum;
 import br.com.transmetais.type.StatusCompraEnum;
 import br.com.transmetais.type.TipoFreteEnum;
 
@@ -60,6 +61,10 @@ public class Compra {
 	@Column(name="status")
 	@Enumerated(EnumType.STRING)
 	private StatusCompraEnum status;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(name="modalidade_pagamento")
+	private FormaPagamentoEnum modalidadePagamento;
 	
 	
 	public Long getId() {
@@ -141,6 +146,12 @@ public class Compra {
 		this.status = status;
 	}
 	
+	public FormaPagamentoEnum getModalidadePagamento() {
+		return modalidadePagamento;
+	}
 	
+	public void setModalidadePagamento(FormaPagamentoEnum modalidadePagamento) {
+		this.modalidadePagamento = modalidadePagamento;
+	}
 	
 }

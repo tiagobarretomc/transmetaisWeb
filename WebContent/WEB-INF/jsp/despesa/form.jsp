@@ -260,7 +260,7 @@
     		$("#divCheque").hide();
     		$("#bean\\.conta\\.id").empty().append('');
     		$("#bean\\.conta\\.id").val('');
-    		alert($("#bean\\.conta\\.id").val());
+    		
     		$("#bean\\.conta\\.id").attr('disabled', true);
     	}
 		
