@@ -206,23 +206,23 @@ $("#btnVoltar").click(function(){
 							<input name="" id="conta.despesa.dataCompetencia" value="${contaAPagar.parcela.numero}/${fn:length(contaAPagar.despesa.parcelas)}" class="form-control "  maxlength="10" readonly="readonly"/>
 							</div>
 							<div class="col-md-2">
-								<label for="contaAPagar.despesa.dataVencimento">Vencimento:</label> 
-							<input name="" id="contaAPagar.despesa.dataVencimento" value="<fmt:formatDate value="${contaAPagar.parcela.dataVencimento}" type="date" pattern="dd/MM/yyyy"/>" class="form-control "  maxlength="10" readonly="readonly"/>
+								<label for="contaAPagar.parcela.dataVencimento">Vencimento:</label> 
+							<input name="" id="contaAPagar.parcela.dataVencimento" value="<fmt:formatDate value="${contaAPagar.parcela.dataVencimento}" type="date" pattern="dd/MM/yyyy"/>" class="form-control "  maxlength="10" readonly="readonly"/>
 							</div>
 							<div class="col-md-2">
 								<label for="contaAPagar.parcela.valor">Valor:</label> 
 							<input name="" id="contaAPagar.parcela.valor" value='<fmt:formatNumber value="${contaAPagar.parcela.valor}" minFractionDigits="2" type="currency"/>' class="form-control "  maxlength="10" readonly="readonly"/>
 							</div>
-							<c:if test="${not empty contaAPagar.parcela.chequeEmitidoParcela}">
+							<c:if test="${not empty contaAPagar.parcela.chequeEmitido}">
 							<div class="col-md-2">
 								<label for="bean.id">Número Cheque:</label> 
-								<input name="" id="contaAPagar.parcela.chequeEmitido.numeroCheque" value="${contaAPagar.parcela.chequeEmitidoParcela.numeroCheque}" class="form-control "  readonly="readonly" />
+								<input name="" id="contaAPagar.parcela.chequeEmitido.numeroCheque" value="${contaAPagar.parcela.chequeEmitido.numeroCheque}" class="form-control "  readonly="readonly" />
 									
 									
 							</div>
 							<div class="col-md-2">
-								<label for="bean.id">Conta Bancária:</label> 
-								<input name="" id="contaAPagar.parcela.chequeEmitido.conta.descricao" value="${contaAPagar.parcela.chequeEmitidoParcela.conta.descricao }" class="form-control "  readonly="readonly" />
+								<label for="contaAPagar.parcela.chequeEmitido.conta.descricao">Conta Bancária:</label> 
+								<input name="" id="contaAPagar.parcela.chequeEmitido.conta.descricao" value="${contaAPagar.parcela.chequeEmitido.conta.descricao }" class="form-control "  readonly="readonly" />
 									
 									
 							</div>
@@ -241,6 +241,88 @@ $("#btnVoltar").click(function(){
 		</c:if>
 		<c:if test="${contaAPagar.class.name  == 'br.com.transmetais.bean.ContaAPagarCompra'}" >
 		<h4 style="margin-top: 0px">Detalhamento da Compra</h4>
+		<div class="row">
+						<div class="col-md-1">
+							<label for="contaAPagar.compra.id">Cód.:</label> 
+						<input name="" id="contaAPagar.compra.id" value="${contaAPagar.compra.id }" class="form-control "  maxlength="10" readonly="readonly"/>
+						</div>
+						<div class="col-md-4">
+							<label for="contaAPagar.compra.fornecedor">Fornecedor:</label> 
+						<input name="" id="contaAPagar.compra.fornecedor" value="${contaAPagar.compra.fornecedor.apelido} - ${contaAPagar.compra.fornecedor.nome}" class="form-control "  maxlength="10" readonly="readonly"/>
+						</div>
+						<div class="col-md-2">
+							<label for="contaAPagar.compra.valor">Valor:</label> 
+						<input name="" id="contaAPagar.compra.valor" value="<fmt:formatNumber value="${contaAPagar.compra.valor}" minFractionDigits="2" type="currency"/>" class="form-control "  maxlength="10" readonly="readonly"/>
+						</div>
+						<div class="col-md-2">
+							<label for="contaAPagar.compra.tipoFrete.descricao">Tipo Frete:</label> 
+						<input name="" id="contaAPagar.compra.tipoFrete.descricao" value="${contaAPagar.compra.tipoFrete.descricao }" class="form-control "  maxlength="10" readonly="readonly"/>
+						</div>
+						<div class="col-md-2">
+							<label for="contaAPagar.compra.numNf">Num NF:</label> 
+						<input name="" id="contaAPagar.compra.numNf" value="${contaAPagar.compra.numNf }" class="form-control "  maxlength="10" readonly="readonly"/>
+						</div>
+				</div>
+						<div class="row">
+							<div class="col-md-2">
+								<label for="conta.compra.dataCompetencia">Dt Competência:</label> 
+							<input name="" id="conta.compra.dataCompetencia" value="<fmt:formatDate value="${conta.compra.dataCompetencia}" type="date" pattern="dd/MM/yyyy"/>" class="form-control "  maxlength="10" readonly="readonly"/>
+							</div>
+							<c:if test="${empty  contaAPagar.parcela}">
+								<div class="col-md-2">
+									<label for="conta.compra.dataVencimento">Dt Competência:</label> 
+									<input name="" id="conta.compra.dataVencimento" value="<fmt:formatDate value="${conta.compra.dataVencimento}" type="date" pattern="dd/MM/yyyy"/>" class="form-control "  maxlength="10" readonly="readonly"/>
+								</div>
+							</c:if>
+							
+							<div class="col-md-2">
+								<label for="contaAPagar.compra.modalidadePagamento.descricao">Mod. pagamento:</label> 
+							<input name="" id="contaAPagar.compra.modalidadePagamento.descricao" value="${contaAPagar.compra.modalidadePagamento.descricao }" class="form-control "   readonly="readonly"/>
+							</div>
+							
+						</div>
+						
+						<c:if test="${not empty contaAPagar.parcela}">
+						<br/>
+		<div class="panel panel-default">
+  			<div class="panel-body">
+  				<div class="row">
+							<div class="col-md-1">
+								<label for="contaAPagar.parcela.numero">Parcela:</label> 
+							<input name="" id="contaAPagar.parcela.numero" value="${contaAPagar.parcela.numero}/${fn:length(contaAPagar.compra.parcelas)}" class="form-control "  maxlength="10" readonly="readonly"/>
+							</div>
+							<div class="col-md-2">
+								<label for="contaAPagar.parcela.dataVencimento">Vencimento:</label> 
+							<input name="" id="contaAPagar.parcela.dataVencimento" value="<fmt:formatDate value="${contaAPagar.parcela.dataVencimento}" type="date" pattern="dd/MM/yyyy"/>" class="form-control "  maxlength="10" readonly="readonly"/>
+							</div>
+							<div class="col-md-2">
+								<label for="contaAPagar.parcela.valor">Valor:</label> 
+							<input name="" id="contaAPagar.parcela.valor" value='<fmt:formatNumber value="${contaAPagar.parcela.valor}" minFractionDigits="2" type="currency"/>' class="form-control "  maxlength="10" readonly="readonly"/>
+							</div>
+							<c:if test="${not empty contaAPagar.parcela.chequeEmitido}">
+							<div class="col-md-2">
+								<label for="bean.id">Número Cheque:</label> 
+								<input name="" id="contaAPagar.parcela.chequeEmitido.numeroCheque" value="${contaAPagar.parcela.chequeEmitido.numeroCheque}" class="form-control "  readonly="readonly" />
+									
+									
+							</div>
+							<div class="col-md-2">
+								<label for="contaAPagar.parcela.chequeEmitido.conta.descricao">Conta Bancária:</label> 
+								<input name="" id="contaAPagar.parcela.chequeEmitido.conta.descricao" value="${contaAPagar.parcela.chequeEmitido.conta.descricao }" class="form-control "  readonly="readonly" />
+									
+									
+							</div>
+							
+							</c:if>
+							
+							
+						</div>
+  			</div>
+  		</div>
+			 
+		
+							
+	</c:if>
 		</c:if>
 		
 	</div>

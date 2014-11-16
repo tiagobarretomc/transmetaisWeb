@@ -8,19 +8,20 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name="movimentacao_parcela")
+@Table(name="movimentacao_despesa")
 @PrimaryKeyJoinColumn(name="movimentacao_id")
-public class MovimentacaoParcela extends Movimentacao{
+public class MovimentacaoCompra extends Movimentacao{
 	
 	@ManyToOne
-	@JoinColumn(name="parcela_id")
-	private ParcelaDespesa parcela;
+	@JoinColumn(name="despesa_id")
+	private Despesa despesa;
 
-	public ParcelaDespesa getParcela() {
-		return parcela;
+	public Despesa getDespesa() {
+		return despesa;
 	}
-	public void setParcela(ParcelaDespesa parcela) {
-		this.parcela = parcela;
+	
+	public void setDespesa(Despesa despesa) {
+		this.despesa = despesa;
 	}
 	
 	

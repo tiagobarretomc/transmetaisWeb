@@ -12,6 +12,7 @@ import br.com.transmetais.bean.ContaAPagarCompra;
 import br.com.transmetais.bean.ContaAPagarDespesa;
 import br.com.transmetais.bean.Movimentacao;
 import br.com.transmetais.bean.MovimentacaoContasAPagar;
+import br.com.transmetais.bean.ParcelaCompra;
 import br.com.transmetais.bean.ParcelaDespesa;
 import br.com.transmetais.dao.CompraDAO;
 import br.com.transmetais.dao.ContaAPagarDAO;
@@ -144,6 +145,10 @@ public class ContasPagarController {
 		
 		ContaAPagar contaAPagarOrig = dao.findById(contaAPagar.getId());
 		
+		if(contaAPagarOrig.getChequeEmitido() != null){
+			contaAPagar.setConta(contaAPagarOrig.getChequeEmitido().getConta());
+		}
+		
 		//setando a conta selecionada para ser
 		contaAPagarOrig.setConta(contaAPagar.getConta());
 		contaAPagarOrig.setDataPagamento(contaAPagar.getDataPagamento());
@@ -155,11 +160,17 @@ public class ContasPagarController {
 		
 		dao.updateEntity(contaAPagarOrig);
 		
+		if(contaAPagarOrig.getParcela() != null){
+			contaAPagarOrig.getParcela().setDataPagamento(contaAPagar.getDataPagamento());
+			contaAPagarOrig.setStatus(StatusMovimentacaoEnum.P);
+			parcelaDao.updateEntity(contaAPagarOrig.getParcela());
+		}
+		
 		MovimentacaoContasAPagar movimentacao = new MovimentacaoContasAPagar();
 		movimentacao.setContaAPagar(contaAPagarOrig);
 		movimentacao.setConta(contaAPagarOrig.getConta());
 		
-		movimentacao.setValor(contaAPagarOrig.getValor());
+		movimentacao.setValor(contaAPagarOrig.getValorTotal());
 		movimentacao.setData(contaAPagarOrig.getDataPagamento());
 		movimentacao.setTipoOperacao(TipoOperacaoEnum.D);
 		
@@ -173,10 +184,42 @@ public class ContasPagarController {
 		
 		if (contaAPagarOrig instanceof ContaAPagarCompra ){
 			ContaAPagarCompra contaCompra = (ContaAPagarCompra)contaAPagarOrig;
-			contaCompra.getCompra().setStatus(StatusCompraEnum.P);
+			//verificando se trata-se de uma despesa parcelada
+			if (contaCompra.getParcela() != null){
+				
+				
+				//verificar se as demais parcelas
+				
+				boolean compraQuitada = true;
+				for (ParcelaCompra parcela : contaCompra.getCompra().getParcelas()) {
+					
+					if(parcela.getStatus() != StatusDespesaEnum.P){
+						compraQuitada = false;
+						break;
+					}
+					
+				}
+				
+				//Se todas as parcelas da despesa estiverem quitadas, entao devemos mudar o estado da despesa.
+				if (compraQuitada){
+					
+					contaCompra.getCompra().setStatus(StatusCompraEnum.P);
+					contaCompra.getCompra().setDataPagamento(contaCompra.getDataPagamento());
+					compraDao.updateEntity(contaCompra.getCompra());
+				}
+				
+			}else{
+				contaCompra.getCompra().setStatus(StatusCompraEnum.P);
+				contaCompra.getCompra().setDataPagamento(contaCompra.getDataPagamento());
+				compraDao.updateEntity(contaCompra.getCompra());
+				
+			}
 			
 			
-			compraDao.updateEntity(contaCompra.getCompra());
+//			contaCompra.getCompra().setStatus(StatusCompraEnum.P);
+//			
+//			
+//			compraDao.updateEntity(contaCompra.getCompra());
 				
 			
 		}else if (contaAPagarOrig instanceof ContaAPagarDespesa){
@@ -184,10 +227,7 @@ public class ContasPagarController {
 			
 			//verificando se trata-se de uma despesa parcelada
 			if (contaDespesa.getParcela() != null){
-				//alterando o status da parcela em questao
-				contaDespesa.getParcela().setStatus(StatusDespesaEnum.P);
-				contaDespesa.getParcela().setDataPagamento(contaDespesa.getDataPagamento());
-				parcelaDao.updateEntity(contaDespesa.getParcela());
+				
 				
 				//verificar se as demais parcelas
 				

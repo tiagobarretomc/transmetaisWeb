@@ -40,9 +40,9 @@ public class Compra {
 	@JoinColumn(name="fornecedor_id")
 	private Fornecedor fornecedor;
 	
-	private BigDecimal quantidade;
+	//private BigDecimal quantidade;
 	private BigDecimal valor;
-	private BigDecimal preco;
+	//private BigDecimal preco;
 	
 	@ManyToOne
 	@JoinColumn(name="conta_id")
@@ -68,6 +68,12 @@ public class Compra {
 	private FormaPagamentoEnum modalidadePagamento;
 	@OneToMany(mappedBy="compra", fetch=FetchType.LAZY)
 	private List<ChequeEmitidoCompra> chequeEmitidoList;
+	@Column(name="data_vencimento")
+	private Date dataVencimento;
+	@Column(name="data_	pagamento")
+	private Date dataPagamento;
+	@OneToMany(mappedBy="compra", fetch = FetchType.LAZY, cascade = CascadeType.ALL,orphanRemoval=true)
+	private List<ParcelaCompra> parcelas;
 	
 	public Long getId() {
 		return id;
@@ -87,24 +93,24 @@ public class Compra {
 	public void setFornecedorMaterial(FornecedorMaterial fornecedorMaterial) {
 		this.fornecedorMaterial = fornecedorMaterial;
 	}
-	public BigDecimal getQuantidade() {
-		return quantidade;
-	}
-	public void setQuantidade(BigDecimal quantidade) {
-		this.quantidade = quantidade;
-	}
+//	public BigDecimal getQuantidade() {
+//		return quantidade;
+//	}
+//	public void setQuantidade(BigDecimal quantidade) {
+//		this.quantidade = quantidade;
+//	}
 	public BigDecimal getValor() {
 		return valor;
 	}
 	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
-	public BigDecimal getPreco() {
-		return preco;
-	}
-	public void setPreco(BigDecimal preco) {
-		this.preco = preco;
-	}
+//	public BigDecimal getPreco() {
+//		return preco;
+//	}
+//	public void setPreco(BigDecimal preco) {
+//		this.preco = preco;
+//	}
 	public Conta getConta() {
 		return conta;
 	}
@@ -175,6 +181,30 @@ public class Compra {
 	
 	public void setChequeEmitidoList(List<ChequeEmitidoCompra> chequeEmitidoList) {
 		this.chequeEmitidoList = chequeEmitidoList;
+	}
+	
+	public Date getDataPagamento() {
+		return dataPagamento;
+	}
+	
+	public void setDataPagamento(Date dataPagamento) {
+		this.dataPagamento = dataPagamento;
+	}
+	
+	public Date getDataVencimento() {
+		return dataVencimento;
+	}
+	
+	public void setDataVencimento(Date dataVencimento) {
+		this.dataVencimento = dataVencimento;
+	}
+	
+	public List<ParcelaCompra> getParcelas() {
+		return parcelas;
+	}
+	
+	public void setParcelas(List<ParcelaCompra> parcelas) {
+		this.parcelas = parcelas;
 	}
 	
 }
