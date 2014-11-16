@@ -17,9 +17,9 @@ public class ContaAPagarDespesa extends ContaAPagar{
 	@JoinColumn(name="despesa_id")
 	private Despesa despesa;
 	
-	@ManyToOne
-	@JoinColumn(name="parcela_id")
-	private ParcelaDespesa parcela;
+//	@ManyToOne
+//	@JoinColumn(name="parcela_id")
+//	private ParcelaDespesa parcela;
 	
 	
 
@@ -32,14 +32,14 @@ public class ContaAPagarDespesa extends ContaAPagar{
 	}
 
 	
-	public ParcelaDespesa getParcela() {
-		return parcela;
-	}
-	
-	public void setParcela(ParcelaDespesa parcela) {
-		this.parcela = parcela;
-	}
-	
+//	public ParcelaDespesa getParcela() {
+//		return parcela;
+//	}
+//	
+//	public void setParcela(ParcelaDespesa parcela) {
+//		this.parcela = parcela;
+//	}
+//	
 	
 	
 	

@@ -16,9 +16,6 @@ public class ChequeEmitidoDespesa extends ChequeEmitido{
 	@JoinColumn(name="despesa_id")
 	private Despesa despesa;
 	
-	@ManyToOne
-	@JoinColumn(name="parcela_despesa_id")
-	private ParcelaDespesa parcela;
 
 	public Despesa getDespesa() {
 		return despesa;
@@ -28,12 +25,6 @@ public class ChequeEmitidoDespesa extends ChequeEmitido{
 		this.despesa = despesa;
 	}
 	
-	public ParcelaDespesa getParcela() {
-		return parcela;
-	}
 	
-	public void setParcela(ParcelaDespesa parcela) {
-		this.parcela = parcela;
-	}
 		
 }

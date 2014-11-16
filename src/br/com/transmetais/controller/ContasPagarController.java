@@ -148,6 +148,11 @@ public class ContasPagarController {
 		contaAPagarOrig.setConta(contaAPagar.getConta());
 		contaAPagarOrig.setDataPagamento(contaAPagar.getDataPagamento());
 		contaAPagarOrig.setStatus(StatusMovimentacaoEnum.P);
+		
+		if (contaAPagar.getModalidadePagamento() == FormaPagamentoEnum.C){
+			contaAPagarOrig.setConta(contaAPagar.getChequeEmitido().getConta());
+		}
+		
 		dao.updateEntity(contaAPagarOrig);
 		
 		MovimentacaoContasAPagar movimentacao = new MovimentacaoContasAPagar();
@@ -172,32 +177,6 @@ public class ContasPagarController {
 			
 			
 			compraDao.updateEntity(contaCompra.getCompra());
-			
-//			//Caso o Fornecedor trabalhe com adiantamentos devemos creditar o valor do carregamento na conta dele.
-//			if(contaCompra.getCompra().getFornecedor().getTipoFaturamento() == TipoFaturamentoEnum.ADIANT){
-//				
-//				
-//				MovimentacaoContasAPagar movimentacaoDestino = new MovimentacaoContasAPagar();
-//				movimentacaoDestino.setContaAPagar(contaAPagarOrig);
-//				movimentacaoDestino.setConta(contaCompra.getCompra().getFornecedor().getConta());
-//				
-//				movimentacaoDestino.setValor(contaAPagarOrig.getValor());
-//				movimentacaoDestino.setData(contaAPagarOrig.getDataPagamento());
-//				movimentacaoDestino.setTipoOperacao(TipoOperacaoEnum.C);
-//				
-//				movimentacaoDao.addEntity(movimentacaoDestino);
-//				
-//				//Alterar o Saldo do fornecedor
-//				Conta conta = contaCompra.getCompra().getFornecedor().getConta();
-//				conta.setSaldo(conta.getSaldo().subtract(movimentacaoDestino.getValor()));
-//				contaDao.updateEntity(conta);
-//				
-//				//Setando a registroo de compra como pago
-//				contaCompra.getCompra().setStatus(StatusCompraEnum.P);
-//				compraDao.updateEntity(contaCompra.getCompra());
-//				
-//				
-//			}
 				
 			
 		}else if (contaAPagarOrig instanceof ContaAPagarDespesa){

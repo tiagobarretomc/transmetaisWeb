@@ -1,6 +1,7 @@
 package br.com.transmetais.bean;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -65,7 +66,8 @@ public class Compra {
 	@Enumerated(EnumType.STRING)
 	@Column(name="modalidade_pagamento")
 	private FormaPagamentoEnum modalidadePagamento;
-	
+	@OneToMany(mappedBy="compra", fetch=FetchType.LAZY)
+	private List<ChequeEmitidoCompra> chequeEmitidoList;
 	
 	public Long getId() {
 		return id;
@@ -152,6 +154,27 @@ public class Compra {
 	
 	public void setModalidadePagamento(FormaPagamentoEnum modalidadePagamento) {
 		this.modalidadePagamento = modalidadePagamento;
+	}
+	
+	public ChequeEmitidoCompra getChequeEmitido(){
+		if(chequeEmitidoList != null && !chequeEmitidoList.isEmpty()){
+			return chequeEmitidoList.get(0);
+		}
+		return null;
+	}
+	public void setChequeEmitido(ChequeEmitidoCompra chequeEmitido){
+		if(chequeEmitidoList == null){
+			chequeEmitidoList = new ArrayList<ChequeEmitidoCompra>();
+		}
+		chequeEmitidoList.add(chequeEmitido);
+	}
+	
+	public List<ChequeEmitidoCompra> getChequeEmitidoList() {
+		return chequeEmitidoList;
+	}
+	
+	public void setChequeEmitidoList(List<ChequeEmitidoCompra> chequeEmitidoList) {
+		this.chequeEmitidoList = chequeEmitidoList;
 	}
 	
 }

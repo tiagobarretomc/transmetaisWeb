@@ -15,6 +15,8 @@ public class ChequeEmitidoCompra extends ChequeEmitido{
 	@ManyToOne
 	@JoinColumn(name="compra_id")
 	private Compra compra;
+	
+	
 
 	public Compra getCompra() {
 		return compra;
@@ -22,6 +24,8 @@ public class ChequeEmitidoCompra extends ChequeEmitido{
 	public void setCompra(Compra compra) {
 		this.compra = compra;
 	}
+	
+	
 	
 	
 }

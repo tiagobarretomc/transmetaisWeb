@@ -360,7 +360,7 @@
 		
 		strLinha += '<td style="max-width:130px"><input name="bean.parcelas[' + i + '].dataVencimento" id="dataParcela' + i + '" data-date-format="dd/mm/yyyy" value="' + dataParcela.toString('dd/MM/yyyy') + '" class="form-control required datepicker" size="8" maxlength="10"/></td>';
 		strLinha += '<td style="max-width:130px"><input name="bean.parcelas[' + i + '].valor" id="valorParcela' + i + '" value="' + parcela + '" class="form-control required"  maxlength="18"/></td>';
-		strLinha += '<td style="max-width:130px"><input name="bean.parcelas[' + i + '].chequeEmitidoParcela.numeroCheque" id="numChequeParcela' + i + '" value="" class="form-control required"  maxlength="18"/></td>';
+		strLinha += '<td style="max-width:130px"><input name="bean.parcelas[' + i + '].chequeEmitido.numeroCheque" id="numChequeParcela' + i + '" value="" class="form-control required"  maxlength="18"/></td>';
 		
 		strLinha += '</tr>';
 		$('#tabelaParcelas > tbody:last').append(strLinha);
@@ -538,7 +538,7 @@
 					<td style="vertical-align: middle;"><a href="#" onclick="removerParcela(${contador.index}); return false;"><span title="Excluir" class="glyphicon glyphicon-remove" ></span></a></td>
 					<td style="max-width:130px"><input name="bean.parcelas[${contador.index}].dataVencimento" id="dataParcela${contador.index}" data-date-format="dd/mm/yyyy" value="<fmt:formatDate value="${parcela.dataVencimento }" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" size="8" maxlength="10"/></td>
 					<td style="max-width:130px"><input name="bean.parcelas[${contador.index}].valor" id="valorParcela${contador.index}" value="<fmt:formatNumber value="${parcela.valor}" minFractionDigits="2" type="currency"/>" class="form-control required"  maxlength="18"/></td>
-					<td style="max-width:130px"><input name="bean.parcelas[${contador.index}].chequeEmitidoParcela.numeroCheque" id="numChequeParcela${contador.index}" value="${parcela.chequeEmitidoParcela.numeroCheque}" class="form-control required"  maxlength="18"/></td>
+					<td style="max-width:130px"><input name="bean.parcelas[${contador.index}].chequeEmitido.numeroCheque" id="numChequeParcela${contador.index}" value="${parcela.chequeEmitido.numeroCheque}" class="form-control required"  maxlength="18"/></td>
 			
 		
 				</tr>

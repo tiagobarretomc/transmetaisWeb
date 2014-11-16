@@ -43,6 +43,9 @@ public class ContaAPagar {
 	protected BigDecimal multa;
 	@Column(name="valor_total")
 	protected BigDecimal valorTotal;
+	@ManyToOne
+	@JoinColumn(name="parcela_id")
+	private Parcela parcela;
 	
 	
 	public Integer getId() {
@@ -121,6 +124,34 @@ public class ContaAPagar {
 			return ((ContaAPagarCompra)this).getCompra().getModalidadePagamento();
 		}
 		return null;
+	}
+	
+	public ChequeEmitido getChequeEmitido(){
+		if(this instanceof ContaAPagarDespesa){
+			
+			if (this.getParcela() == null){
+				return ((ContaAPagarDespesa)this).getDespesa().getChequeEmitido();
+			}
+			else{
+				return this.getParcela().getChequeEmitido();
+			}
+			//todo
+		}else if(this instanceof ContaAPagarCompra){
+			if (this.getParcela() == null){
+				return ((ContaAPagarCompra)this).getCompra().getChequeEmitido();
+			}
+			else{
+				return this.getParcela().getChequeEmitido();
+			}
+		}
+		return null;
+	}
+	
+	public Parcela getParcela() {
+		return parcela;
+	}
+	public void setParcela(Parcela parcela) {
+		this.parcela = parcela;
 	}
 	
 	

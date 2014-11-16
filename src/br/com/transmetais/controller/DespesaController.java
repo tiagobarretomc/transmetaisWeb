@@ -15,6 +15,7 @@ import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.CentroAplicacao;
+import br.com.transmetais.bean.ChequeEmitidoDespesa;
 import br.com.transmetais.bean.Conta;
 import br.com.transmetais.bean.ContaAPagarDespesa;
 import br.com.transmetais.bean.ContaContabil;
@@ -183,12 +184,15 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 		
 		if(bean.getModalidadePagamento() == FormaPagamentoEnum.C && bean.getParcelas() == null){
 			if(bean.getChequeEmitido() != null){
-				bean.getChequeEmitido().setConta(bean.getConta());
-				bean.getChequeEmitido().setData(bean.getDataCompetencia());
-				bean.getChequeEmitido().setDespesa(bean);
-				bean.getChequeEmitido().setValor(bean.getValor());
-				bean.getChequeEmitido().setStatus(SituacaoChequeEnum.A);
-				bean.getChequeEmitido().setDataStatus(new Date());
+				ChequeEmitidoDespesa cheque = new ChequeEmitidoDespesa();
+				cheque.setNumeroCheque(bean.getChequeEmitido().getNumeroCheque());
+				cheque.setConta(bean.getConta());
+				cheque.setData(bean.getDataCompetencia());
+				cheque.setDespesa(bean);
+				cheque.setValor(bean.getValor());
+				cheque.setStatus(SituacaoChequeEnum.A);
+				cheque.setDataStatus(new Date());
+				bean.setChequeEmitido(cheque);
 				
 				//chequeEmitidoDao.addEntity(cheque);
 				
@@ -209,6 +213,7 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 		int numero =1;
 		
 		if (bean.getParcelas() != null){
+			ChequeEmitidoDespesa cheque = null;
 			//Atualizando a despesa de cada parcela 
 			for (ParcelaDespesa parcela : bean.getParcelas()) {
 				parcela.setDespesa(bean);
@@ -218,14 +223,17 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 				
 				
 				if(bean.getModalidadePagamento() == FormaPagamentoEnum.C && bean.getParcelas() != null){
-					
-					parcela.getChequeEmitidoParcela().setConta(bean.getConta());
-					parcela.getChequeEmitidoParcela().setData(parcela.getDataVencimento());
-					parcela.getChequeEmitidoParcela().setDespesa(bean);
-					parcela.getChequeEmitidoParcela().setValor(parcela.getValor());
-					parcela.getChequeEmitidoParcela().setStatus(SituacaoChequeEnum.A);
-					parcela.getChequeEmitidoParcela().setParcela(parcela);
-					parcela.getChequeEmitidoParcela().setDataStatus(new Date());
+					cheque = new ChequeEmitidoDespesa();
+					cheque.setNumeroCheque(parcela.getChequeEmitido().getNumeroCheque());
+					cheque.setValor(parcela.getChequeEmitido().getValor());
+					cheque.setConta(bean.getConta());
+					cheque.setData(parcela.getDataVencimento());
+					cheque.setDespesa(bean);
+					cheque.setValor(parcela.getValor());
+					cheque.setStatus(SituacaoChequeEnum.A);
+					cheque.setParcela(parcela);
+					cheque.setDataStatus(new Date());
+					parcela.setChequeEmitido(cheque);
 					
 				}
 			}

@@ -5,6 +5,12 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		
+$("#btnVoltar").click(function(){
+			
+			window.location.href = "<c:url value='/contasPagar'/>";
+			
+		});
+		
 		$("#btnConfirmar").click(function(){
     		//alert("salvar a parada doida!");
     		
@@ -32,7 +38,7 @@
     	
     
     	
-	   	  $('#contaAPagar\\.dataPagamento').datepicker({
+	   	  $('.datepicker').datepicker({
 	   		language : 'pt-BR',
 	   		autoclose : true,
 	   		format : 'dd/mm/yyyy'
@@ -47,14 +53,7 @@
         
         $('#formContaAPagar').validate({
   		   
-   		  rules: {  
-   			 "contaAPagar.dataPagamento" :  {
-   				 
-   				dateLessThanToday: true
-   			 }
-   	                
-   	         	
-   	          },
+   		 
         
    	      ignore: ':not(select:hidden, input:visible, textarea:visible)',
          	
@@ -76,22 +75,34 @@
 	    });
     	
         
-        $("#contaAPagar\\.juros").change(function(){
+        $(".valor").change(function(){
         	
-        	if($("#contaAPagar\\.juros").val() != ''){
-	        	var valorTotal = moeda2float($("#contaAPagar\\.juros").val()) + moeda2float($("#contaAPagar\\.valor").val());
-	        	
-	        	$("#contaAPagar\\.valorTotal").val(float2moeda(valorTotal));
+        	var juros = 0.00;
+        	var multa = 0.00;
+        	var valorTotal = moeda2float($("#contaAPagar\\.valor").val());
+        	
+        	
+        	if($("#contaAPagar\\.juros").val() != '' ){
         		
-        	}else{
-        		$("#contaAPagar\\.valorTotal").val($("#contaAPagar\\.valor").val());
+        		juros = moeda2float($("#contaAPagar\\.juros").val());
         	}
+        	
+			if($("#contaAPagar\\.multa").val() != '' ){
+        		
+        		multa = moeda2float($("#contaAPagar\\.multa").val());
+        	}
+        	
+			valorTotal = valorTotal + juros + multa;
+			
+        	
+        	$("#contaAPagar\\.valorTotal").val(float2moeda(valorTotal));
+        	
         	
         	
         	
         });
         
-        $("#contaAPagar\\.juros").priceFormat({
+        $(".valor").priceFormat({
 	        prefix: '',
 	        centsSeparator: ',',
 	        thousandsSeparator: '.',
@@ -100,6 +111,42 @@
 	    });
 	
 	});
+	function float2moeda(num) {
+
+	 	   x = 0;
+
+	 	   if(num<0) {
+	 	      num = Math.abs(num);
+	 	      x = 1;
+	 	   }
+	 	   if(isNaN(num)) num = "0";
+	 	      cents = Math.floor((num*100+0.5)%100);
+
+	 	   num = Math.floor((num*100+0.5)/100).toString();
+
+	 	   if(cents < 10) cents = "0" + cents;
+	 	      for (var i = 0; i < Math.floor((num.length-(1+i))/3); i++)
+	 	         num = num.substring(0,num.length-(4*i+3))+'.'
+	 	               +num.substring(num.length-(4*i+3));
+	 	      ret = num + ',' + cents;
+	 	      
+	 	      if (x == 1) ret = ' - ' + ret;return ret;
+
+	 }
+
+	 function moeda2float(moeda){
+	 	   var retorno = moeda.replace(".","");
+	 	  
+	 	   retorno = retorno.replace(",",".");
+
+	 	   return parseFloat(retorno);
+
+	 	}
+	 function roundNumber (rnum) {
+
+	 	   return Math.round(rnum*Math.pow(10,2))/Math.pow(10,2);
+
+	 	}
 </script>
 
 <div class="container">
@@ -192,6 +239,9 @@
 	</c:if>
 				
 		</c:if>
+		<c:if test="${contaAPagar.class.name  == 'br.com.transmetais.bean.ContaAPagarCompra'}" >
+		<h4 style="margin-top: 0px">Detalhamento da Compra</h4>
+		</c:if>
 		
 	</div>
 	</div>
@@ -221,7 +271,8 @@
 			      	<div class="col-md-2">
 		      	
 		        		<label for="contaAPagar.valor">Valor:</label>
-		        		<input name="contaAPagar.valor"  id="contaAPagar.valor" value='<fmt:formatNumber value="${contaAPagar.valor}" minFractionDigits="2" type="currency"/>' class="form-control" readonly="readonly"/>
+		        		<input name="contaAPagar.valor"  id="contaAPagar.valor" value='<fmt:formatNumber value="${contaAPagar.valor}" minFractionDigits="2" type="number"/>' class="form-control" readonly="readonly"/>
+		        		
 	        		</div>
 	        		<c:if test="${contaAPagar.modalidadePagamento eq 'C'}">
 	        			</div>
@@ -241,18 +292,18 @@
 		      			<div class="col-md-2">
 	      	
 			        		<label for="contaAPagar.multa">Multa:</label>
-			        		<input name="contaAPagar.multa"  id="contaAPagar.multa" value="${contaAPagar.multa}" class="form-control"/>
+			        		<input name="contaAPagar.multa"  id="contaAPagar.multa" value="${contaAPagar.multa}" class="form-control valor"/>
         				</div>
 		      			<div class="col-md-2">
 				      	
 			        		<label for="contaAPagar.juros">Juros:</label>
-			        		<input name="contaAPagar.juros"  id="contaAPagar.juros" value="${contaAPagar.juros}" class="form-control"/>
+			        		<input name="contaAPagar.juros"  id="contaAPagar.juros" value="${contaAPagar.juros}" class="form-control valor"/>
         				</div>
         		</div>
         		<div class="row">
 		        	<div class="col-md-2">
 			      		<label for="contaAPagar.valorTotal">Valor Total:</label>
-		        		<input name="contaAPagar.valorTotal"  id="contaAPagar.valorTotal" value="" class="form-control " readonly="readonly"  />
+		        		<input name="contaAPagar.valorTotal"  id="contaAPagar.valorTotal" value="${empty contaAPagar.valorTotal ? contaAPagar.valor : contaAPagar.valorTotal }" class="form-control " readonly="readonly"  />
 						
 			      	</div>
 				</div>
