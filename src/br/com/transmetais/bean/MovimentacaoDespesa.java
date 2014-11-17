@@ -7,21 +7,22 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 
+
 @Entity
-@Table(name="movimentacao_compra")
+@Table(name="movimentacao_despesa")
 @PrimaryKeyJoinColumn(name="movimentacao_id")
 public class MovimentacaoDespesa extends Movimentacao{
 	
 	@ManyToOne
-	@JoinColumn(name="compra_id")
-	private Compra compra;
+	@JoinColumn(name="despesa_id")
+	private Despesa despesa;
 
-	public Compra getCompra() {
-		return compra;
+	public Despesa getDespesa() {
+		return despesa;
 	}
 	
-	public void setCompra(Compra compra) {
-		this.compra = compra;
+	public void setDespesa(Despesa despesa) {
+		this.despesa = despesa;
 	}
 	
 	
