@@ -32,22 +32,31 @@
     		
     	}
     	
-    	$(".btnDetalhe").on("click",function(event){
+    	/* $(".btnDetalhe").on("click",function(event){
     		var indiceCampo = $(this).attr('id').split("_")[1];
     		$("#divResultado").load( '<c:url value="/contasPagar/"/>' + indiceCampo, {'_format':'json'});
     		$('#myModal').modal('show');
-    	});
+    	}); */
     	
     	$("#dataInicio").mask('99/99/9999');
     	$("#dataFim").mask('99/99/9999');
     	
     	
-    	/* $('.datepicker').datepicker({
+    	 $('#dataInicio').datepicker({
 	   		language : 'pt-BR',
 	   		autoclose : true,
 	   		format : 'dd/mm/yyyy'
 	   	 	
-	   	}); */
+	   	}); 
+    	 
+    	 $('#dataFim').datepicker({
+ 	   		language : 'pt-BR',
+ 	   		autoclose : true,
+ 	   		format : 'dd/mm/yyyy'
+ 	   	 	
+ 	   	}); 
+	   	
+	   	
     	
     	$("#btnFiltrar").click(function(){
     		
@@ -58,6 +67,8 @@
     	
     	
     });
+    
+    
  </script>
  
 <div class="container">
@@ -123,9 +134,7 @@
 				 --%>
 				
 					<c:if test="${conta.status == 'A' }">
-						<button class="btn btn-default btn-xs btnDetalhe" id="btnDetalhe_${conta.id}" type="button" >
-							<span class="glyphicon glyphicon-ok-sign"></span>
-						</button>
+						<a  href="<c:url value='/contasPagar/'/>${conta.id}"><span title="Confirmar" class="glyphicon glyphicon-ok"></span></a>
 					</c:if>
 				</td>
 				<td>
@@ -136,9 +145,6 @@
 					
 						<c:if test="${conta.class.name  == 'br.com.transmetais.bean.ContaAPagarCompra'}">
 							<b>Compra <fmt:formatNumber minIntegerDigits="4" value="${conta.compra.id}" groupingUsed="" /></b> Fornecedor: ${conta.compra.fornecedor.apelido } - ${conta.compra.fornecedor.nome }
-						</c:if>
-						<c:if test="${conta.class.name  == 'br.com.transmetais.bean.ContaAPagarAdiantamento'}">
-							<b>Adiantamento <fmt:formatNumber minIntegerDigits="4" value="${conta.adiantamento.id}" groupingUsed="" /></b> Fornecedor: ${conta.adiantamento.fornecedor.apelido } - ${conta.adiantamento.fornecedor.nome }
 						</c:if>
 						<c:if test="${conta.class.name  == 'br.com.transmetais.bean.ContaAPagarDespesa'}">
 							${conta.descricao }

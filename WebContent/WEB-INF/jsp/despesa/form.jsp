@@ -42,6 +42,8 @@
 	    	if ($('#qtdParcelas').val() == '' || $('#qtdParcelas').val()=='0'){
 	    		alert('Informe a quantidade de parcelas!');
 	    		return;
+	    	}else{
+	    		$("#divCheque").hide();
 	    	}
 	    	
 	    	
@@ -73,6 +75,8 @@
 	    		
 	    		adicionarParcela(i);
 	    	}
+	    	
+	    	
 	    	
     	});
 	    $("#btnAdicionarRegra").click(function(){
@@ -219,7 +223,7 @@
 	 	    	
 	 	    	
 	 	    	var html = "";  
-	 	       html += "<select name='bean.modalidadePagamento' id='bean.modalidadePagamento' class='selectpicker form-control' onchange='atualizaContas()'>" ;  
+	 	       html += "<select name='bean.modalidadePagamento' id='bean.modalidadePagamento' class=' form-control' onchange='atualizaContas()'>" ;  
 	 	      html += "<option value=''>Selecione</option>";
 	 	       for(i=0;i<modalidades.length;i++) {  
 	 	           html += "<option value='"+modalidades[i][0] +"'>"+modalidades[i][1]+"</option>";                           
@@ -244,6 +248,21 @@
 	
 	function atualizaContas(){
 		
+		if($('input[name=bean\\.formaPagamento]:checked').val() == 'S'){
+			
+		}
+		
+		
+		if ($('#bean\\.modalidadePagamento').val() == 'C'){
+    		$("#divCheque").show();
+    		$("#bean\\.conta\\.id").attr('disabled', false);
+    	}else{
+    		$("#divCheque").hide();
+    		$("#bean\\.conta\\.id").empty().append('');
+    		$("#bean\\.conta\\.id").val('');
+    		
+    		$("#bean\\.conta\\.id").attr('disabled', true);
+    	}
 		
 		if($('input[name=bean\\.formaPagamento]:checked').val()) {
     		$.ajax({
@@ -257,7 +276,7 @@
 	 	    	var contas = jsonObject.list;
 	 	    	
 	 	    	var html = "";  
-	 	       html += "<select name='bean.conta.id' id='bean.conta.id' class='selectpicker form-control' data-live-search='true'>" ; 
+	 	       html += "<select name='bean.conta.id' id='bean.conta.id' class=' form-control' data-live-search='true'>" ; 
 	 	      html += "<option value=''>Selecione</option>";
 	 	       for(i=0;i<contas.length;i++) {  
 	 	           html += "<option value='"+contas[i].id +"'>"+contas[i].descricao+"</option>";                           
@@ -279,6 +298,8 @@
 	
 	
     	}  
+		
+		
 		
 	}
 	
@@ -339,6 +360,12 @@
 		
 		strLinha += '<td style="max-width:130px"><input name="bean.parcelas[' + i + '].dataVencimento" id="dataParcela' + i + '" data-date-format="dd/mm/yyyy" value="' + dataParcela.toString('dd/MM/yyyy') + '" class="form-control required datepicker" size="8" maxlength="10"/></td>';
 		strLinha += '<td style="max-width:130px"><input name="bean.parcelas[' + i + '].valor" id="valorParcela' + i + '" value="' + parcela + '" class="form-control required"  maxlength="18"/></td>';
+		if($("#bean\\.modalidadePagamento").val() == 'C'){
+			strLinha += '<td style="max-width:130px"><input name="bean.parcelas[' + i + '].chequeEmitido.numeroCheque" id="numChequeParcela' + i + '" value="" class="form-control required"  maxlength="18"/></td>';
+		}else{
+			strLinha += '<td style="max-width:130px"></td>';
+		}
+		
 		strLinha += '</tr>';
 		$('#tabelaParcelas > tbody:last').append(strLinha);
 		$("#dataParcela" + i).mask('99/99/9999');
@@ -404,7 +431,7 @@
 	       <div class="col-md-2">
 	        		<label for="bean.modalidadePagamento">Modalidade Pag.:</label>
 	        		<div id="ajaxResultDiv">
-	        		<select id="bean.modalidadePagamento" name="bean.modalidadePagamento" class="selectpicker required form-control" >
+	        		<select id="bean.modalidadePagamento" name="bean.modalidadePagamento" class=" required form-control" >
 							<option value ="">Selecione</option>
 							<c:forEach var="modalidade" items="${modalidades}" varStatus="contador">
 							
@@ -421,7 +448,7 @@
 			<div class="col-md-4">
         		<label for="bean.contaContabil.id">Conta Financeira:</label>
 				<div id="divCboContas">
-	        		<select id="bean.conta.id" name="bean.conta.id" class=" form-control selectpicker" >
+	        		<select id="bean.conta.id" name="bean.conta.id" class=" form-control " >
 							<option value ="">Selecione</option>
 							<c:forEach var="conta" items="${contasFinanceiras}" varStatus="contador">
 							
@@ -458,6 +485,11 @@
         	
       	</div>
       	<div class="row">
+      	<div class="col-md-2" id="divCheque" style="display:none;">
+	      	
+        		<label for="">Número Cheque:</label>
+        		<input name="bean.chequeEmitidoList[0].numeroCheque"  id="bean.chequeEmitidoList[0].numeroCheque" value="" class="form-control required " maxlength="15"  />
+        	</div>
       	<div class="col-md-2">
         		<label for="bean.dataCompetencia">Data Competência:</label>
         		<input name="bean.dataCompetencia" id="bean.dataCompetencia" value=" <fmt:formatDate value="${bean.dataCompetencia }" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" size="8" maxlength="10" />
@@ -496,6 +528,7 @@
 				<th ></th>
 				<th >Data</th>
 				<th >Valor</th>
+				<th >Num Cheque</th>
 				
 				
 			</tr>
@@ -509,6 +542,12 @@
 					<td style="vertical-align: middle;"><a href="#" onclick="removerParcela(${contador.index}); return false;"><span title="Excluir" class="glyphicon glyphicon-remove" ></span></a></td>
 					<td style="max-width:130px"><input name="bean.parcelas[${contador.index}].dataVencimento" id="dataParcela${contador.index}" data-date-format="dd/mm/yyyy" value="<fmt:formatDate value="${parcela.dataVencimento }" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" size="8" maxlength="10"/></td>
 					<td style="max-width:130px"><input name="bean.parcelas[${contador.index}].valor" id="valorParcela${contador.index}" value="<fmt:formatNumber value="${parcela.valor}" minFractionDigits="2" type="currency"/>" class="form-control required"  maxlength="18"/></td>
+					<c:if test="${not empty parcela.chequeEmitido }">
+						<td style="max-width:130px"><input name="bean.parcelas[${contador.index}].chequeEmitido.numeroCheque" id="numChequeParcela${contador.index}" value="${parcela.chequeEmitido.numeroCheque}" class="form-control required"  maxlength="18"/></td>
+					</c:if>
+					<c:if test="${ empty parcela.chequeEmitido }">
+					<td style="max-width:130px"></td>
+					</c:if>
 			
 		
 				</tr>

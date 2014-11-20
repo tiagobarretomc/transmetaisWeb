@@ -15,6 +15,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import br.com.transmetais.type.SituacaoChequeEnum;
@@ -39,6 +40,9 @@ public class ChequeEmitido {
 	private Date dataStatus;
 	@Column(name="motivo_cancelamento")
 	private String motivoCancelamento;
+	@OneToOne
+	@JoinColumn(name="parcela_id")
+	private Parcela parcela;
 	
 	public Long getId() {
 		return id;
@@ -93,5 +97,12 @@ public class ChequeEmitido {
 	
 	public void setMotivoCancelamento(String motivoCancelamento) {
 		this.motivoCancelamento = motivoCancelamento;
+	}
+	
+	public Parcela getParcela() {
+		return parcela;
+	}
+	public void setParcela(Parcela parcela) {
+		this.parcela = parcela;
 	}
 }

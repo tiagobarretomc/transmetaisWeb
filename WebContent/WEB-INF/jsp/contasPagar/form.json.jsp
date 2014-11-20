@@ -35,7 +35,7 @@
     	
     
     	
-	   	  $('.datepicker').datepicker({
+	   	  $('#contaAPagar\\.dataPagamento').datepicker({
 	   		language : 'pt-BR',
 	   		autoclose : true,
 	   		format : 'dd/mm/yyyy'
@@ -78,6 +78,29 @@
 	           
 	    });
     	
+        
+        $("#contaAPagar\\.juros").change(function(){
+        	
+        	if($("#contaAPagar\\.juros").val() != ''){
+	        	var valorTotal = moeda2float($("#contaAPagar\\.juros").val()) + moeda2float($("#contaAPagar\\.valor").val());
+	        	
+	        	$("#contaAPagar\\.valorTotal").val(float2moeda(valorTotal));
+        		
+        	}else{
+        		$("#contaAPagar\\.valorTotal").val($("#contaAPagar\\.valor").val());
+        	}
+        	
+        	
+        	
+        });
+        
+        $("#contaAPagar\\.juros").priceFormat({
+	        prefix: '',
+	        centsSeparator: ',',
+	        thousandsSeparator: '.',
+	        limit: 12
+	        
+	    });
     	
     });
 </script>
@@ -121,7 +144,7 @@
 		<div class="row">
         	
         	
-        	<div class="col-md-3">
+        	<div class="col-md-2">
         		<label for="contaAPagar.valor">Valor:</label>
         		<input name="contaAPagar.valor" id="contaAPagar.valor" readonly="readonly" value="<fmt:formatNumber value="${contaAPagar.valor}" minFractionDigits="2" type="number" />" class="form-control required" />
         	</div>
@@ -141,34 +164,33 @@
         	
 	        	<div class="col-md-4">
 		      		<label for="contaSacada">Conta sacada:</label>
-	        		
-	        		<c:if test="${ contaAPagar.class.name == 'br.com.transmetais.bean.ContaAPagarCompra' and contaAPagar.compra.fornecedor.tipoFaturamento.name == 'ADIANT'}">
-		        		<select  id="contaAPagar.conta.id" name="contaAPagar.conta.id"  class=" form-control required selectpicker">
-							<option value="${ contaAPagar.compra.fornecedor.conta.id}" >${ contaAPagar.compra.fornecedor.conta.descricao}</option>
-							
-						</select>
-	        		</c:if>
-	        		
-	        		<c:if test="${ contaAPagar.class.name != 'br.com.transmetais.bean.ContaAPagarCompra' or contaAPagar.compra.fornecedor.tipoFaturamento.name != 'ADIANT'}">
-					<select  id="contaAPagar.conta.id" name="contaAPagar.conta.id" class=" form-control required selectpicker" >
+	        		<select  id="contaAPagar.conta.id" name="contaAPagar.conta.id" class=" form-control required selectpicker" >
 						<option value="" >--Selecione--</option>
 						<c:forEach var="conta" items="${contas}">
 							<option value="${conta.id }" ${conta.id == contaAPagar.conta.id ? 'selected="selected"' : '' }>${conta.descricao}</option>
 						</c:forEach>
 					</select>
-					</c:if>
+					
 		      	</div>
         	
       	</div>
-        	<c:if test="${ contaAPagar.class.name == 'br.com.transmetais.bean.ContaAPagarAdiantamento'}">
-	        	<div class="row">
-	        		<div class="col-md-4">
-			      		<label for="contaSacada">Conta Destino:</label>
-		        		
-						<input type="text" readonly="readonly" value="${contaAPagar.adiantamento.fornecedor.conta.descricao }" class="form-control "/>
-			      	</div>
-			     </div>
-        	</c:if>
+      	
+      	<div class="row">
+	      
+	      	<div class="col-md-2">
+	      	
+        		<label for="contaAPagar.juros">Juros:</label>
+        		<input name="contaAPagar.juros"  id="contaAPagar.juros" value="" class="form-control"/>
+        	</div>
+        	
+	        	<div class="col-md-4">
+		      		<label for="contaAPagar.valorTotal">Valor Total:</label>
+	        		<input name="contaAPagar.valorTotal"  id="contaAPagar.valorTotal" value="" class="form-control " readonly="readonly"  />
+					
+		      	</div>
+        	
+      	</div>
+        	
 		
       	
       	

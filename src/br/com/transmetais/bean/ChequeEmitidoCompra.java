@@ -8,33 +8,24 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name="contaapagar_compra")
-@PrimaryKeyJoinColumn(name="contaapagar_id")
-public class ContaAPagarCompra extends ContaAPagar{
-	
+@Table(name="cheque_emitido_compra")
+@PrimaryKeyJoinColumn(name="cheque_emitido_id")
+public class ChequeEmitidoCompra extends ChequeEmitido{
 	
 	@ManyToOne
 	@JoinColumn(name="compra_id")
 	private Compra compra;
 	
-//	@ManyToOne
-//	@JoinColumn(name="parcela_compra_id")
-//	private ParcelaCompra parcela;
+	
 
 	public Compra getCompra() {
 		return compra;
 	}
-
 	public void setCompra(Compra compra) {
 		this.compra = compra;
 	}
 	
 	
-//	public ParcelaCompra getParcela() {
-//		return parcela;
-//	}
-//	
-//	public void setParcela(ParcelaCompra parcela) {
-//		this.parcela = parcela;
-//	}
+	
+	
 }

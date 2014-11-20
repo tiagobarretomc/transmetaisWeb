@@ -3,6 +3,7 @@ package br.com.transmetais.bean;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -11,8 +12,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import br.com.transmetais.type.StatusDespesaEnum;
@@ -20,30 +22,34 @@ import br.com.transmetais.type.StatusDespesaEnum;
 
 @Entity
 @Table(name="parcela")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Parcela {
 	
 	@Id 
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	protected Long id;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="despesa_id")
-	private Despesa despesa;
+	
 	
 	@Column(name="data_vencimento")
 	private Date dataVencimento;
 	
 	@Column(name="valor")
-	private BigDecimal valor;
-	
-	@Column(name="numero_cheque")
-	private String numeroCheque;
+	protected BigDecimal valor;
 	
 	@Enumerated(EnumType.STRING)
-	private StatusDespesaEnum status;
+	protected StatusDespesaEnum status;
 	
 	@Column(name="data_pagamento")
-	private Date dataPagamento;
+	protected Date dataPagamento;
+	
+	
+	protected Integer numero;
+	
+	@OneToOne(mappedBy="parcela", fetch=FetchType.LAZY, cascade = CascadeType.ALL)
+	protected ChequeEmitido chequeEmitido;
+	
+	
 
 	public Long getId() {
 		return id;
@@ -53,14 +59,7 @@ public class Parcela {
 		this.id = id;
 	}
 
-	public Despesa getDespesa() {
-		return despesa;
-	}
-
-	public void setDespesa(Despesa despesa) {
-		this.despesa = despesa;
-	}
-
+	
 	public Date getDataVencimento() {
 		return dataVencimento;
 	}
@@ -77,13 +76,7 @@ public class Parcela {
 		this.valor = valor;
 	}
 
-	public String getNumeroCheque() {
-		return numeroCheque;
-	}
-
-	public void setNumeroCheque(String numeroCheque) {
-		this.numeroCheque = numeroCheque;
-	}
+	
 	
 	public StatusDespesaEnum getStatus() {
 		return status;
@@ -99,6 +92,22 @@ public class Parcela {
 	
 	public void setDataPagamento(Date dataPagamento) {
 		this.dataPagamento = dataPagamento;
+	}
+	
+	public Integer getNumero() {
+		return numero;
+	}
+	
+	public void setNumero(Integer numero) {
+		this.numero = numero;
+	}
+
+	public ChequeEmitido getChequeEmitido() {
+		return chequeEmitido;
+	}
+
+	public void setChequeEmitido(ChequeEmitido chequeEmitido) {
+		this.chequeEmitido = chequeEmitido;
 	}
 
 }

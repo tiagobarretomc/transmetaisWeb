@@ -8,6 +8,8 @@ import javax.persistence.Query;
 
 import br.com.caelum.vraptor.ioc.Component;
 import br.com.transmetais.bean.ChequeEmitido;
+import br.com.transmetais.bean.ChequeEmitidoDespesa;
+import br.com.transmetais.bean.Despesa;
 import br.com.transmetais.dao.ChequeEmitidoDAO;
 import br.com.transmetais.dao.commons.CrudDAOJPA;
 import br.com.transmetais.dao.commons.DAOException;
@@ -15,6 +17,9 @@ import br.com.transmetais.dao.commons.DAOException;
 @Component
 public class ChequeEmitidoDaoImpl extends CrudDAOJPA<ChequeEmitido> implements ChequeEmitidoDAO{
 	
+	public List<ChequeEmitidoDespesa> obterChequeByDespesa(Despesa despesa){
+		return null;
+	}
 	public List<ChequeEmitido> findByFilter(Date dataInicio, Date dataFim, ChequeEmitido cheque) throws DAOException {
 		EntityManager manager = factory.createEntityManager(); 
 		

@@ -7,6 +7,7 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 
+
 @Entity
 @Table(name="movimentacao_despesa")
 @PrimaryKeyJoinColumn(name="movimentacao_id")

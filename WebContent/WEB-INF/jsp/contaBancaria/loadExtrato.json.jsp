@@ -81,6 +81,11 @@
 							Despesa - ${movimentacao.despesa.id} - ${movimentacao.despesa.descricao}
 						
 					</c:if>
+					<c:if test="${movimentacao.class.name  == 'br.com.transmetais.bean.MovimentacaoCompra'}">
+						
+							Compra - ${movimentacao.compra.id} - Fornecedor: ${movimentacao.compra.fornecedor.nome}
+						
+					</c:if>
 					<c:if test="${movimentacao.class.name  == 'br.com.transmetais.bean.MovimentacaoAdiantamento'}">
 						
 							Adiantamento - ${movimentacao.adiantamento.id} - Fornecedor: ${movimentacao.adiantamento.fornecedor.nome}

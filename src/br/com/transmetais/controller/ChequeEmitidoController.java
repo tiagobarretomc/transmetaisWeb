@@ -1,5 +1,6 @@
 package br.com.transmetais.controller;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -13,16 +14,33 @@ import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.Adiantamento;
 import br.com.transmetais.bean.ChequeEmitido;
 import br.com.transmetais.bean.ChequeEmitidoAdiantamento;
+import br.com.transmetais.bean.ChequeEmitidoCompra;
+import br.com.transmetais.bean.ChequeEmitidoDespesa;
 import br.com.transmetais.bean.Conta;
+import br.com.transmetais.bean.ContaAPagarCompra;
+import br.com.transmetais.bean.ContaAPagarDespesa;
 import br.com.transmetais.bean.MovimentacaoAdiantamento;
+import br.com.transmetais.bean.MovimentacaoCompra;
+import br.com.transmetais.bean.MovimentacaoContasAPagar;
+import br.com.transmetais.bean.MovimentacaoDespesa;
+import br.com.transmetais.bean.ParcelaCompra;
+import br.com.transmetais.bean.ParcelaDespesa;
 import br.com.transmetais.dao.AdiantamentoDAO;
 import br.com.transmetais.dao.ChequeEmitidoDAO;
+import br.com.transmetais.dao.CompraDAO;
+import br.com.transmetais.dao.ContaAPagarDAO;
 import br.com.transmetais.dao.ContaDAO;
+import br.com.transmetais.dao.DespesaDAO;
 import br.com.transmetais.dao.MovimentacaoDAO;
+import br.com.transmetais.dao.ParcelaDAO;
 import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.type.SituacaoAdiantamentoEnum;
 import br.com.transmetais.type.SituacaoChequeEnum;
+import br.com.transmetais.type.StatusCompraEnum;
+import br.com.transmetais.type.StatusDespesaEnum;
+import br.com.transmetais.type.StatusMovimentacaoEnum;
 import br.com.transmetais.type.TipoOperacaoEnum;
+import br.com.transmetais.type.TipoPagamentoEnum;
 
 @Resource
 @Path("/chequeEmitido")
@@ -31,6 +49,11 @@ public class ChequeEmitidoController extends BaseController<ChequeEmitido, Chequ
 	private ContaDAO contaDao;
 	private MovimentacaoDAO movimentacaoDao;
 	private AdiantamentoDAO adiantamentoDao;
+	private ParcelaDAO parcelaDao;
+	private ContaAPagarDAO contaAPagarDao;
+	private DespesaDAO despesaDao;
+	private CompraDAO compraDao;
+	
 
 	@Override
 	protected ChequeEmitido createInstance() {
@@ -141,6 +164,12 @@ public class ChequeEmitidoController extends BaseController<ChequeEmitido, Chequ
 		
 		dao.updateEntity(bean);
 		
+		if (bean.getParcela() != null){
+			bean.getParcela().setStatus(StatusDespesaEnum.C);
+			bean.getParcela().setDataPagamento(bean.getDataStatus());
+			parcelaDao.updateEntity(bean.getParcela());
+		}
+		
 		if(bean instanceof ChequeEmitidoAdiantamento){
 			Adiantamento adiantamento = ((ChequeEmitidoAdiantamento)bean).getAdiantamento();
 			
@@ -172,6 +201,176 @@ public class ChequeEmitidoController extends BaseController<ChequeEmitido, Chequ
 			Conta contaDestino = adiantamento.getFornecedor().getConta();
 			contaDestino.setSaldo(contaDestino.getSaldo().add(adiantamento.getValor()));
 			contaDao.updateEntity(contaDestino);
+		}
+		else if(bean instanceof ChequeEmitidoDespesa) {
+			
+			ChequeEmitidoDespesa chequeEmitidoDespesa = (ChequeEmitidoDespesa)bean;
+			
+			
+			
+			// Se o pagamento for a prazo será necessário encerrar tb a conta a pagar
+			if (chequeEmitidoDespesa.getDespesa().getFormaPagamento() == TipoPagamentoEnum.P){
+				
+				ContaAPagarDespesa contaAPagarDespesa = contaAPagarDao.obterPorDespesa(chequeEmitidoDespesa.getDespesa(), chequeEmitidoDespesa.getParcela());
+				
+				
+				contaAPagarDespesa.setConta(bean.getConta());
+				contaAPagarDespesa.setDataPagamento(chequeEmitidoDespesa.getDataStatus());
+				contaAPagarDespesa.setStatus(StatusMovimentacaoEnum.P);
+				contaAPagarDespesa.setMulta(new BigDecimal(0));
+				contaAPagarDespesa.setJuros(new BigDecimal(0));
+				contaAPagarDespesa.setValorTotal(contaAPagarDespesa.getValor());
+				contaAPagarDao.updateEntity(contaAPagarDespesa);
+				
+				MovimentacaoContasAPagar movimentacao = new MovimentacaoContasAPagar();
+				movimentacao.setContaAPagar(contaAPagarDespesa);
+				movimentacao.setConta(contaAPagarDespesa.getConta());
+				movimentacao.setValor(contaAPagarDespesa.getValor());
+				movimentacao.setData(contaAPagarDespesa.getDataPagamento());
+				movimentacao.setTipoOperacao(TipoOperacaoEnum.D);
+				
+				
+				movimentacaoDao.addEntity(movimentacao);
+				
+				
+				if (bean.getParcela() != null){
+					
+					
+					//verificar se as demais parcelas
+					
+					boolean despesaQuitada = true;
+					for (ParcelaDespesa parcela : contaAPagarDespesa.getDespesa().getParcelas()) {
+						
+						if(parcela.getStatus() != StatusDespesaEnum.P){
+							despesaQuitada = false;
+							break;
+						}
+						
+					}
+					
+					//Se todas as parcelas da despesa estiverem quitadas, entao devemos mudar o estado da despesa.
+					if (despesaQuitada){
+						
+						contaAPagarDespesa.getDespesa().setStatus(StatusDespesaEnum.P);
+						contaAPagarDespesa.getDespesa().setDataPagamento(contaAPagarDespesa.getDataPagamento());
+						despesaDao.updateEntity(contaAPagarDespesa.getDespesa());
+					}
+				
+				}else{
+					chequeEmitidoDespesa.getDespesa().setDataPagamento(chequeEmitidoDespesa.getDataStatus());
+					chequeEmitidoDespesa.getDespesa().setStatus(StatusDespesaEnum.P);
+					despesaDao.updateEntity(chequeEmitidoDespesa.getDespesa());
+				}
+				
+			}else{
+				MovimentacaoDespesa movimentacaDespesa= new MovimentacaoDespesa();
+				movimentacaDespesa.setDespesa(chequeEmitidoDespesa.getDespesa());
+				movimentacaDespesa.setConta(chequeEmitidoDespesa.getConta());
+				
+				movimentacaDespesa.setValor(chequeEmitidoDespesa.getValor());
+				movimentacaDespesa.setData(chequeEmitidoDespesa.getDataStatus());
+				movimentacaDespesa.setTipoOperacao(TipoOperacaoEnum.D);
+				movimentacaoDao.addEntity(movimentacaDespesa);
+				
+				chequeEmitidoDespesa.getDespesa().setDataPagamento(chequeEmitidoDespesa.getDataStatus());
+				chequeEmitidoDespesa.getDespesa().setStatus(StatusDespesaEnum.P);
+				despesaDao.updateEntity(chequeEmitidoDespesa.getDespesa());
+				
+			}
+				
+			
+			//Alterar o Saldo da Conta Sacada
+			Conta contaSacada = contaDao.findById(bean.getConta().getId());
+			contaSacada.setSaldo(contaSacada.getSaldo().subtract(bean.getValor()));
+			contaDao.updateEntity(contaSacada);
+			
+			
+			
+		}
+		else if(bean instanceof ChequeEmitidoCompra) {
+			
+			
+			ChequeEmitidoCompra chequeEmitidoCompra = (ChequeEmitidoCompra)bean;
+			
+			
+			
+			// Se o pagamento for a prazo será necessário encerrar tb a conta a pagar
+			if (chequeEmitidoCompra.getCompra().getFormaPagamento() == TipoPagamentoEnum.P){
+				
+				ContaAPagarCompra contaAPagarCompra = contaAPagarDao.obterPorCompra(chequeEmitidoCompra.getCompra(), chequeEmitidoCompra.getParcela());
+				
+				
+				contaAPagarCompra.setConta(bean.getConta());
+				contaAPagarCompra.setDataPagamento(bean.getDataStatus());
+				contaAPagarCompra.setStatus(StatusMovimentacaoEnum.P);
+				contaAPagarCompra.setMulta(new BigDecimal(0));
+				contaAPagarCompra.setJuros(new BigDecimal(0));
+				contaAPagarCompra.setValorTotal(contaAPagarCompra.getValor());
+				contaAPagarDao.updateEntity(contaAPagarCompra);
+				
+				MovimentacaoContasAPagar movimentacao = new MovimentacaoContasAPagar();
+				movimentacao.setContaAPagar(contaAPagarCompra);
+				movimentacao.setConta(contaAPagarCompra.getConta());
+				
+				movimentacao.setValor(contaAPagarCompra.getValor());
+				movimentacao.setData(contaAPagarCompra.getDataPagamento());
+				movimentacao.setTipoOperacao(TipoOperacaoEnum.D);
+				
+				
+				movimentacaoDao.addEntity(movimentacao);
+				
+				
+				if (bean.getParcela() != null){
+					
+					
+					//verificar se as demais parcelas
+					
+					boolean despesaQuitada = true;
+					for (ParcelaCompra parcela : contaAPagarCompra.getCompra().getParcelas()) {
+						
+						if(parcela.getStatus() != StatusDespesaEnum.P){
+							despesaQuitada = false;
+							break;
+						}
+						
+					}
+					
+					//Se todas as parcelas da despesa estiverem quitadas, entao devemos mudar o estado da despesa.
+					if (despesaQuitada){
+						
+						contaAPagarCompra.getCompra().setStatus(StatusCompraEnum.P);
+						contaAPagarCompra.getCompra().setDataPagamento(contaAPagarCompra.getDataPagamento());
+						compraDao.updateEntity(contaAPagarCompra.getCompra());
+					}
+				
+				}else{
+					chequeEmitidoCompra.getCompra().setDataPagamento(chequeEmitidoCompra.getDataStatus());
+					chequeEmitidoCompra.getCompra().setStatus(StatusCompraEnum.P);
+					compraDao.updateEntity(chequeEmitidoCompra.getCompra());
+				}
+				
+			}else{
+				MovimentacaoCompra movimentacaoCompra= new MovimentacaoCompra();
+				movimentacaoCompra.setCompra(chequeEmitidoCompra.getCompra());
+				movimentacaoCompra.setConta(chequeEmitidoCompra.getConta());
+				
+				movimentacaoCompra.setValor(chequeEmitidoCompra.getValor());
+				movimentacaoCompra.setData(chequeEmitidoCompra.getDataStatus());
+				movimentacaoCompra.setTipoOperacao(TipoOperacaoEnum.D);
+				movimentacaoDao.addEntity(movimentacaoCompra);
+				
+				chequeEmitidoCompra.getCompra().setDataPagamento(chequeEmitidoCompra.getDataStatus());
+				chequeEmitidoCompra.getCompra().setStatus(StatusCompraEnum.P);
+				compraDao.updateEntity(chequeEmitidoCompra.getCompra());
+				
+			}
+				
+			
+			//Alterar o Saldo da Conta Sacada
+			Conta contaSacada = contaDao.findById(bean.getConta().getId());
+			contaSacada.setSaldo(contaSacada.getSaldo().subtract(bean.getValor()));
+			contaDao.updateEntity(contaSacada);
+			
 		}
 		
 		
@@ -251,5 +450,22 @@ public class ChequeEmitidoController extends BaseController<ChequeEmitido, Chequ
 	public void setAdiantamentoDao(AdiantamentoDAO adiantamentoDao) {
 		this.adiantamentoDao = adiantamentoDao;
 	}
+	@Autowired
+	public void setContaAPagarDao(ContaAPagarDAO contaAPagarDao) {
+		this.contaAPagarDao = contaAPagarDao;
+	}
+	@Autowired
+	public void setParcelaDao(ParcelaDAO parcelaDao) {
+		this.parcelaDao = parcelaDao;
+	}
+	@Autowired
+	public void setDespesaDao(DespesaDAO despesaDao) {
+		this.despesaDao = despesaDao;
+	}
+	@Autowired
+	public void setCompraDao(CompraDAO compraDao) {
+		this.compraDao = compraDao;
+	}
+	
 
 }

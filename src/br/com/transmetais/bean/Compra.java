@@ -1,6 +1,7 @@
 package br.com.transmetais.bean;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,8 +19,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import br.com.transmetais.type.FormaPagamentoEnum;
 import br.com.transmetais.type.StatusCompraEnum;
 import br.com.transmetais.type.TipoFreteEnum;
+import br.com.transmetais.type.TipoPagamentoEnum;
 
 @Entity
 @Table(name="compra")
@@ -38,9 +41,9 @@ public class Compra {
 	@JoinColumn(name="fornecedor_id")
 	private Fornecedor fornecedor;
 	
-	private BigDecimal quantidade;
+	//private BigDecimal quantidade;
 	private BigDecimal valor;
-	private BigDecimal preco;
+	//private BigDecimal preco;
 	
 	@ManyToOne
 	@JoinColumn(name="conta_id")
@@ -61,6 +64,19 @@ public class Compra {
 	@Enumerated(EnumType.STRING)
 	private StatusCompraEnum status;
 	
+	@Enumerated(EnumType.STRING)
+	@Column(name="modalidade_pagamento")
+	private FormaPagamentoEnum modalidadePagamento;
+	@Column(name="forma_pagamento")
+	private TipoPagamentoEnum formaPagamento;
+	@OneToMany(mappedBy="compra", fetch=FetchType.LAZY)
+	private List<ChequeEmitidoCompra> chequeEmitidoList;
+	@Column(name="data_vencimento")
+	private Date dataVencimento;
+	@Column(name="data_pagamento")
+	private Date dataPagamento;
+	@OneToMany(mappedBy="compra", fetch = FetchType.LAZY, cascade = CascadeType.ALL,orphanRemoval=true)
+	private List<ParcelaCompra> parcelas;
 	
 	public Long getId() {
 		return id;
@@ -80,24 +96,24 @@ public class Compra {
 	public void setFornecedorMaterial(FornecedorMaterial fornecedorMaterial) {
 		this.fornecedorMaterial = fornecedorMaterial;
 	}
-	public BigDecimal getQuantidade() {
-		return quantidade;
-	}
-	public void setQuantidade(BigDecimal quantidade) {
-		this.quantidade = quantidade;
-	}
+//	public BigDecimal getQuantidade() {
+//		return quantidade;
+//	}
+//	public void setQuantidade(BigDecimal quantidade) {
+//		this.quantidade = quantidade;
+//	}
 	public BigDecimal getValor() {
 		return valor;
 	}
 	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
-	public BigDecimal getPreco() {
-		return preco;
-	}
-	public void setPreco(BigDecimal preco) {
-		this.preco = preco;
-	}
+//	public BigDecimal getPreco() {
+//		return preco;
+//	}
+//	public void setPreco(BigDecimal preco) {
+//		this.preco = preco;
+//	}
 	public Conta getConta() {
 		return conta;
 	}
@@ -141,6 +157,65 @@ public class Compra {
 		this.status = status;
 	}
 	
+	public FormaPagamentoEnum getModalidadePagamento() {
+		return modalidadePagamento;
+	}
 	
+	public void setModalidadePagamento(FormaPagamentoEnum modalidadePagamento) {
+		this.modalidadePagamento = modalidadePagamento;
+	}
+	
+	public ChequeEmitidoCompra getChequeEmitido(){
+		if(chequeEmitidoList != null && !chequeEmitidoList.isEmpty()){
+			return chequeEmitidoList.get(0);
+		}
+		return null;
+	}
+	public void setChequeEmitido(ChequeEmitidoCompra chequeEmitido){
+		if(chequeEmitidoList == null){
+			chequeEmitidoList = new ArrayList<ChequeEmitidoCompra>();
+		}
+		chequeEmitidoList.add(chequeEmitido);
+	}
+	
+	public List<ChequeEmitidoCompra> getChequeEmitidoList() {
+		return chequeEmitidoList;
+	}
+	
+	public void setChequeEmitidoList(List<ChequeEmitidoCompra> chequeEmitidoList) {
+		this.chequeEmitidoList = chequeEmitidoList;
+	}
+	
+	public Date getDataPagamento() {
+		return dataPagamento;
+	}
+	
+	public void setDataPagamento(Date dataPagamento) {
+		this.dataPagamento = dataPagamento;
+	}
+	
+	public Date getDataVencimento() {
+		return dataVencimento;
+	}
+	
+	public void setDataVencimento(Date dataVencimento) {
+		this.dataVencimento = dataVencimento;
+	}
+	
+	public List<ParcelaCompra> getParcelas() {
+		return parcelas;
+	}
+	
+	public void setParcelas(List<ParcelaCompra> parcelas) {
+		this.parcelas = parcelas;
+	}
+	
+	public TipoPagamentoEnum getFormaPagamento() {
+		return formaPagamento;
+	}
+	
+	public void setFormaPagamento(TipoPagamentoEnum formaPagamento) {
+		this.formaPagamento = formaPagamento;
+	}
 	
 }
