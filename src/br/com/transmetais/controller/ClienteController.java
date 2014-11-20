@@ -1,5 +1,6 @@
 package br.com.transmetais.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import br.com.caelum.vraptor.Path;
@@ -29,6 +30,22 @@ public class ClienteController {
 		this.cidadeDao = cidadeDao;
 		this.estadoDao = estadoDao;
 		
+	}
+	
+	public List<Cliente> loadListaCliente(Long clienteId){
+		List<Cliente> lista = new ArrayList<Cliente>();
+		
+		try {
+			
+			lista.add(dao.findById(clienteId));
+			
+			result.include("clientes",lista);
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return lista;
 	}
 	
 	@Path({"/cliente/","/cliente","/cliente/lista"})
