@@ -14,6 +14,7 @@ import br.com.transmetais.bean.Movimentacao;
 import br.com.transmetais.bean.MovimentacaoContasAPagar;
 import br.com.transmetais.bean.ParcelaCompra;
 import br.com.transmetais.bean.ParcelaDespesa;
+import br.com.transmetais.dao.ChequeEmitidoDAO;
 import br.com.transmetais.dao.CompraDAO;
 import br.com.transmetais.dao.ContaAPagarDAO;
 import br.com.transmetais.dao.ContaDAO;
@@ -22,6 +23,7 @@ import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.ParcelaDAO;
 import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.type.FormaPagamentoEnum;
+import br.com.transmetais.type.SituacaoChequeEnum;
 import br.com.transmetais.type.StatusCompraEnum;
 import br.com.transmetais.type.StatusDespesaEnum;
 import br.com.transmetais.type.StatusMovimentacaoEnum;
@@ -38,11 +40,12 @@ public class ContasPagarController {
 	private CompraDAO compraDao;
 	private DespesaDAO despesaDao;
 	private ParcelaDAO parcelaDao;
+	private ChequeEmitidoDAO chequeEmitidoDAO;
 	
 	
 	public ContasPagarController(Result result,ContaAPagarDAO dao, ContaDAO contaDao, 
 			MovimentacaoDAO movimentacaoDao, CompraDAO compraDao, 
-			DespesaDAO despesaDao, ParcelaDAO parcelaDao) {
+			DespesaDAO despesaDao, ParcelaDAO parcelaDao,ChequeEmitidoDAO chequeEmitidoDAO) {
 		this.dao = dao;
 		this.result = result;
 		this.contaDao = contaDao;
@@ -51,6 +54,7 @@ public class ContasPagarController {
 		
 		this.despesaDao = despesaDao;
 		this.parcelaDao = parcelaDao;
+		this.chequeEmitidoDAO = chequeEmitidoDAO;
 		
 	}
 	
@@ -91,7 +95,6 @@ public class ContasPagarController {
 		}
 	
 	public void salvar(Movimentacao movimentacao) {
-		
 		
 		result.redirectTo(ContasPagarController.class).lista(null, null);
 	}
@@ -153,16 +156,30 @@ public class ContasPagarController {
 		contaAPagarOrig.setConta(contaAPagar.getConta());
 		contaAPagarOrig.setDataPagamento(contaAPagar.getDataPagamento());
 		contaAPagarOrig.setStatus(StatusMovimentacaoEnum.P);
+		contaAPagarOrig.setMulta(contaAPagar.getMulta());
+		contaAPagarOrig.setJuros(contaAPagar.getJuros());
+		contaAPagarOrig.setValorTotal(contaAPagar.getValorTotal());
 		
-		if (contaAPagar.getModalidadePagamento() == FormaPagamentoEnum.C){
-			contaAPagarOrig.setConta(contaAPagar.getChequeEmitido().getConta());
+		if (contaAPagarOrig.getModalidadePagamento() == FormaPagamentoEnum.C){
+			contaAPagarOrig.setConta(contaAPagarOrig.getChequeEmitido().getConta());
+		}
+		
+		contaAPagarOrig.setValorTotal(contaAPagarOrig.getValor());
+		
+		if (contaAPagarOrig.getMulta() != null){
+			
+			contaAPagarOrig.setValorTotal(contaAPagarOrig.getValorTotal().add(contaAPagarOrig.getMulta()));
+		}
+		if (contaAPagarOrig.getJuros() != null){
+			
+			contaAPagarOrig.setValorTotal(contaAPagarOrig.getValorTotal().add(contaAPagarOrig.getJuros()));
 		}
 		
 		dao.updateEntity(contaAPagarOrig);
 		
 		if(contaAPagarOrig.getParcela() != null){
 			contaAPagarOrig.getParcela().setDataPagamento(contaAPagar.getDataPagamento());
-			contaAPagarOrig.setStatus(StatusMovimentacaoEnum.P);
+			contaAPagarOrig.getParcela().setStatus(StatusDespesaEnum.P);
 			parcelaDao.updateEntity(contaAPagarOrig.getParcela());
 		}
 		
@@ -208,13 +225,20 @@ public class ContasPagarController {
 					compraDao.updateEntity(contaCompra.getCompra());
 				}
 				
+				
+				
 			}else{
 				contaCompra.getCompra().setStatus(StatusCompraEnum.P);
 				contaCompra.getCompra().setDataPagamento(contaCompra.getDataPagamento());
 				compraDao.updateEntity(contaCompra.getCompra());
 				
 			}
-			
+//			if (contaCompra.getParcela().getChequeEmitido() != null){
+//				contaCompra.getParcela().getChequeEmitido().setStatus(SituacaoChequeEnum.C);
+//				contaCompra.getParcela().getChequeEmitido().setDataStatus(new Date());
+//				chequeEmitidoDAO.updateEntity(contaCompra.getParcela().getChequeEmitido());
+//				
+//			}
 			
 //			contaCompra.getCompra().setStatus(StatusCompraEnum.P);
 //			
@@ -255,9 +279,24 @@ public class ContasPagarController {
 				despesaDao.updateEntity(contaDespesa.getDespesa());
 			}
 			
+//			if (contaDespesa.getChequeEmitido() != null){
+//				contaDespesa.getParcela().getChequeEmitido().setStatus(SituacaoChequeEnum.C);
+//				contaDespesa.getParcela().getChequeEmitido().setDataStatus(new Date());
+//				chequeEmitidoDAO.updateEntity(contaDespesa.getParcela().getChequeEmitido());
+//				
+//			}
+			
 		}
 		
-		result.nothing();
+		if (contaAPagarOrig.getChequeEmitido() != null){
+			contaAPagarOrig.getChequeEmitido().setStatus(SituacaoChequeEnum.C);
+			contaAPagarOrig.getChequeEmitido().setDataStatus(new Date());
+			chequeEmitidoDAO.updateEntity(contaAPagarOrig.getChequeEmitido());
+			
+		}
+		
+		result.include("mensagem", "Confirmação de pagamento da conta efetuado com sucesso!");
+		result.redirectTo(this.getClass()).lista(null,null);
 	}
 	
 	

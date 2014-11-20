@@ -193,6 +193,19 @@ $("#btnVoltar").click(function(){
 								<label for="contaAPagar.despesa.modalidadePagamento.descricao">Mod. pagamento:</label> 
 							<input name="" id="contaAPagar.despesa.modalidadePagamento.descricao" value="${contaAPagar.despesa.modalidadePagamento.descricao }" class="form-control "   readonly="readonly"/>
 							</div>
+							<c:if test="${(empty contaApagar.parcela) && (contaAPagar.modalidadePagamento == 'C')}">
+								<div class="col-md-2">
+									<label for="contaAPagar.despesa.chequeEmitido.numero">Num. Cheque:</label> 
+								<input name="" id="contaAPagar.despesa.chequeEmitido.numero" value="${contaAPagar.despesa.chequeEmitido.numeroCheque }" class="form-control "   readonly="readonly"/>
+								</div>
+								
+								<div class="col-md-4">
+								<label for="contaAPagar.despesa.chequeEmitido.conta.descricao">Conta Bancária:</label> 
+								<input name="" id="contaAPagar.despesa.chequeEmitido.conta.descricao" value="${contaAPagar.despesa.chequeEmitido.conta.descricao }" class="form-control "  readonly="readonly" />
+									
+									
+							</div>
+							</c:if>
 							
 						</div>
 						
@@ -336,7 +349,7 @@ $("#btnVoltar").click(function(){
 			<form action="<c:url value='/contasPagar/confirmar'/>" id="formContaAPagar"
 				name="formContaAPagar" method="post">
 				
-				<input type="hidden" name="bean.id" value="${contaAPagar.id }"/>
+				<input type="hidden" name="contaAPagar.id" id="contaAPagar.id" value="${contaAPagar.id }"/>
 
 
 				<div class="row">
@@ -345,7 +358,7 @@ $("#btnVoltar").click(function(){
 					<div class="row">
 					<div class="col-md-2">
 						<label for="bean.id">Data Pagamento:</label> 
-						<input name="bean.dataStatus" id="bean.dataStatus" value="" class="form-control datepicker required dateLessThanToday"  maxlength="10" />
+						<input name="contaAPagar.dataPagamento" id="contaAPagar.dataPagamento" value="${contaAPagar.dataPagamento }" class="form-control datepicker required dateLessThanToday"  maxlength="10" />
 							
 							
 					</div>

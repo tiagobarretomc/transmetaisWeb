@@ -123,6 +123,7 @@ public class ContaAPagar {
 		}else if(this instanceof ContaAPagarCompra){
 			return ((ContaAPagarCompra)this).getCompra().getModalidadePagamento();
 		}
+		
 		return null;
 	}
 	

@@ -80,6 +80,7 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 				movimentacao.setValor(bean.getValor());
 				movimentacao.setConta(bean.getConta());
 				
+				
 				try {
 					
 					//inserindo a movimentacao no vanco de dados
@@ -113,7 +114,12 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 					
 					ContaAPagarDespesa contaApagar = new ContaAPagarDespesa();
 					contaApagar.setParcela(parcela);
-					contaApagar.setConta(null);
+					if(bean.getModalidadePagamento() == FormaPagamentoEnum.C){
+						contaApagar.setConta(bean.getConta());
+					}else{
+						
+						contaApagar.setConta(null);
+					}
 					contaApagar.setDataPrevista(parcela.getDataVencimento());
 					contaApagar.setDescricao("Parcela da Despesa - " +bean.getId().toString() + " - " + bean.getDescricao());
 					contaApagar.setStatus(StatusMovimentacaoEnum.A);

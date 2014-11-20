@@ -22,6 +22,7 @@ import javax.persistence.Table;
 import br.com.transmetais.type.FormaPagamentoEnum;
 import br.com.transmetais.type.StatusCompraEnum;
 import br.com.transmetais.type.TipoFreteEnum;
+import br.com.transmetais.type.TipoPagamentoEnum;
 
 @Entity
 @Table(name="compra")
@@ -66,11 +67,13 @@ public class Compra {
 	@Enumerated(EnumType.STRING)
 	@Column(name="modalidade_pagamento")
 	private FormaPagamentoEnum modalidadePagamento;
+	@Column(name="forma_pagamento")
+	private TipoPagamentoEnum formaPagamento;
 	@OneToMany(mappedBy="compra", fetch=FetchType.LAZY)
 	private List<ChequeEmitidoCompra> chequeEmitidoList;
 	@Column(name="data_vencimento")
 	private Date dataVencimento;
-	@Column(name="data_	pagamento")
+	@Column(name="data_pagamento")
 	private Date dataPagamento;
 	@OneToMany(mappedBy="compra", fetch = FetchType.LAZY, cascade = CascadeType.ALL,orphanRemoval=true)
 	private List<ParcelaCompra> parcelas;
@@ -205,6 +208,14 @@ public class Compra {
 	
 	public void setParcelas(List<ParcelaCompra> parcelas) {
 		this.parcelas = parcelas;
+	}
+	
+	public TipoPagamentoEnum getFormaPagamento() {
+		return formaPagamento;
+	}
+	
+	public void setFormaPagamento(TipoPagamentoEnum formaPagamento) {
+		this.formaPagamento = formaPagamento;
 	}
 	
 }

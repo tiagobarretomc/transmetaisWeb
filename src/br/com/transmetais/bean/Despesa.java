@@ -166,9 +166,9 @@ public class Despesa {
 		return null;
 	}
 	public void setChequeEmitido(ChequeEmitidoDespesa chequeEmitido){
-		if(chequeEmitidoList == null){
+	//	if(chequeEmitidoList == null ){
 			chequeEmitidoList = new ArrayList<ChequeEmitidoDespesa>();
-		}
+	//	}
 		chequeEmitidoList.add(chequeEmitido);
 	}
 
