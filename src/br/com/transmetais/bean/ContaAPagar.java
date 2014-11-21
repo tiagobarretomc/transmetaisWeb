@@ -46,6 +46,8 @@ public class ContaAPagar {
 	@ManyToOne
 	@JoinColumn(name="parcela_id")
 	private Parcela parcela;
+	@Column(name="data_cancelamento")
+	private Date dataCancelamento;
 	
 	
 	public Integer getId() {
@@ -153,6 +155,14 @@ public class ContaAPagar {
 	}
 	public void setParcela(Parcela parcela) {
 		this.parcela = parcela;
+	}
+	
+	public Date getDataCancelamento() {
+		return dataCancelamento;
+	}
+	
+	public void setDataCancelamento(Date dataCancelamento) {
+		this.dataCancelamento = dataCancelamento;
 	}
 	
 	

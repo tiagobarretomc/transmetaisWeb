@@ -165,7 +165,7 @@ public class ChequeEmitidoController extends BaseController<ChequeEmitido, Chequ
 		dao.updateEntity(bean);
 		
 		if (bean.getParcela() != null){
-			bean.getParcela().setStatus(StatusDespesaEnum.C);
+			bean.getParcela().setStatus(StatusDespesaEnum.P);
 			bean.getParcela().setDataPagamento(bean.getDataStatus());
 			parcelaDao.updateEntity(bean.getParcela());
 		}
@@ -387,23 +387,96 @@ public class ChequeEmitidoController extends BaseController<ChequeEmitido, Chequ
 		
 		try{
 			
-		bean = dao.findById(bean.getId());
-		
-		bean.setDataStatus(dataCancelamento);
-		
-		bean.setStatus(SituacaoChequeEnum.K);
-		
-		bean.setMotivoCancelamento(motivo);
-		
-		dao.updateEntity(bean);
-		
-		if(bean instanceof ChequeEmitidoAdiantamento){
-			Adiantamento adiantamento = ((ChequeEmitidoAdiantamento)bean).getAdiantamento();
+			bean = dao.findById(bean.getId());
 			
-			adiantamento.setSituacao(SituacaoAdiantamentoEnum.C);
-			adiantamentoDao.updateEntity(adiantamento);
+			bean.setDataStatus(dataCancelamento);
 			
-		}
+			bean.setStatus(SituacaoChequeEnum.K);
+			
+			bean.setMotivoCancelamento(motivo);
+			
+			dao.updateEntity(bean);
+			
+			if(bean instanceof ChequeEmitidoAdiantamento){
+				Adiantamento adiantamento = ((ChequeEmitidoAdiantamento)bean).getAdiantamento();
+				
+				adiantamento.setSituacao(SituacaoAdiantamentoEnum.C);
+				adiantamento.setDataCancelamento(new Date());
+				adiantamentoDao.updateEntity(adiantamento);
+				
+			}
+			else if(bean instanceof ChequeEmitidoDespesa){
+				ChequeEmitidoDespesa chequeDespesa = (ChequeEmitidoDespesa)bean;
+				
+				//Caso seja uma despesa a vista
+				if(chequeDespesa.getDespesa().getFormaPagamento() == TipoPagamentoEnum.V){
+					chequeDespesa.getDespesa().setStatus(StatusDespesaEnum.C);
+					chequeDespesa.getDespesa().setDataCancelamento(new Date());
+					despesaDao.updateEntity(chequeDespesa.getDespesa());
+				}
+				//Despesa a prazo
+				else{
+					
+					ContaAPagarDespesa contaAPagarDespesa = contaAPagarDao.obterPorDespesa(chequeDespesa.getDespesa(), chequeDespesa.getParcela());
+					
+					contaAPagarDespesa.setDataCancelamento(new Date());
+					contaAPagarDespesa.setStatus(StatusMovimentacaoEnum.C);
+					contaAPagarDao.updateEntity(contaAPagarDespesa);
+					
+					//Se for despesa parcelada
+					if(chequeDespesa.getParcela() != null){
+						chequeDespesa.getParcela().setStatus(StatusDespesaEnum.C);
+						chequeDespesa.getParcela().setDataCancelamento(new Date());
+						
+						parcelaDao.updateEntity(chequeDespesa.getParcela());
+					}
+					//se for uma despesa a prazo nao parcelada
+					else{
+						
+						chequeDespesa.getDespesa().setStatus(StatusDespesaEnum.C);
+						chequeDespesa.getDespesa().setDataCancelamento(new Date());
+						despesaDao.updateEntity(chequeDespesa.getDespesa());
+						
+					}
+				}
+			}
+			else if(bean instanceof ChequeEmitidoCompra){
+				
+				ChequeEmitidoCompra chequeCompra = (ChequeEmitidoCompra)bean;
+				
+				//Caso seja uma compra a vista
+				if(chequeCompra.getCompra().getFormaPagamento() == TipoPagamentoEnum.V){
+					chequeCompra.getCompra().setStatus(StatusCompraEnum.C);
+					chequeCompra.getCompra().setDataCancelamento(new Date());
+					compraDao.updateEntity(chequeCompra.getCompra());
+				}
+				//compra a prazo
+				else{
+					
+					ContaAPagarCompra contaAPagarCompra = contaAPagarDao.obterPorCompra(chequeCompra.getCompra(), chequeCompra.getParcela());
+					
+					contaAPagarCompra.setDataCancelamento(new Date());
+					contaAPagarCompra.setStatus(StatusMovimentacaoEnum.C);
+					contaAPagarDao.updateEntity(contaAPagarCompra);
+					
+					//Se for compra parcelada
+					if(chequeCompra.getParcela() != null){
+						chequeCompra.getParcela().setStatus(StatusDespesaEnum.C);
+						chequeCompra.getParcela().setDataCancelamento(new Date());
+						
+						parcelaDao.updateEntity(chequeCompra.getParcela());
+					}
+					//se for uma compra a prazo nao parcelada
+					else{
+						
+						chequeCompra.getCompra().setStatus(StatusCompraEnum.C);
+						chequeCompra.getCompra().setDataCancelamento(new Date());
+						compraDao.updateEntity(chequeCompra.getCompra());
+						
+					}
+				}
+				
+			}
 		}
 		catch (Exception ex){
 			ex.printStackTrace();

@@ -44,6 +44,9 @@ public class Adiantamento {
 	
 	private Date data;
 	
+	@Column(name="data_cancelamento")
+	private Date dataCancelamento;
+	
 	public Long getId() {
 		return id;
 	}
@@ -99,6 +102,14 @@ public class Adiantamento {
 	
 	public void setConta(Conta conta) {
 		this.conta = conta;
+	}
+	
+	public Date getDataCancelamento() {
+		return dataCancelamento;
+	}
+	
+	public void setDataCancelamento(Date dataCancelamento) {
+		this.dataCancelamento = dataCancelamento;
 	}
 
 }

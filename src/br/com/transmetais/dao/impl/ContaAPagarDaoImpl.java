@@ -103,7 +103,7 @@ public class ContaAPagarDaoImpl extends CrudDAOJPA<ContaAPagar> implements Conta
 			
 			if (parcela !=null && parcela.getId()>0){
 				
-				hqlQuery.setParameter("parcela", parcela.getId());
+				hqlQuery.setParameter("parcelaId", parcela.getId());
 			}
 			
 			
@@ -150,7 +150,7 @@ public class ContaAPagarDaoImpl extends CrudDAOJPA<ContaAPagar> implements Conta
 			
 			if (parcela !=null && parcela.getId()>0){
 				
-				hqlQuery.setParameter("parcela", parcela.getId());
+				hqlQuery.setParameter("parcelaId", parcela.getId());
 			}
 			
 			

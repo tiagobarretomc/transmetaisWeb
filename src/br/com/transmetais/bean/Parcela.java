@@ -43,6 +43,8 @@ public class Parcela {
 	@Column(name="data_pagamento")
 	protected Date dataPagamento;
 	
+	@Column(name="data_cancelamento")
+	protected Date dataCancelamento;
 	
 	protected Integer numero;
 	
@@ -108,6 +110,14 @@ public class Parcela {
 
 	public void setChequeEmitido(ChequeEmitido chequeEmitido) {
 		this.chequeEmitido = chequeEmitido;
+	}
+	
+	public Date getDataCancelamento() {
+		return dataCancelamento;
+	}
+	
+	public void setDataCancelamento(Date dataCancelamento) {
+		this.dataCancelamento = dataCancelamento;
 	}
 
 }

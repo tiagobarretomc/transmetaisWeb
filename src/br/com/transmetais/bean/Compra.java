@@ -75,6 +75,8 @@ public class Compra {
 	private Date dataVencimento;
 	@Column(name="data_pagamento")
 	private Date dataPagamento;
+	@Column(name="data_cancelamento")
+	private Date dataCancelamento;
 	@OneToMany(mappedBy="compra", fetch = FetchType.LAZY, cascade = CascadeType.ALL,orphanRemoval=true)
 	private List<ParcelaCompra> parcelas;
 	
@@ -218,4 +220,11 @@ public class Compra {
 		this.formaPagamento = formaPagamento;
 	}
 	
+	public Date getDataCancelamento() {
+		return dataCancelamento;
+	}
+	
+	public void setDataCancelamento(Date dataCancelamento) {
+		this.dataCancelamento = dataCancelamento;
+	}
 }

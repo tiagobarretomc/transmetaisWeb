@@ -37,6 +37,8 @@ public class Despesa {
 	private Date dataVencimento;
 	@Column(name="data_pagamento")
 	private Date dataPagamento;
+	@Column(name="data_cancelamento")
+	private Date dataCancelamento;
 	@Enumerated(EnumType.STRING)
 	private StatusDespesaEnum status;
 	@ManyToOne
@@ -170,6 +172,14 @@ public class Despesa {
 			chequeEmitidoList = new ArrayList<ChequeEmitidoDespesa>();
 	//	}
 		chequeEmitidoList.add(chequeEmitido);
+	}
+	
+	public Date getDataCancelamento() {
+		return dataCancelamento;
+	}
+	
+	public void setDataCancelamento(Date dataCancelamento) {
+		this.dataCancelamento = dataCancelamento;
 	}
 
 }
