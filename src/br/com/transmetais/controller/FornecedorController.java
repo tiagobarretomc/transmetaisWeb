@@ -1,7 +1,5 @@
 package br.com.transmetais.controller;
 
-import static br.com.caelum.vraptor.view.Results.json;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +9,6 @@ import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.Cidade;
 import br.com.transmetais.bean.Conta;
-import br.com.transmetais.bean.ContaBancaria;
 import br.com.transmetais.bean.ContaFornecedor;
 import br.com.transmetais.bean.Estado;
 import br.com.transmetais.bean.Fornecedor;
@@ -134,7 +131,7 @@ public class FornecedorController {
 		if (fornecedor != null && fornecedor.getId() != null && fornecedor.getId()>0){
 			try {
 				fornecedor = dao.findById(fornecedor.getId());
-				//System.out.println(fornecedor.getInformacoesBancarias());
+				System.out.println("$$$$$$$$"+ fornecedor.getInformacoesBancarias());
 				
 			} catch (DAOException e) {
 				// TODO Auto-generated catch block
@@ -158,24 +155,6 @@ public class FornecedorController {
 		result.include("estados", estados);
 		return fornecedor;
 	}
-	
-	public void loadCidades(Integer id) throws Exception{
-		Estado estadoSelecionado = null;
-		
-		
-		if (id != null && id>0){
-			estadoSelecionado = estadoDAO.findById(id);
-		}
-		
-		result.use(json()).from(estadoSelecionado.getCidades()).serialize();
-		
-		result.nothing();
-		
-	}
-	
-	public void loadJsonCidade(Estado estado) {
-        result.use(json()).from(estado.getCidades()).serialize();
-    }
 	
 	public List<Fornecedor> loadListaFornecedor(Long fornecedorId){
 		List<Fornecedor> lista = new ArrayList<Fornecedor>();

@@ -75,11 +75,13 @@ public abstract class BaseController<E, T extends CrudDAO<E>> {
 		Long id = (Long)EntityUtil.getId(bean);
 		String msg = null;
 		if (id != null && id > 0){
-			update(bean);
-			msg = "Registro alterado com sucesso." ;
+			if(update(bean)){
+				msg = "Registro alterado com sucesso." ;
+			}
 		}else{
-			persist(bean);
-			msg = "Registro incluído com sucesso." ;
+			if(persist(bean)){
+				msg = "Registro incluído com sucesso." ;
+			}
 		}
 		postPersistUpdate(bean, result);
 		result.include("mensagem", msg);
@@ -88,20 +90,24 @@ public abstract class BaseController<E, T extends CrudDAO<E>> {
 	  }
 	
 	
-	public void persist(E bean){
+	public boolean persist(E bean){
 		try {
 			dao.addEntity(bean);
+			return true;
 		} catch (DAOException e) {
-			result.include("erro", e.getMessage());
-			e.printStackTrace();		
+			result.include("erro","Erro ao incluir registro.");
+			e.printStackTrace();
+			return false;
 		}
 	}
-	public void update(E bean){
+	public boolean update(E bean){
 		try {
 			dao.updateEntity(bean);
+			return true;
 		} catch (Exception e) {
-			result.include("erro", e.getMessage());
-			e.printStackTrace();		
+			result.include("erro", "Erro ao alterar registro.");
+			e.printStackTrace();
+			return false;
 		}
 	}
 	@Path({"/lista","/lista/"})
