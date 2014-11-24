@@ -4,12 +4,15 @@ import static br.com.caelum.vraptor.view.Results.json;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.Compra;
+import br.com.transmetais.bean.Conta;
 import br.com.transmetais.bean.ContaAPagarCompra;
 import br.com.transmetais.bean.Estoque;
 import br.com.transmetais.bean.Fornecedor;
@@ -24,9 +27,11 @@ import br.com.transmetais.dao.FornecedorDAO;
 import br.com.transmetais.dao.FornecedorMaterialDAO;
 import br.com.transmetais.dao.MaterialDAO;
 import br.com.transmetais.dao.commons.DAOException;
+import br.com.transmetais.type.FormaPagamentoEnum;
 import br.com.transmetais.type.StatusCompraEnum;
 import br.com.transmetais.type.StatusMovimentacaoEnum;
 import br.com.transmetais.type.TipoFreteEnum;
+import br.com.transmetais.type.TipoPagamentoEnum;
 
 @Resource
 public class CompraController {
@@ -38,6 +43,7 @@ public class CompraController {
 	private ContaAPagarDAO contaAPagarDAO;
 	private EstoqueDAO estoqueDAO;
 	private MaterialDAO materialDao;
+	private ContaDAO contaDao;
 	
 	public CompraController(Result result, CompraDAO compraDao, FornecedorDAO fornecedorDao, FornecedorMaterialDAO fornecedorMaterialDao, ContaAPagarDAO contaAPagarDAO, 
 			ContaDAO contaDao, MaterialDAO materialDao, EstoqueDAO estoqueDAO) {
@@ -48,6 +54,7 @@ public class CompraController {
 		this.result = result;
 		this.materialDao = materialDao;
 		this.estoqueDAO = estoqueDAO;
+		this.contaDao = contaDao;
 	}
 	
 	//tela de listagem de compras
@@ -255,6 +262,64 @@ public class CompraController {
 		List<FornecedorMaterial> fornecedorMateriais = fornecedorMaterialDao.obterAtivosPorFiltro(fornecedor,tipoFrete);
 		
 		result.use(json()).from(fornecedorMateriais).include("material").serialize();
+		
+		result.nothing();
+		
+	}
+	
+	public void loadModalidades(TipoPagamentoEnum tipoPagamento) throws Exception{
+		
+		
+		Map<String, String> mapa = new HashMap<String, String>();
+		if (tipoPagamento == TipoPagamentoEnum.V){
+			mapa.put(FormaPagamentoEnum.D.getName(), FormaPagamentoEnum.D.getDescricao());
+			mapa.put(FormaPagamentoEnum.C.getName(), FormaPagamentoEnum.C.getDescricao());
+			mapa.put(FormaPagamentoEnum.T.getName(), FormaPagamentoEnum.T.getDescricao());
+			mapa.put(FormaPagamentoEnum.B.getName(), FormaPagamentoEnum.B.getDescricao());
+			
+			
+		}else{
+			
+			mapa.put(FormaPagamentoEnum.C.getName(), FormaPagamentoEnum.C.getDescricao());
+			mapa.put(FormaPagamentoEnum.T.getName(), FormaPagamentoEnum.T.getDescricao());
+			mapa.put(FormaPagamentoEnum.B.getName(), FormaPagamentoEnum.B.getDescricao());
+		}
+		
+		result.use(json()).from(mapa).serialize();
+		
+		result.nothing();
+		
+	}
+	
+	
+	public void loadContas(TipoPagamentoEnum tipoPagamento, FormaPagamentoEnum formaPagamento) throws Exception{
+		
+	
+		List<Conta> lista = null;
+		
+		//Carregar as contas financeiras apenas quando for despesa paga a vista
+		if (tipoPagamento == TipoPagamentoEnum.V){
+			// se for pagamento em dinheiro carregar contas de fundo fixo
+			if (formaPagamento == FormaPagamentoEnum.D){
+				lista = (List<Conta>)contaDao.obterContasFundoFixo();
+				
+			}
+			else if(formaPagamento == FormaPagamentoEnum.B){
+				lista = (List<Conta>)contaDao.obterContasFinanceiras();
+			}
+			//se nao for pagamento em dinheiro carregar as contas bancárias
+			else{
+				
+					
+					lista = (List<Conta>)contaDao.obterContasBancarias();
+				
+			}
+		}else if(formaPagamento == FormaPagamentoEnum.C){
+			lista = (List<Conta>)contaDao.obterContasBancarias();
+		}
+		
+		if (lista != null)
+			result.use(json()).from(lista).serialize();
 		
 		result.nothing();
 		
