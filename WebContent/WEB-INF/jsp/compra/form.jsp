@@ -719,7 +719,10 @@
 		</div>
 		<div class="panel panel-default">
 		  	<div class="panel-body">
-				<h4>Faturamento</h4>
+				<h4>Faturamento</h4> ${empty fornecedor.conta ? '': ' - Valor a ser abatido no saldo de adiantamentos do fornecedor' }
+				<c:if test="${empty fornecedor.conta }">
+				
+				
 				<div class="row">
 					<div class="col-md-2">
 						<label for="optPagamentoAVista">Forma Pagamento:</label><br/>
@@ -820,8 +823,15 @@
 			</tbody>
 			</table>
 			</div>
-			
-      	
+			</c:if>
+      		<c:if test="${not empty fornecedor.conta }">
+      			<div class="row">
+      				<div class="col-md-8">
+      				<label>Saldo Atual:</label>
+      				<label><fmt:formatNumber value="${fornecedor.conta.saldo}" minFractionDigits="2" type="currency" /></label>
+      				</div>
+      			</div>
+      		</c:if>
 		        	
 		        	
 	        

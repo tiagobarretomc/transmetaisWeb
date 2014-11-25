@@ -11,16 +11,20 @@ import java.util.Map;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.transmetais.bean.CentroAplicacao;
 import br.com.transmetais.bean.Compra;
 import br.com.transmetais.bean.Conta;
 import br.com.transmetais.bean.ContaAPagarCompra;
+import br.com.transmetais.bean.ContaContabil;
 import br.com.transmetais.bean.Estoque;
 import br.com.transmetais.bean.Fornecedor;
 import br.com.transmetais.bean.FornecedorMaterial;
 import br.com.transmetais.bean.ItemCompra;
 import br.com.transmetais.bean.Material;
+import br.com.transmetais.dao.CentroAplicacaoDAO;
 import br.com.transmetais.dao.CompraDAO;
 import br.com.transmetais.dao.ContaAPagarDAO;
+import br.com.transmetais.dao.ContaContabilDAO;
 import br.com.transmetais.dao.ContaDAO;
 import br.com.transmetais.dao.EstoqueDAO;
 import br.com.transmetais.dao.FornecedorDAO;
@@ -44,9 +48,11 @@ public class CompraController {
 	private EstoqueDAO estoqueDAO;
 	private MaterialDAO materialDao;
 	private ContaDAO contaDao;
+	private ContaContabilDAO contaContabilDAO;
+	private CentroAplicacaoDAO centroAplicacaoDAO;
 	
 	public CompraController(Result result, CompraDAO compraDao, FornecedorDAO fornecedorDao, FornecedorMaterialDAO fornecedorMaterialDao, ContaAPagarDAO contaAPagarDAO, 
-			ContaDAO contaDao, MaterialDAO materialDao, EstoqueDAO estoqueDAO) {
+			ContaDAO contaDao, MaterialDAO materialDao, EstoqueDAO estoqueDAO,ContaContabilDAO contaContabilDAO, CentroAplicacaoDAO centroAplicacaoDAO) {
 		this.dao = compraDao;
 		this.fornecedorDao = fornecedorDao;
 		this.fornecedorMaterialDao = fornecedorMaterialDao;
@@ -55,6 +61,8 @@ public class CompraController {
 		this.materialDao = materialDao;
 		this.estoqueDAO = estoqueDAO;
 		this.contaDao = contaDao;
+		this.contaContabilDAO = contaContabilDAO;
+		this.centroAplicacaoDAO = centroAplicacaoDAO;
 	}
 	
 	//tela de listagem de compras
@@ -221,14 +229,17 @@ public class CompraController {
 		if (compra != null && compra.getId() != null && compra.getId()>0){
 			try {
 				compra = dao.findById(compra.getId());
-				//System.out.println(fornecedor.getInformacoesBancarias());
+				//System.out.println(fornecedor.getInformacoesBancarias());a
+				
+				
 				
 			} catch (DAOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}else{
-			compra.setFornecedor(fornecedorDao.findById(compra.getFornecedor().getId()));
+			if(compra != null && compra.getFornecedor()!=null && compra.getFornecedor().getId()!=null)
+				compra.setFornecedor(fornecedorDao.findById(compra.getFornecedor().getId()));
 		}
 		
 		if(compra.getItens() != null)
@@ -250,6 +261,16 @@ public class CompraController {
 			
 			//this.result.use(Results.json()).from(fornecedorMateriais, "formulario").serialize();
 		}
+		
+		List<ContaContabil> listaContas;
+		List<CentroAplicacao> listaCentroAplicacao;
+		
+		
+		listaContas = contaContabilDAO.findAll();
+		listaCentroAplicacao = centroAplicacaoDAO.findAll();
+		
+		result.include("contas", listaContas);
+		result.include("centros", listaCentroAplicacao);
 		
 		
 		
