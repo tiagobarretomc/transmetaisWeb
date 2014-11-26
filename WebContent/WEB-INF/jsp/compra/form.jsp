@@ -235,7 +235,7 @@
         
         
         $("#optPagamentoAVista").click(function(){
-    		alert('teste');
+    		
 	    	$('#copra\\.dataVencimento').attr('disabled', true);
 	    	$("#compra\\.conta\\.id").attr('disabled', false);
 	    	$("#qtdParcelas").attr('readonly', true);
@@ -557,7 +557,7 @@
 	<h3>Dados da Compra</h3>
 	<form action="<c:url value='/compra/salvar'/>" id="formCompra" name="formCompra" method="post">
 		<input type="hidden" id="compraId" name="compra.id" value="${compra.id}"/>
-		<input type="hidden" id="contaId" name="compra.conta.id" value="${compra.conta.id}"/>
+		
 		<input type="hidden" id="fornecedor" name="compra.fornecedor.id" value="${fornecedor.id}"/>
 		
 		<div class="row">
