@@ -3,30 +3,51 @@ package br.com.transmetais.controller;
 import static br.com.caelum.vraptor.view.Results.json;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.transmetais.bean.CentroAplicacao;
+import br.com.transmetais.bean.ChequeEmitidoCompra;
 import br.com.transmetais.bean.Compra;
+import br.com.transmetais.bean.Conta;
 import br.com.transmetais.bean.ContaAPagarCompra;
+import br.com.transmetais.bean.ContaAPagarDespesa;
+import br.com.transmetais.bean.ContaContabil;
 import br.com.transmetais.bean.Estoque;
 import br.com.transmetais.bean.Fornecedor;
 import br.com.transmetais.bean.FornecedorMaterial;
 import br.com.transmetais.bean.ItemCompra;
 import br.com.transmetais.bean.Material;
+import br.com.transmetais.bean.MovimentacaoCompra;
+import br.com.transmetais.bean.ParcelaCompra;
+import br.com.transmetais.bean.ParcelaDespesa;
+import br.com.transmetais.dao.CentroAplicacaoDAO;
+import br.com.transmetais.dao.ChequeEmitidoDAO;
 import br.com.transmetais.dao.CompraDAO;
 import br.com.transmetais.dao.ContaAPagarDAO;
+import br.com.transmetais.dao.ContaContabilDAO;
 import br.com.transmetais.dao.ContaDAO;
 import br.com.transmetais.dao.EstoqueDAO;
 import br.com.transmetais.dao.FornecedorDAO;
 import br.com.transmetais.dao.FornecedorMaterialDAO;
 import br.com.transmetais.dao.MaterialDAO;
+import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.commons.DAOException;
+import br.com.transmetais.type.FormaPagamentoEnum;
+import br.com.transmetais.type.SituacaoChequeEnum;
 import br.com.transmetais.type.StatusCompraEnum;
+import br.com.transmetais.type.StatusDespesaEnum;
 import br.com.transmetais.type.StatusMovimentacaoEnum;
 import br.com.transmetais.type.TipoFreteEnum;
+import br.com.transmetais.type.TipoOperacaoEnum;
+import br.com.transmetais.type.TipoPagamentoEnum;
 
 @Resource
 public class CompraController {
@@ -38,9 +59,15 @@ public class CompraController {
 	private ContaAPagarDAO contaAPagarDAO;
 	private EstoqueDAO estoqueDAO;
 	private MaterialDAO materialDao;
+	private ContaDAO contaDao;
+	private ContaContabilDAO contaContabilDAO;
+	private CentroAplicacaoDAO centroAplicacaoDAO;
+	private ChequeEmitidoDAO chequeEmitidoDAO;
+	private MovimentacaoDAO movimentacaoDAO;
 	
 	public CompraController(Result result, CompraDAO compraDao, FornecedorDAO fornecedorDao, FornecedorMaterialDAO fornecedorMaterialDao, ContaAPagarDAO contaAPagarDAO, 
-			ContaDAO contaDao, MaterialDAO materialDao, EstoqueDAO estoqueDAO) {
+			ContaDAO contaDao, MaterialDAO materialDao, EstoqueDAO estoqueDAO,ContaContabilDAO contaContabilDAO, CentroAplicacaoDAO centroAplicacaoDAO,
+			ChequeEmitidoDAO chequeEmitidoDAO, MovimentacaoDAO movimentacaoDAO) {
 		this.dao = compraDao;
 		this.fornecedorDao = fornecedorDao;
 		this.fornecedorMaterialDao = fornecedorMaterialDao;
@@ -48,6 +75,11 @@ public class CompraController {
 		this.result = result;
 		this.materialDao = materialDao;
 		this.estoqueDAO = estoqueDAO;
+		this.contaDao = contaDao;
+		this.contaContabilDAO = contaContabilDAO;
+		this.centroAplicacaoDAO = centroAplicacaoDAO;
+		this.chequeEmitidoDAO = chequeEmitidoDAO;
+		this.movimentacaoDAO = movimentacaoDAO;
 	}
 	
 	//tela de listagem de compras
@@ -141,7 +173,80 @@ public class CompraController {
 	public void salvar(Compra compra) {
 		try {
 			
-			compra.setConta(null);
+			if(compra.getModalidadePagamento() == FormaPagamentoEnum.C && compra.getParcelas() == null){
+				if(compra.getChequeEmitido() != null){
+					ChequeEmitidoCompra cheque = new ChequeEmitidoCompra();
+					cheque.setNumeroCheque(compra.getChequeEmitido().getNumeroCheque());
+					cheque.setConta(compra.getConta());
+					cheque.setData(compra.getDataCompetencia());
+					cheque.setCompra(compra);
+					cheque.setValor(compra.getValor());
+					cheque.setStatus(SituacaoChequeEnum.A);
+					cheque.setDataStatus(new Date());
+					compra.setChequeEmitido(cheque);
+					
+					//chequeEmitidoDao.addEntity(cheque);
+					
+				}
+			}else if(compra.getModalidadePagamento() == FormaPagamentoEnum.C && compra.getParcelas() != null){
+				compra.setChequeEmitidoList(null);
+			}
+			
+			
+			compra.setStatus(StatusCompraEnum.A);
+			if(compra.getParcelas()!=null){
+				Collections.sort(compra.getParcelas(), new Comparator<ParcelaCompra>() {
+					  public int compare(ParcelaCompra o1, ParcelaCompra o2) {
+					      return o1.getDataVencimento().compareTo(o2.getDataVencimento());
+					  }
+				});
+			}
+			int numero =1;
+			
+			if (compra.getParcelas() != null){
+				ChequeEmitidoCompra cheque = null;
+				//Atualizando a despesa de cada parcela 
+				for (ParcelaCompra parcela : compra.getParcelas()) {
+					parcela.setCompra(compra);
+					parcela.setStatus(StatusDespesaEnum.A);
+					parcela.setNumero(numero);
+					numero++;
+					
+					
+					if(compra.getModalidadePagamento() == FormaPagamentoEnum.C && compra.getParcelas() != null){
+						cheque = new ChequeEmitidoCompra();
+						cheque.setNumeroCheque(parcela.getChequeEmitido().getNumeroCheque());
+						cheque.setValor(parcela.getChequeEmitido().getValor());
+						cheque.setConta(compra.getConta());
+						cheque.setData(parcela.getDataVencimento());
+						cheque.setCompra(compra);
+						cheque.setValor(parcela.getValor());
+						cheque.setStatus(SituacaoChequeEnum.A);
+						cheque.setParcela(parcela);
+						cheque.setDataStatus(new Date());
+						parcela.setChequeEmitido(cheque);
+						
+					}
+				}
+				
+			}
+			
+			//Quando se tratar de despesa/compra a vista a data de vencimento é a mesma data da competencia
+			if (compra.getFormaPagamento() == TipoPagamentoEnum.V){
+				compra.setDataVencimento(compra.getDataCompetencia());
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			//compra.setConta(null);
 			for (ItemCompra item : compra.getItens()) {
 				item.setCompra(compra);
 				
@@ -157,6 +262,123 @@ public class CompraController {
 				//compra.setConta(fornecedorMaterial.getFornecedor().getConta());
 				compra.setStatus(StatusCompraEnum.A);
 				dao.addEntity(compra);
+				
+				if (compra.getModalidadePagamento() == FormaPagamentoEnum.C && compra.getChequeEmitido() != null){
+					try{
+						chequeEmitidoDAO.addEntity(compra.getChequeEmitido());
+					}catch(DAOException ex){
+						ex.printStackTrace();
+						result.include("erro", ex.getMessage());
+					}
+				}
+				
+				//Caso se trate de pagamento a Vista
+				if (compra.getFormaPagamento() == TipoPagamentoEnum.V ){
+					
+					//Caso o pagamento for em cheque. o saldo só devera ser atualizado e a movimentacao gerada quando o cheque tiver a sua compensação confirmada.
+					if(compra.getModalidadePagamento() != FormaPagamentoEnum.C){
+						
+						//Setando os dados da Movimentacao.
+						MovimentacaoCompra movimentacao = new MovimentacaoCompra();
+						movimentacao.setCompra(compra);
+						movimentacao.setData(compra.getDataCompetencia());
+						movimentacao.setTipoOperacao(TipoOperacaoEnum.D);
+						movimentacao.setValor(compra.getValor());
+						movimentacao.setConta(compra.getConta());
+						
+						
+						try {
+							
+							//inserindo a movimentacao no vanco de dados
+							movimentacaoDAO.addEntity(movimentacao);
+							
+							//Obter a conta que sera debitado o valor da despesa
+							Conta conta = contaDao.findById(compra.getConta().getId());
+							
+							//Atualizando o Saldo da conta subtrainda o valor da despesa
+							conta.setSaldo(conta.getSaldo().subtract(compra.getValor()));
+							
+							//persistindo na base de dados
+							contaDao.updateEntity(conta);
+							
+						} catch (DAOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					
+					
+					
+				}
+				
+				
+				// Caso a forma de pagamento for à prazo
+				else{
+					
+					//Verificando se trata-se de uma compra a prazo parcelada.
+					if(compra.getParcelas() != null && compra.getParcelas().size()>0){
+						
+						for (ParcelaCompra parcela : compra.getParcelas()) {
+							
+							ContaAPagarCompra contaApagar = new ContaAPagarCompra();
+							contaApagar.setParcela(parcela);
+							if(compra.getModalidadePagamento() == FormaPagamentoEnum.C){
+								contaApagar.setConta(compra.getConta());
+							}else{
+								
+								contaApagar.setConta(null);
+							}
+							contaApagar.setDataPrevista(parcela.getDataVencimento());
+							contaApagar.setDescricao("Parcela da Compra - " + compra.getId().toString());
+							contaApagar.setStatus(StatusMovimentacaoEnum.A);
+							contaApagar.setValor(parcela.getValor());
+							contaApagar.setCompra(compra);
+							//contaApagar.setModalidadePagamento(bean.getModalidadePagamento());
+							
+							try {
+								contaAPagarDAO.addEntity(contaApagar);
+							} catch (DAOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							
+						}
+						
+					}
+					//Caso a compra for à prazo e não for parcelada.
+					else{
+						
+						ContaAPagarCompra conta = new ContaAPagarCompra();
+						conta.setDataPrevista(compra.getDataVencimento());
+						conta.setStatus(StatusMovimentacaoEnum.A);
+						conta.setValor(compra.getValor());
+						conta.setCompra(compra);
+						conta.setDescricao("Compra " + compra.getId() );
+						//Se nao há parcelas o campo fica null
+						conta.setParcela(null);
+						//conta.setModalidadePagamento(bean.getModalidadePagamento());
+						
+						try {
+							contaAPagarDAO.addEntity(conta);
+						} catch (DAOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+					}
+					
+				}
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
 				
 				ContaAPagarCompra contaPagar = new ContaAPagarCompra();
 				contaPagar.setCompra(compra);
@@ -214,14 +436,17 @@ public class CompraController {
 		if (compra != null && compra.getId() != null && compra.getId()>0){
 			try {
 				compra = dao.findById(compra.getId());
-				//System.out.println(fornecedor.getInformacoesBancarias());
+				//System.out.println(fornecedor.getInformacoesBancarias());a
+				
+				
 				
 			} catch (DAOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}else{
-			compra.setFornecedor(fornecedorDao.findById(compra.getFornecedor().getId()));
+			if(compra != null && compra.getFornecedor()!=null && compra.getFornecedor().getId()!=null)
+				compra.setFornecedor(fornecedorDao.findById(compra.getFornecedor().getId()));
 		}
 		
 		if(compra.getItens() != null)
@@ -244,6 +469,16 @@ public class CompraController {
 			//this.result.use(Results.json()).from(fornecedorMateriais, "formulario").serialize();
 		}
 		
+		List<ContaContabil> listaContas;
+		List<CentroAplicacao> listaCentroAplicacao;
+		
+		
+		listaContas = contaContabilDAO.findAll();
+		listaCentroAplicacao = centroAplicacaoDAO.findAll();
+		
+		result.include("contas", listaContas);
+		result.include("centros", listaCentroAplicacao);
+		
 		
 		
 		return compra;
@@ -255,6 +490,64 @@ public class CompraController {
 		List<FornecedorMaterial> fornecedorMateriais = fornecedorMaterialDao.obterAtivosPorFiltro(fornecedor,tipoFrete);
 		
 		result.use(json()).from(fornecedorMateriais).include("material").serialize();
+		
+		result.nothing();
+		
+	}
+	
+	public void loadModalidades(TipoPagamentoEnum tipoPagamento) throws Exception{
+		
+		
+		Map<String, String> mapa = new HashMap<String, String>();
+		if (tipoPagamento == TipoPagamentoEnum.V){
+			mapa.put(FormaPagamentoEnum.D.getName(), FormaPagamentoEnum.D.getDescricao());
+			mapa.put(FormaPagamentoEnum.C.getName(), FormaPagamentoEnum.C.getDescricao());
+			mapa.put(FormaPagamentoEnum.T.getName(), FormaPagamentoEnum.T.getDescricao());
+			mapa.put(FormaPagamentoEnum.B.getName(), FormaPagamentoEnum.B.getDescricao());
+			
+			
+		}else{
+			
+			mapa.put(FormaPagamentoEnum.C.getName(), FormaPagamentoEnum.C.getDescricao());
+			mapa.put(FormaPagamentoEnum.T.getName(), FormaPagamentoEnum.T.getDescricao());
+			mapa.put(FormaPagamentoEnum.B.getName(), FormaPagamentoEnum.B.getDescricao());
+		}
+		
+		result.use(json()).from(mapa).serialize();
+		
+		result.nothing();
+		
+	}
+	
+	
+	public void loadContas(TipoPagamentoEnum tipoPagamento, FormaPagamentoEnum formaPagamento) throws Exception{
+		
+	
+		List<Conta> lista = null;
+		
+		//Carregar as contas financeiras apenas quando for despesa paga a vista
+		if (tipoPagamento == TipoPagamentoEnum.V){
+			// se for pagamento em dinheiro carregar contas de fundo fixo
+			if (formaPagamento == FormaPagamentoEnum.D){
+				lista = (List<Conta>)contaDao.obterContasFundoFixo();
+				
+			}
+			else if(formaPagamento == FormaPagamentoEnum.B){
+				lista = (List<Conta>)contaDao.obterContasFinanceiras();
+			}
+			//se nao for pagamento em dinheiro carregar as contas bancárias
+			else{
+				
+					
+					lista = (List<Conta>)contaDao.obterContasBancarias();
+				
+			}
+		}else if(formaPagamento == FormaPagamentoEnum.C){
+			lista = (List<Conta>)contaDao.obterContasBancarias();
+		}
+		
+		if (lista != null)
+			result.use(json()).from(lista).serialize();
 		
 		result.nothing();
 		

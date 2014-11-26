@@ -40,11 +40,7 @@ public class Compra {
 	@ManyToOne
 	@JoinColumn(name="fornecedor_id")
 	private Fornecedor fornecedor;
-	
-	//private BigDecimal quantidade;
 	private BigDecimal valor;
-	//private BigDecimal preco;
-	
 	@ManyToOne
 	@JoinColumn(name="conta_id")
 	private Conta conta;
@@ -77,8 +73,16 @@ public class Compra {
 	private Date dataPagamento;
 	@Column(name="data_cancelamento")
 	private Date dataCancelamento;
+	@Column(name="data_competencia")
+	private Date dataCompetencia;
 	@OneToMany(mappedBy="compra", fetch = FetchType.LAZY, cascade = CascadeType.ALL,orphanRemoval=true)
 	private List<ParcelaCompra> parcelas;
+	@ManyToOne
+	@JoinColumn(name="centro_aplicacao_id")
+	private CentroAplicacao centroAplicacao;
+	@ManyToOne
+	@JoinColumn(name="conta_contabil_id")
+	private ContaContabil contaContabil;
 	
 	public Long getId() {
 		return id;
@@ -98,24 +102,14 @@ public class Compra {
 	public void setFornecedorMaterial(FornecedorMaterial fornecedorMaterial) {
 		this.fornecedorMaterial = fornecedorMaterial;
 	}
-//	public BigDecimal getQuantidade() {
-//		return quantidade;
-//	}
-//	public void setQuantidade(BigDecimal quantidade) {
-//		this.quantidade = quantidade;
-//	}
+
 	public BigDecimal getValor() {
 		return valor;
 	}
 	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
-//	public BigDecimal getPreco() {
-//		return preco;
-//	}
-//	public void setPreco(BigDecimal preco) {
-//		this.preco = preco;
-//	}
+
 	public Conta getConta() {
 		return conta;
 	}
@@ -227,4 +221,25 @@ public class Compra {
 	public void setDataCancelamento(Date dataCancelamento) {
 		this.dataCancelamento = dataCancelamento;
 	}
+	public CentroAplicacao getCentroAplicacao() {
+		return centroAplicacao;
+	}
+	public void setCentroAplicacao(CentroAplicacao centroAplicacao) {
+		this.centroAplicacao = centroAplicacao;
+	}
+	public ContaContabil getContaContabil() {
+		return contaContabil;
+	}
+	public void setContaContabil(ContaContabil contaContabil) {
+		this.contaContabil = contaContabil;
+	}
+	public Date getDataCompetencia() {
+		return dataCompetencia;
+	}
+	public void setDataCompetencia(Date dataCompetencia) {
+		this.dataCompetencia = dataCompetencia;
+	}
+	
+	
+	
 }
