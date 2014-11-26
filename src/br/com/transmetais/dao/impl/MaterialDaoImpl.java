@@ -5,8 +5,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 
 import br.com.caelum.vraptor.ioc.Component;
-import br.com.transmetais.bean.Compra;
-import br.com.transmetais.bean.GrupoMaterial;
 import br.com.transmetais.bean.Material;
 import br.com.transmetais.dao.MaterialDAO;
 import br.com.transmetais.dao.commons.CrudDAOJPA;

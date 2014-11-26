@@ -7,7 +7,7 @@
     	
     	
     	$("#btnAdicionar").click(function(){
-    		document.location.href = "${pageContext.request.contextPath}/unidadeMedida/novo";
+    		document.location.href = "${pageContext.request.contextPath}/cp/novo";
     	});
     	
     	
@@ -16,7 +16,7 @@
 <div class="container">
 		
         <br/>
-		<h2>Unidade de Medidas</h2>
+		<h2>Comprovante de Pesagem</h2>
 		<br>
 		
 		<button type="button" id="btnAdicionar" class="btn btn-default btn-md">
@@ -31,28 +31,32 @@
 		<thead>
 	<tr>
 		<th ></th>
-		<th >Código</th>
-		<th >Sigla</th>
-		<th >Descrição</th>
+		<th >Data de emissão</th>
+		<th >Número do ticket</th>
+		<th >Placa do veículo</th>
+		<th >Peso Líquido</th>
 		
 	</tr>
 	</thead>
 	<tbody>
-		<c:forEach var="unidade" items="${beanList}" varStatus="contador">
+		<c:forEach var="comprovantePesagem" items="${beanList}" varStatus="contador">
 	
 		<tr>
 			<td>
-				<a href="<c:url value='/unidadeMedida/'/>${unidade.id}"><span title="Alterar"  class="glyphicon glyphicon-edit"></span></a>
-				<a href="<c:url value='/unidadeMedida/remove/'/>${unidade.id}"><span title="Excluir" class="glyphicon glyphicon-remove"></span></a> 
+				<a href="<c:url value='/cp/'/>${comprovantePesagem.id}"><span title="Alterar"  class="glyphicon glyphicon-edit"></span></a>
+				<a href="<c:url value='/cp/remove/'/>${comprovantePesagem.id}"><span title="Excluir" class="glyphicon glyphicon-remove"></span></a> 
 			</td>
 			<td>
-				${unidade.codigo} 
+				${comprovantePesagem.dataEmissao} 
 			</td>
 			<td>
-				${unidade.sigla} 
+				${comprovantePesagem.numeroTicket} 
 			</td>
 			<td>
-				${unidade.descricao} 
+				${comprovantePesagem.placaVeiculo} 
+			</td>
+			<td>
+				${comprovantePesagem.pesoLiquido} 
 			</td>
 			
 		</tr>

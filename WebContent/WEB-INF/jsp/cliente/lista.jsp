@@ -15,7 +15,6 @@
         });
     	
 		$("#btnFiltrar").click(function(){
-			alert('aqui');
     		$("#divTabela").load( '<c:url value="/cliente/loadListaCliente"/>', $('#formCliente').serialize() );
     	});
     	

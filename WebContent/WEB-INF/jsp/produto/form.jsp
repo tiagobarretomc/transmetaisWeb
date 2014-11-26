@@ -19,7 +19,7 @@
         
         $("#btnAdicionarRegra").click(function(){
     		var strLinha = '<tr id="regra_' + qtdRegras + '">';
-    		strLinha += '<td style="vertical-align: middle;"><span title="Excluir" class="glyphicon glyphicon-remove" onclick="removerRegra(' + qtdRegras +'"></span></td>';
+    		strLinha += '<td style="vertical-align: middle;"><span title="Excluir" class="glyphicon glyphicon-remove" onclick="removerRegra(' + qtdRegras +')"></span></td>';
     		strLinha += '<td style="max-width:130px"><input type="hidden" id="id_' + qtdRegras + '" name="bean.regrasTributacao[' + qtdRegras + '].id"/>';
     		strLinha += '<select id="tipoOperacao_' + qtdRegras + '" name="bean.regrasTributacao[' + qtdRegras + '].tipoOperacao.id" class="selectpicker required form-control" data-live-search="true"></select></td>';
     		strLinha += '<td style="max-width:130px"><select id="origemMercadoria_' + qtdRegras + '" name="bean.regrasTributacao[' + qtdRegras + '].origemMercadoria.id" class="selectpicker required form-control" data-live-search="true"></select></td>';

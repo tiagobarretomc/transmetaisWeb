@@ -25,18 +25,18 @@
 	<div class="panel panel-default">
 	<div class="panel-body">
 	<form action="<c:url value='/unidade/add'/>" id="formUnidade" name="formUnidade" method="post">
-		<input type="hidden" id="unidadelId" name="unidade.id" value="${unidade.id}"/>
+		<input type="hidden" id="unidadelId" name="bean.id" value="${bean.id}"/>
 		
 		
 		<div class="row">
         	<div class="col-md-4">
-        		<label for="material.ncm">Código:</label>
-        		<input name="unidade.codigo" id="unidade.codigo" value="${unidade.codigo}" class="form-control required" size="8" maxlength="4"/>
+        		<label for="bean.codigo">Código:</label>
+        		<input name="bean.codigo" id="bean.codigo" value="${bean.codigo}" class="form-control required" size="8" maxlength="4"/>
         	</div>
         	
         	<div class="col-md-4">
-        		<label for="material.descricao">Descrição:</label>
-        		<input name="unidade.descricao" id="unidade.descricao" value="${unidade.descricao}" class="form-control required" size="45" maxlength="45"/>
+        		<label for="bean.descricao">Descrição:</label>
+        		<input name="bean.descricao" id="bean.descricao" value="${bean.descricao}" class="form-control required" size="45" maxlength="45"/>
         	</div>
       	</div>
 		

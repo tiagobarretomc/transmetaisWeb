@@ -163,7 +163,7 @@ form {
 							<li class="dropdown"><a href="#" class="dropdown-toggle"
 								data-toggle="dropdown">Cadastros <b class="caret"></b></a>
 								<ul class="dropdown-menu">
-									<li><a href="<c:url value='/unidade/'/>">Unidades da
+									<li><a href="<c:url value='/unidade/lista'/>">Unidades da
 											Transmetais</a></li>
 									<li><a href="<c:url value='/funcionario/'/>">Funcionários</a></li>
 									<li class="divider"></li>
@@ -173,7 +173,7 @@ form {
 									<li class="divider"></li>
 									<li><a href="<c:url value='/material/'/>">Material</a></li>
 									<li><a href="<c:url value='/produto/lista'/>">Produto</a></li>
-									<li><a href="<c:url value='/unidadeMedida/'/>">Unidade
+									<li><a href="<c:url value='/unidadeMedida/lista'/>">Unidade
 											de Medida</a></li>
 									<li><a href="<c:url value='/grupoMaterial/'/>">Grupo
 											de Material</a></li>
@@ -192,6 +192,8 @@ form {
             <li class="dropdown">
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Compras <b class="caret"></b></a>
 	          <ul class="dropdown-menu">
+	          	<li><a href="<c:url value='/cpe/lista'/>">Comprovante de pesagem de Entrada</a></li>
+	          	<li><a href="<c:url value='/cps/lista'/>">Comprovante de pesagem de Saída</a></li>
 	          	 <li><a href="<c:url value='/compra/'/>">Compra de Metais Ferrosos e Não Ferrosos</a></li>
 	          	<li><a href="<c:url value='/adiantamento/'/>">Adiantamento a Fornecedores</a></li>
 	          	

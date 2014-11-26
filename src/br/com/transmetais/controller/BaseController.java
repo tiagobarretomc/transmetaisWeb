@@ -36,11 +36,16 @@ public abstract class BaseController<E, T extends CrudDAO<E>> {
 	public void remove(Long id) throws DAOException {
 		E bean = dao.findById(id);
 		String msg = null;
-		if (id != null && id>0){
-			dao.removeEntity(bean);
-			msg = "Registro excluído com sucesso." ;
+		if (bean != null){
+			try{
+				dao.removeEntity(bean);
+				msg = "Registro excluído com sucesso." ;
+				result.include("mensagem", msg);
+			}catch(DAOException e){
+				result.include("erro", e.getMessage());
+
+			}
 		}
-		result.include("mensagem", msg);
 		result.forwardTo(this.getClass()).lista();
 	  }
 

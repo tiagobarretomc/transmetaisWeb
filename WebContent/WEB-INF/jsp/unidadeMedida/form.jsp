@@ -25,21 +25,21 @@
 	<div class="panel panel-default">
 	<div class="panel-body">
 	<form action="<c:url value='/unidadeMedida/add'/>" id="formUnidade" name="formUnidade" method="post">
-		<input type="hidden" id="unidadelId" name="unidade.id" value="${unidadeMedida.id}"/>
+		<input type="hidden" id="unidadelId" name="bean.id" value="${unidadeMedida.id}"/>
 		
 		
 		<div class="row">
         	<div class="col-md-4">
-        		<label for="material.ncm">Código:</label>
-        		<input name="unidade.codigo" id="unidade.codigo" value="${unidadeMedida.codigo}" class="form-control required" size="8" maxlength="4"/>
+        		<label for="bean.codigo">Código:</label>
+        		<input name="bean.codigo" id="bean.codigo" value="${unidadeMedida.codigo}" class="form-control required" size="8" maxlength="4"/>
         	</div>
         	<div class="col-md-4">
-        		<label for="material.sigla">Sigla:</label>
-        		<input name="unidade.sigla" id="unidade.sigla" value="${unidadeMedida.sigla}" class="form-control required" size="4" maxlength="4"/>
+        		<label for="bean.sigla">Sigla:</label>
+        		<input name="bean.sigla" id="bean.sigla" value="${unidadeMedida.sigla}" class="form-control required" size="4" maxlength="4"/>
         	</div>
         	<div class="col-md-4">
-        		<label for="material.descricao">Descrição:</label>
-        		<input name="unidade.descricao" id="unidade.descricao" value="${unidadeMedida.descricao}" class="form-control required" size="45" maxlength="45"/>
+        		<label for="bean.descricao">Descrição:</label>
+        		<input name="bean.descricao" id="bean.descricao" value="${unidadeMedida.descricao}" class="form-control required" size="45" maxlength="45"/>
         	</div>
       	</div>
 		

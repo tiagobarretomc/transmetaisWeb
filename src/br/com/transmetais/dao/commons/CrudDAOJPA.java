@@ -7,12 +7,14 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import javax.transaction.RollbackException;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
+import org.hibernate.exception.ConstraintViolationException;
 
 
 public class CrudDAOJPA<T> implements CrudDAO<T> {
@@ -132,14 +134,30 @@ public class CrudDAOJPA<T> implements CrudDAO<T> {
             entity = manager.merge(entity);
             manager.remove(entity);
             manager.getTransaction().commit();
-        } catch (Exception e) {
-            manager.getTransaction().rollback();
+            close(manager);
+        }catch (Exception e) {
+        	if(isConstraintException(e)){
+        		throw new DAOException("O registro não pode ser excluído pois está sendo utilizado no sistema.");
+        	}	
+        	manager.getTransaction().rollback();
+        	close(manager);
             throw new DAOException(e);
-        } finally {
-        	if (manager != null) {
-        		manager.close();
-        	}
         }
+	}
+	
+	private void close(EntityManager manager){
+		if (manager != null && manager.isOpen()) {
+    		manager.close();
+    	}
+	}
+	
+	private boolean isConstraintException(Throwable e){
+		if(e == null) return false;
+		if(e.getCause() instanceof ConstraintViolationException){
+			return true;
+		}else{
+			return isConstraintException(e.getCause());
+		}
 	}
 	
 	public void removeEntity(T entity, EntityManager manager) throws DAOException {

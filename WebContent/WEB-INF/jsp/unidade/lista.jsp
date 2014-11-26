@@ -37,18 +37,18 @@
 	</tr>
 	</thead>
 	<tbody>
-		<c:forEach var="unidade" items="${unidades}" varStatus="contador">
+		<c:forEach var="bean" items="${beanList}" varStatus="contador">
 	
 		<tr>
 			<td>
-				<a href="<c:url value='/unidade/'/>${unidade.id}"><span title="Alterar"  class="glyphicon glyphicon-edit"></span></a>
-				<a href="<c:url value='/unidade/remove/'/>${unidade.id}"><span title="Excluir" class="glyphicon glyphicon-remove"></span></a> 
+				<a href="<c:url value='/unidade/'/>${bean.id}"><span title="Alterar"  class="glyphicon glyphicon-edit"></span></a>
+				<a href="<c:url value='/unidade/remove/'/>${bean.id}"><span title="Excluir" class="glyphicon glyphicon-remove"></span></a> 
 			</td>
 			<td>
-				${unidade.codigo} 
+				${bean.codigo} 
 			</td>
 			<td>
-				${unidade.descricao} 
+				${bean.descricao} 
 			</td>
 			
 		</tr>

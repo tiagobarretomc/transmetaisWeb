@@ -22,31 +22,31 @@ function carregarCombo(obj, list, selecionado) {
 	$(obj).selectpicker({});
 };
 function initFields() {
-	$(".percent").priceFormat({
-		prefix : '',
-		centsSeparator : ',',
-		thousandsSeparator : '.',
-		limit : 5
-
-	});
-	$(".valor").priceFormat({
-		prefix : '',
-		centsSeparator : ',',
-		thousandsSeparator : '.',
-		limit : 12
-
-	});
-	$('.selectpicker').selectpicker();
-	
-	$('.datepicker').datepicker({
-   		language : 'pt-BR',
-   		autoclose : true,
-   		format : 'dd/mm/yyyy'
-   	 	
-   	}); 
-	
-	$('.datepicker').mask("99/99/9999");
-	
+	try{
+		$(".percent").priceFormat({
+			prefix : '',
+			centsSeparator : ',',
+			thousandsSeparator : '.',
+			limit : 5
+			
+		});
+		$(".valor").priceFormat({
+			prefix : '',
+			centsSeparator : ',',
+			thousandsSeparator : '.',
+			limit : 12
+			
+		});
+		$('.selectpicker').selectpicker();
+		$('.datepicker').mask("99/99/9999");
+		$('.datepicker').datepicker({
+	   		language : 'pt-BR',
+	   		autoclose : true,
+	   		format : 'dd/mm/yyyy'
+	   	 	
+	   	}); 
+	}catch(err) {
+	}
 }
 
 function float2moeda(num) {
