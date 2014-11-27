@@ -5,27 +5,7 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		
-		$.validator.addMethod( "dateLessThanToday", function( value, element ) {
-	   	    /* ... regra de validação ... */
-	   	    var isValid = false;
-	   	    
-	   	   var dataPagamento = Date.parseExact(value,'dd/MM/yyyy');
-	   	   var hoje = Date.today();
-	   	  
-	   	  
-	   	 	if(dataPagamento.compareTo(hoje) <= 0){
-	   	 		return true;
-	   	 	}else{
-	   	 		return false;
-	   	 	}
-	   	 	
-	   	 	//alert(dataPagamento <= hoje );
-	   	 	
-	   	    return  isValid;
-	   	 
-	   	}, "A Data de compensação deve ser menor ou igual a data atual." );
-
-		$("#bean\\.dataStatus").mask('99/99/9999');
+		initFields();
 		
 		$("#btnVoltar").click(function(){
 			
@@ -33,10 +13,7 @@
 			
 		});
 		
-		$(".datepicker").datepicker({
-	       	 format: "dd/mm/yyyy",
-	       	 laguage: "pt-BR"
-	    	});
+		
 		
 		$('#formCheque').validate({
 	  		
@@ -179,20 +156,8 @@
 					<div class="col-md-2">
 						<label for="bean.id">Data Compensação:</label> 
 						<input name="bean.dataStatus" id="bean.dataStatus" value="" class="form-control datepicker required dateLessThanToday"  maxlength="10" />
-							
-							
 					</div>
-
-					
-					
-					
-
 				</div>
-
-				
-				
-
-
 
 				<br />
 				<button type="submit" id="btnSalvar" 

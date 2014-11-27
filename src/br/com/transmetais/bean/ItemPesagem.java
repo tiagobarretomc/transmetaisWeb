@@ -22,8 +22,6 @@ public abstract class ItemPesagem {
 	@Id 
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
-	@Column(name="nr_item")
-	private String nrItem;
 	@Column(name="peso_perc")
 	private Double pesoPercentual;
 	@Column(name="peso_liquido")
@@ -36,12 +34,6 @@ public abstract class ItemPesagem {
 	}
 	public void setId(Long id) {
 		this.id = id;
-	}
-	public String getNrItem() {
-		return nrItem;
-	}
-	public void setNrItem(String nrItem) {
-		this.nrItem = nrItem;
 	}
 	public BigDecimal getPesoLiquido() {
 		return pesoLiquido;
