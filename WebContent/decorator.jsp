@@ -193,16 +193,18 @@ form {
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Compras <b class="caret"></b></a>
 	          <ul class="dropdown-menu">
 	          	<li><a href="<c:url value='/cpe/lista'/>">Comprovante de pesagem de Entrada</a></li>
-	          	<li><a href="<c:url value='/cps/lista'/>">Comprovante de pesagem de Saída</a></li>
 	          	 <li><a href="<c:url value='/compra/'/>">Compra de Metais Ferrosos e Não Ferrosos</a></li>
 	          	<li><a href="<c:url value='/adiantamento/'/>">Adiantamento a Fornecedores</a></li>
 	          	
 	            
 	          </ul>
 	        </li>
-            
-							<li><a href="#">Vendas</a></li>
-            <li><a href="#"></a></li>
+	         <li class="dropdown">
+	          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Vendas <b class="caret"></b></a>
+	          	<ul class="dropdown-menu">
+            		<li><a href="<c:url value='/cps/lista'/>">Comprovante de pesagem de Saída</a></li>
+            	</ul>
+            </li>
             
             <li class="dropdown">
 	          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Financeiro <b class="caret"></b></a>

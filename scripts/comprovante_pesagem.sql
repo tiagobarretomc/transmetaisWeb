@@ -1,10 +1,10 @@
 CREATE TABLE `transmetais`.`tipo_veiculo` (
-  `id` INT NOT NULL,
+  `id` INT NOT NULL AUTO_INCREMENT,
   `descricao` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id`));
 
 CREATE TABLE `comprovante_pesagem` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `dt_emissao` date NOT NULL,
   `nr_ticket` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
   `balanca` varchar(45) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE `comprovante_pesagem` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
  CREATE TABLE `item_pesagem` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `nr_item` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
   `produto_id` int(11) DEFAULT NULL,
   `peso_perc` double NOT NULL,

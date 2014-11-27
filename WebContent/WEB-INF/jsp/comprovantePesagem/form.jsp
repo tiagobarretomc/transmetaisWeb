@@ -4,11 +4,15 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 
 <script type="text/javascript">
-
+	
 	<c:if test="${bean.class.simpleName eq 'ComprovantePesagemEntrada' }">
 		var materialList = ${materialList};
+		<c:set var="controller" value="cpe" />
+		<c:set var="pageTitle" value="Cadastro de Comprovante de Pesagem - Entrada" />
 	</c:if>
 	<c:if test="${bean.class.simpleName eq 'ComprovantePesagemSaida' }">
+		<c:set var="controller" value="cps" />
+		<c:set var="pageTitle" value="Cadastro de Comprovante de Pesagem - Saída" />
 		var produtoList = ${produtoList};
 	</c:if>
 	var itensPesagem = ${itensPesagem};
@@ -60,6 +64,26 @@
        $.each ($("select[id^='produto_']"), function(i){
        	carregarCombo($(this), produtoList, itensPesagem[i].produto.id);
        });
+       $("#pesoBruto, #taraVeiculo, #percentualImpureza").blur(function(){
+	   		if($("#taraVeiculo").val() && $("#pesoBruto").val() && $("#percentualImpureza").val()){
+	   			var taraVeiculo = moeda2float($("#taraVeiculo").val());
+		   		var pesoTotal =  moeda2float($("#pesoBruto").val());
+	   			if(pesoTotal < taraVeiculo){
+	   				bootbox.alert('O peso bruto não pode ser menor que o peso de tara do veículo.');
+	   			}else{
+			   		var pesoCarga = pesoTotal - taraVeiculo;
+			   		var percImpureza =  moeda2float($("#percentualImpureza").val())/100;
+			   		var valorImpureza = pesoCarga * percImpureza;
+			   		var pesoLiquido = pesoCarga  - valorImpureza;
+		    		$("#pesoLiquido").attr("value",float2moeda(pesoLiquido));
+		    		$("#pesoImpureza").attr("value",float2moeda(valorImpureza));
+	   			}
+
+	   				
+	   		}
+	   		
+	   		
+	   	});
        initFields();
 	
     });
@@ -74,39 +98,51 @@
 
     <div class="container">
     <br>
-	<h2>Cadastro de Comprovante de Pesagem</h2>
+	<h2>${pageTitle}</h2>
 	<br/>
 	<div class="panel panel-default">
 	<div class="panel-body">
-	<form action="<c:url value='/cp/add'/>" id="formComprovantePesagem" name="formComprovantePesagem" method="post">
-		<input type="hidden" id="comprovantePesagemId" name="bean.id" value="${bean.id}"/>
-		
+	<form action="<c:url value='/${controller }/gravar'/>" id="formComprovantePesagem" name="formComprovantePesagem" method="post" enctype="multipart/form-data">
+		<input type="hidden" id="bean.id" name="bean.id" value="${bean.id}"/>
 		
 		<div class="row">
-        	<div class="col-md-4">
-        		<label for="id">Data de Emissão:</label>
-        		<input name="bean.dataEmissao" id="bean.dataEmissao" value="<fmt:formatDate value="${bean.dataEmissao}" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" />
-        	</div>
-        	
-        	<div class="col-md-4">
+			<div class="col-md-3">
         		<label for="bean.numeroTicket">Número do Ticket:</label>
         		<input name="bean.numeroTicket" id="bean.numeroTicket" value="${bean.numeroTicket}" class="form-control required" size="45" maxlength="45"/>
         	</div>
-        	<div class="col-md-4">
+			<div class="col-md-4">
+				<c:if test="${bean.class.simpleName eq 'ComprovantePesagemEntrada' }">
+	        		<label for="bean.fornecedor.id">Fornecedor:</label>
+		        	<select id="bean.fornecedor.id" name="bean.fornecedor.id" class="selectpicker form-control" data-live-search="true">
+						<option value ="" >Selecione</option>
+						<c:forEach var="fornecedor" items="${fornecedores}" varStatus="contador">
+							<option value ="${fornecedor.id}" ${bean.fornecedor.id eq fornecedor.id  ? 'selected' : ''}>${fornecedor.apelido} - ${fornecedor.nome}</option>
+						</c:forEach>	
+					</select>
+				</c:if>
+				<c:if test="${bean.class.simpleName eq 'ComprovantePesagemSaida' }">
+	        		<label for="bean.cliente.id">Cliente:</label>
+		        	<select id="bean.cliente.id" name="bean.cliente.id" class="selectpicker form-control" data-live-search="true">
+						<option value ="" >Selecione</option>
+						<c:forEach var="cliente" items="${clientes}" varStatus="contador">
+							<option value ="${cliente.id}" ${bean.cliente.id eq cliente.id  ? 'selected' : ''}>${cliente.razaoSocial}</option>
+						</c:forEach>	
+					</select>
+				</c:if>
+        	</div>
+        	
+			<div class="col-md-2">
+        		<label for="id">Data de Emissão:</label>
+        		<input name="bean.dataEmissao" id="bean.dataEmissao" value="<fmt:formatDate value="${bean.dataEmissao}" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" />
+        	</div>
+        	<div class="col-md-3">
         		<label for="bean.balanca">Balança:</label>
         		<input name="bean.balanca" id="bean.balanca" value="${bean.balanca}" class="form-control required" size="45" maxlength="45"/>
         	</div>
-        </div>
-        <div class="row">
-        	<div class="col-md-4">
-        		<label for="bean.placaVeiculo">Placa do veículo:</label>
-        		<input name="bean.placaVeiculo" id="bean.placaVeiculo" value="${bean.placaVeiculo}" class="form-control required" size="45" maxlength="45"/>
-        	</div>
-        	<div class="col-md-4">
-        		<label for="bean.nomeTransportador">Nome do Transportador:</label>
-        		<input name="bean.nomeTransportador" id="bean.nomeTransportador" value="${bean.nomeTransportador}" class="form-control required" size="45" maxlength="45"/>
-        	</div>
-        	<div class="col-md-4">
+		</div>
+		<div class="row">
+        	
+        	<div class="col-md-3">
 				<label for="cboTipoFrete">Forma de Frete/Entrega:</label>
 				<select style="width: 180px;" id="cboTipoFrete" name="bean.tipoFrete" class="selectpicker form-control" ${not empty bean.id ? 'disabled="disabled"' : ''}>
 					<option value="" >Selecione</option>
@@ -115,37 +151,52 @@
 					</c:forEach>
 				</select>
 			</div>
-			<div class="col-md-4">
+        	<div class="col-md-2">
 				<label for="cboTipoVeiculo">Tipo de veículo:</label>
-				<select style="width: 180px;" id="cboTipoVeiculo" name="bean.tipoVeiculo" class="selectpicker form-control" ${not empty bean.id ? 'disabled="disabled"' : ''}>
+				<select style="width: 180px;" id="cboTipoVeiculo" name="bean.tipoVeiculo.id" class="selectpicker form-control" ${not empty bean.id ? 'disabled="disabled"' : ''}>
 					<option value="" >Selecione</option>
 					<c:forEach var="tipoVeiculo" items="${tiposVeiculo}">
-						<option value="${tipoVeiculo.id }" ${bean.tipoVeiculo.id eq tipoVeiculo.id ? 'selected' : ''}>${tipoVeiculo.descricao}</option>
+						<option value="${tipoVeiculo.codigo }" ${bean.tipoVeiculo.id eq tipoVeiculo.codigo ? 'selected' : ''}>${tipoVeiculo.descricao}</option>
 					</c:forEach>
 				</select>
 			</div>
-      	</div>
+        	<div class="col-md-2">
+        		<label for="bean.placaVeiculo">Placa do veículo:</label>
+        		<input name="bean.placaVeiculo" id="bean.placaVeiculo" value="${bean.placaVeiculo}" class="form-control required" size="2" maxlength="8"/>
+        	</div>
+        	<div class="col-md-5">
+        		<label for="bean.nomeTransportador">Nome do Transportador:</label>
+        		<input name="bean.nomeTransportador" id="bean.nomeTransportador" value="${bean.nomeTransportador}" class="form-control required" size="45" maxlength="45"/>
+        	</div>
+        	
+        </div>
 		<div class="row">
-			<div class="col-md-5">
+			<div class="col-md-2">
 				<label for="taraVeiculo">Tara do Veículo (Kg):</label>
-        		<input type="text" name="bean.taraVeiculo" id="taraVeiculo" class="required form-control" value="<fmt:formatNumber value="${bean.taraVeiculo}" minFractionDigits="2" type="number" />" />
+        		<input type="text" name="bean.taraVeiculo" id="taraVeiculo" class="required form-control valor" value="<fmt:formatNumber value="${bean.taraVeiculo}" minFractionDigits="2" type="number" />" />
         	</div>
-        	<div class="col-md-5">
-				<label for="percentualImpureza">Impureza (%):</label>
-        		<input type="text" name="bean.percentualImpureza" id="percentualImpureza" class="required form-control" value="<fmt:formatNumber value="${bean.percentualImpureza}" minFractionDigits="2" type="number" />" />
-        	</div>
-        	<div class="col-md-5">
+        	<div class="col-md-2">
 				<label for="pesoBruto">Peso Bruto (Kg):</label>
-        		<input type="text" name="bean.pesoBruto" id="pesoBruto" class="required form-control" value="<fmt:formatNumber value="${bean.pesoBruto}" minFractionDigits="2" type="number" />" />
+        		<input type="text" name="bean.pesoBruto" id="pesoBruto" class="required form-control valor" value="<fmt:formatNumber value="${bean.pesoBruto}" minFractionDigits="2" type="number" />" />
         	</div>
-        	<div class="col-md-5">
+        	<div class="col-md-2">
+				<label for="percentualImpureza">Impureza (%):</label>
+        		<input type="text" name="bean.percentualImpureza" id="percentualImpureza" class="required form-control percent" value="<fmt:formatNumber value="${bean.percentualImpureza}" minFractionDigits="2" type="number" />" />
+        	</div>
+        	<div class="col-md-2">
 				<label for="pesoImpureza">Impureza (Kg):</label>
-        		<input type="text" name="bean.pesoImpureza" id="pesoImpureza" class="required form-control" value="<fmt:formatNumber value="${bean.pesoImpureza}" minFractionDigits="2" type="number" />" />
+        		<input type="text" name="bean.pesoImpureza" id="pesoImpureza" readonly="readonly" class="required form-control valor" value="<fmt:formatNumber value="${bean.pesoImpureza}" minFractionDigits="2" type="number" />" />
         	</div>
-        	<div class="col-md-5">
+        	<div class="col-md-2">
 				<label for="pesoLiquido">Peso Líquido (Kg):</label>
-        		<input type="text" name="bean.pesoLiquido" id="pesoLiquido" class="required form-control" value="<fmt:formatNumber value="${bean.pesoLiquido}" minFractionDigits="2" type="number" />" />
+        		<input type="text" name="bean.pesoLiquido" id="pesoLiquido" readonly="readonly" class="required form-control valor" value="<fmt:formatNumber value="${bean.pesoLiquido}" minFractionDigits="2" type="number" />" />
         	</div>
+      	</div>
+      	<div class="row">
+      		<div class="col-md-5">
+      			<label for="arquivo">Ticket de pesagem:</label>
+      			<input type="file" name="arquivo" id="arquivo">
+      		</div>
       	</div>
       	<br/>
       	<div class="panel panel-default" >

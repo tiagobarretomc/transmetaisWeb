@@ -7,7 +7,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.transaction.RollbackException;
+import javax.persistence.Query;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -263,6 +263,12 @@ public class CrudDAOJPA<T> implements CrudDAO<T> {
 		return (Integer) crit.list().get(0);
 	}
 
+	public List<T> findByFilter(T filter){
+		QueryGenerator qGen = new QueryGenerator();
+		EntityManager manager = factory.createEntityManager();
+		Query query = qGen.createQuery(filter, manager);
+		return query.getResultList();
+	}
 	
 }
 

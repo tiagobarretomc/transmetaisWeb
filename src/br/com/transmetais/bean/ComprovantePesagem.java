@@ -17,6 +17,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import br.com.transmetais.type.TipoFreteEnum;
 @Entity
@@ -30,11 +31,13 @@ public abstract class ComprovantePesagem {
 	@Column(name="dt_emissao")
 	private Date dataEmissao;
 	@Column(name="nr_ticket")
+	@NotNull
 	private String numeroTicket;
 	@Column(name="balanca")
 	private String balanca;
 	@Column(name="nm_transportador")
 	private String nomeTransportador;
+	@NotNull
 	@Column(name="placa_veiculo")
 	private String placaVeiculo;
 	@Column(name="tipo_frete")
@@ -43,6 +46,7 @@ public abstract class ComprovantePesagem {
 	@ManyToOne
 	@JoinColumn(name="tipo_veiculo_id")
 	private TipoVeiculo tipoVeiculo;
+	@NotNull
 	@Column(name="tara_veiculo")
 	private BigDecimal taraVeiculo;
 	@Column(name="peso_bruto_veiculo")

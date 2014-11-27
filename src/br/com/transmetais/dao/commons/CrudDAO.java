@@ -67,5 +67,6 @@ public interface CrudDAO<T> {
 	
 	public List<T> findByCriteria(final Criterion... criterion);
 	
+	public List<T> findByFilter(T filter);
 }
 

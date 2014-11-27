@@ -12,8 +12,8 @@ import br.com.transmetais.bean.Cliente;
 import br.com.transmetais.bean.ComprovantePesagem;
 import br.com.transmetais.bean.ComprovantePesagemEntrada;
 import br.com.transmetais.bean.ComprovantePesagemSaida;
+import br.com.transmetais.bean.ItemPesagemSaida;
 import br.com.transmetais.dao.ClienteDAO;
-import br.com.transmetais.dao.ComprovantePesagemDAO;
 import br.com.transmetais.dao.ProdutoDAO;
 import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.util.EntityUtil;
@@ -22,18 +22,39 @@ import com.google.gson.Gson;
 
 @Resource
 @Path("/cps")
-public class ComprovantePesagemSaidaController extends BaseController<ComprovantePesagem, ComprovantePesagemDAO>{
+public class ComprovantePesagemSaidaController extends ComprovantePesagemController<ComprovantePesagemSaida> {
 
 	private ClienteDAO clienteDAO;
 	private ProdutoDAO produtoDAO;
 	
 	@Override
-	protected void prePersistUpdate(ComprovantePesagem bean) {
+	protected void prePersistUpdate(ComprovantePesagemSaida bean) {
+		 for (ItemPesagemSaida item : bean.getItens()) {
+			 	item.setComprovantePesagem(bean);
+				if(item.getProduto() != null 
+						&& item.getProduto().getId() == 0){
+					item.setProduto(null);
+				}
+			}
+	}
+	
+	@Override
+	protected void initFilter(ComprovantePesagemSaida filter) {
+		// TODO Auto-generated method stub
+		super.initFilter(filter);
+		List<Cliente> clientes;
+		try {
+			clientes = clienteDAO.findAll();
+			result.include("clientes",clientes);
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	@Override
-	protected void initForm(ComprovantePesagem bean)  {
+	protected void initForm(ComprovantePesagemSaida bean)  {
 		try{
-	
+			super.initForm(bean);
 			List<Cliente> clientes = clienteDAO.findAll();
 			result.include("clientes",clientes);
 			
@@ -42,11 +63,7 @@ public class ComprovantePesagemSaidaController extends BaseController<Comprovant
 			String json = gson.toJson(EntityUtil.retrieveCombo(produtoDAO.findAll(), "id", "descricao"));
 			result.include("produtoList",json);
 			
-			if(bean instanceof ComprovantePesagemEntrada){
-				json = gson.toJson(((ComprovantePesagemEntrada)bean).getItens());
-			}else if(bean instanceof ComprovantePesagemSaida){
-				json = gson.toJson(((ComprovantePesagemSaida)bean).getItens());
-			}
+			json = gson.toJson(bean.getItens());
 			result.include("itensPesagem",json);
 			
 		}catch(DAOException e){
@@ -62,11 +79,11 @@ public class ComprovantePesagemSaidaController extends BaseController<Comprovant
 		this.produtoDAO = produtoDAO;
 	}
 	@Override
-	protected ComprovantePesagem createInstance() {
+	protected ComprovantePesagemSaida createInstance() {
 		return new ComprovantePesagemSaida();
 	}
 	@Override
-	protected void postPersistUpdate(ComprovantePesagem bean, Result result) {
+	protected void postPersistUpdate(ComprovantePesagemSaida bean, Result result) {
 		// TODO Auto-generated method stub
 		
 	}

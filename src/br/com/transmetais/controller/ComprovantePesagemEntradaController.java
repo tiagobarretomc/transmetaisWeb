@@ -8,10 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
-import br.com.transmetais.bean.ComprovantePesagem;
 import br.com.transmetais.bean.ComprovantePesagemEntrada;
 import br.com.transmetais.bean.Fornecedor;
-import br.com.transmetais.dao.ComprovantePesagemDAO;
+import br.com.transmetais.bean.ItemPesagemEntrada;
 import br.com.transmetais.dao.FornecedorDAO;
 import br.com.transmetais.dao.MaterialDAO;
 import br.com.transmetais.dao.commons.DAOException;
@@ -21,17 +20,27 @@ import com.google.gson.Gson;
 
 @Resource
 @Path("/cpe")
-public class ComprovantePesagemEntradaController extends BaseController<ComprovantePesagem, ComprovantePesagemDAO>{
+public class ComprovantePesagemEntradaController extends ComprovantePesagemController<ComprovantePesagemEntrada>{
 
 	private FornecedorDAO fornecedorDAO;
 	private MaterialDAO materialDAO;
 	
 	@Override
-	protected void prePersistUpdate(ComprovantePesagem bean) {
+	protected void prePersistUpdate(ComprovantePesagemEntrada bean) {
+		if(bean.getItens() != null){
+			 for (ItemPesagemEntrada item : bean.getItens()) {
+			 	item.setComprovantePesagem(bean);
+				if(item.getMaterial() != null 
+						&& item.getMaterial().getId() == 0){
+					item.setMaterial(null);
+				}
+			}
+		}
 	}
 	@Override
-	protected void initForm(ComprovantePesagem bean)  {
+	protected void initForm(ComprovantePesagemEntrada bean)  {
 		try{
+			super.initForm(bean);
 			List<Fornecedor> fornecedores = fornecedorDAO.findAll();
 			result.include("fornecedores",fornecedores);
 	
@@ -40,7 +49,7 @@ public class ComprovantePesagemEntradaController extends BaseController<Comprova
 			String json = gson.toJson(EntityUtil.retrieveCombo(materialDAO.findAll(), "id", "descricao"));
 			this.result.include("materialList", json);
 			
-			json = gson.toJson(((ComprovantePesagemEntrada)bean).getItens());
+			json = gson.toJson(bean.getItens());
 			result.include("itensPesagem",json);
 			
 		}catch(DAOException e){
@@ -56,10 +65,10 @@ public class ComprovantePesagemEntradaController extends BaseController<Comprova
 		this.materialDAO = materialDAO;
 	}
 	@Override
-	protected ComprovantePesagem createInstance() {
+	protected ComprovantePesagemEntrada createInstance() {
 		return new ComprovantePesagemEntrada();
 	}
-	protected void postPersistUpdate(ComprovantePesagem bean, Result result) {
+	protected void postPersistUpdate(ComprovantePesagemEntrada bean, Result result) {
 		// TODO Auto-generated method stub
 		
 	}

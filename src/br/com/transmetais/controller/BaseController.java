@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.caelum.vraptor.Path;
+import br.com.caelum.vraptor.Post;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.Validator;
@@ -18,10 +19,12 @@ public abstract class BaseController<E, T extends CrudDAO<E>> {
 	protected  T dao;
 	protected Validator validator;
 	
-	@Autowired 
+	
+	@Autowired
 	public void setResult(Result result) {
 		this.result = result;
 	}
+
 	@Autowired
 	public void setValidator(Validator validator) {
 		this.validator = validator;
@@ -73,7 +76,7 @@ public abstract class BaseController<E, T extends CrudDAO<E>> {
 		
 		return bean;
 	}
-	
+	@Post
 	public void add(E bean) {
 		prePersistUpdate(bean);
 	 	validateForm(bean);
@@ -121,8 +124,9 @@ public abstract class BaseController<E, T extends CrudDAO<E>> {
 		
 		try {
 			lista = dao.findAll();
-			
-			
+			E filter = createInstance();
+			initFilter(filter);
+			result.include("filter",filter);
 			result.include("beanList",lista);
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
@@ -131,15 +135,27 @@ public abstract class BaseController<E, T extends CrudDAO<E>> {
 		
 		return lista;
 	}
+	@Path({"/filtrar"})
+	public List<E> filtrar(E filter){
+		List<E> lista = null;
+		
+		lista = dao.findByFilter(filter);
+		initFilter(filter);
+		result.include("beanList",lista);
+		
+		return lista;
+		
+	}
 	protected void validateForm(E bean){
 		validator.validate(bean);
-		validator.onErrorRedirectTo(this.getClass()).form(bean);
+		validator.onErrorUsePageOf(this.getClass()).form(bean);
 	}
 	
 	protected  E createInstance(Class<E> type) throws InstantiationException, IllegalAccessException{
 		E tipoBase = type.newInstance();
 		return tipoBase;
 	}
+	protected void initFilter(E filter){}
 	
 	protected abstract E createInstance();
 	protected abstract void initForm(E bean);

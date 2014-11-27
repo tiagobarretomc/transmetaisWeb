@@ -1,5 +1,6 @@
 package br.com.transmetais.bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -17,7 +18,7 @@ public class ComprovantePesagemSaida extends ComprovantePesagem {
 	@JoinColumn(name="cliente_id")
 	private Cliente cliente;
 	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL}, targetEntity=ItemPesagem.class,mappedBy="comprovantePesagem")
-	private List<ItemPesagemSaida> itens;
+	private List<ItemPesagemSaida> itens = new ArrayList<ItemPesagemSaida>();
 
 	public Cliente getCliente() {
 		return cliente;
