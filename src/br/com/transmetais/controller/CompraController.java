@@ -173,63 +173,84 @@ public class CompraController {
 	public void salvar(Compra compra) {
 		try {
 			
-			if(compra.getModalidadePagamento() == FormaPagamentoEnum.C && compra.getParcelas() == null){
-				if(compra.getChequeEmitido() != null){
-					ChequeEmitidoCompra cheque = new ChequeEmitidoCompra();
-					cheque.setNumeroCheque(compra.getChequeEmitido().getNumeroCheque());
-					cheque.setConta(compra.getConta());
-					cheque.setData(compra.getDataCompetencia());
-					cheque.setCompra(compra);
-					cheque.setValor(compra.getValor());
-					cheque.setStatus(SituacaoChequeEnum.A);
-					cheque.setDataStatus(new Date());
-					compra.setChequeEmitido(cheque);
-					
-					//chequeEmitidoDao.addEntity(cheque);
-					
-				}
-			}else if(compra.getModalidadePagamento() == FormaPagamentoEnum.C && compra.getParcelas() != null){
-				compra.setChequeEmitidoList(null);
-			}
 			
+			Fornecedor fornecedor = fornecedorDao.findById(compra.getFornecedor().getId());
 			
 			compra.setStatus(StatusCompraEnum.A);
-			if(compra.getParcelas()!=null){
-				Collections.sort(compra.getParcelas(), new Comparator<ParcelaCompra>() {
-					  public int compare(ParcelaCompra o1, ParcelaCompra o2) {
-					      return o1.getDataVencimento().compareTo(o2.getDataVencimento());
-					  }
-				});
-			}
-			int numero =1;
 			
-			if (compra.getParcelas() != null){
-				ChequeEmitidoCompra cheque = null;
-				//Atualizando a despesa de cada parcela 
-				for (ParcelaCompra parcela : compra.getParcelas()) {
-					parcela.setCompra(compra);
-					parcela.setStatus(StatusDespesaEnum.A);
-					parcela.setNumero(numero);
-					numero++;
-					
-					
-					if(compra.getModalidadePagamento() == FormaPagamentoEnum.C && compra.getParcelas() != null){
-						cheque = new ChequeEmitidoCompra();
-						cheque.setNumeroCheque(parcela.getChequeEmitido().getNumeroCheque());
-						cheque.setValor(parcela.getChequeEmitido().getValor());
+			if(compra.getCentroAplicacao() != null && compra.getCentroAplicacao().getId() == null){
+				compra.setCentroAplicacao(null);
+			}
+			
+			if(compra.getContaContabil() != null && compra.getContaContabil().getId() == null){
+				compra.setContaContabil(null);
+			}
+			
+			//Caso o fornecedor trabalhe com adiantamentos receberá um tratamento diferenciado.
+			if (fornecedor.getConta() != null){
+				compra.setFormaPagamento(TipoPagamentoEnum.A);
+				compra.setDataVencimento(compra.getDataCompetencia());
+			}else{
+				if(compra.getModalidadePagamento() == FormaPagamentoEnum.C && compra.getParcelas() == null){
+					if(compra.getChequeEmitido() != null){
+						ChequeEmitidoCompra cheque = new ChequeEmitidoCompra();
+						cheque.setNumeroCheque(compra.getChequeEmitido().getNumeroCheque());
 						cheque.setConta(compra.getConta());
-						cheque.setData(parcela.getDataVencimento());
+						cheque.setData(compra.getDataCompetencia());
 						cheque.setCompra(compra);
-						cheque.setValor(parcela.getValor());
+						cheque.setValor(compra.getValor());
 						cheque.setStatus(SituacaoChequeEnum.A);
-						cheque.setParcela(parcela);
 						cheque.setDataStatus(new Date());
-						parcela.setChequeEmitido(cheque);
+						compra.setChequeEmitido(cheque);
+						
+						//chequeEmitidoDao.addEntity(cheque);
 						
 					}
+				}else if(compra.getModalidadePagamento() == FormaPagamentoEnum.C && compra.getParcelas() != null){
+					compra.setChequeEmitidoList(null);
 				}
 				
+				
+				if(compra.getParcelas()!=null){
+					Collections.sort(compra.getParcelas(), new Comparator<ParcelaCompra>() {
+						  public int compare(ParcelaCompra o1, ParcelaCompra o2) {
+						      return o1.getDataVencimento().compareTo(o2.getDataVencimento());
+						  }
+					});
+				}
+				int numero =1;
+				
+				if (compra.getParcelas() != null){
+					ChequeEmitidoCompra cheque = null;
+					//Atualizando a despesa de cada parcela 
+					for (ParcelaCompra parcela : compra.getParcelas()) {
+						parcela.setCompra(compra);
+						parcela.setStatus(StatusDespesaEnum.A);
+						parcela.setNumero(numero);
+						numero++;
+						
+						
+						if(compra.getModalidadePagamento() == FormaPagamentoEnum.C && compra.getParcelas() != null){
+							cheque = new ChequeEmitidoCompra();
+							cheque.setNumeroCheque(parcela.getChequeEmitido().getNumeroCheque());
+							cheque.setValor(parcela.getChequeEmitido().getValor());
+							cheque.setConta(compra.getConta());
+							cheque.setData(parcela.getDataVencimento());
+							cheque.setCompra(compra);
+							cheque.setValor(parcela.getValor());
+							cheque.setStatus(SituacaoChequeEnum.A);
+							cheque.setParcela(parcela);
+							cheque.setDataStatus(new Date());
+							parcela.setChequeEmitido(cheque);
+							
+						}
+					}
+					
+				}
 			}
+			
+			
+			
 			
 			//Quando se tratar de despesa/compra a vista a data de vencimento é a mesma data da competencia
 			if (compra.getFormaPagamento() == TipoPagamentoEnum.V){
@@ -251,92 +272,138 @@ public class CompraController {
 				item.setCompra(compra);
 				
 			}
+			
 			if (compra.getId() != null && compra.getId()>0){
 				//alteracao
 				//compra.setConta(contaDao.findById(compra.getConta().getId()));
 				dao.updateEntity(compra);
 				
-			}else{
+			}	else{
 				//insercao - nova compra
 				//FornecedorMaterial fornecedorMaterial = fornecedorMaterialDao.findById(compra.getFornecedorMaterial().getId());
 				//compra.setConta(fornecedorMaterial.getFornecedor().getConta());
 				compra.setStatus(StatusCompraEnum.A);
 				dao.addEntity(compra);
 				
-				if (compra.getModalidadePagamento() == FormaPagamentoEnum.C && compra.getChequeEmitido() != null){
-					try{
-						chequeEmitidoDAO.addEntity(compra.getChequeEmitido());
-					}catch(DAOException ex){
-						ex.printStackTrace();
-						result.include("erro", ex.getMessage());
-					}
-				}
-				
-				//Caso se trate de pagamento a Vista
-				if (compra.getFormaPagamento() == TipoPagamentoEnum.V ){
+				if(fornecedor.getConta()!=null){
 					
-					//Caso o pagamento for em cheque. o saldo só devera ser atualizado e a movimentacao gerada quando o cheque tiver a sua compensação confirmada.
-					if(compra.getModalidadePagamento() != FormaPagamentoEnum.C){
-						
-						//Setando os dados da Movimentacao.
-						MovimentacaoCompra movimentacao = new MovimentacaoCompra();
-						movimentacao.setCompra(compra);
-						movimentacao.setData(compra.getDataCompetencia());
-						movimentacao.setTipoOperacao(TipoOperacaoEnum.D);
-						movimentacao.setValor(compra.getValor());
-						movimentacao.setConta(compra.getConta());
-						
-						
-						try {
-							
-							//inserindo a movimentacao no vanco de dados
-							movimentacaoDAO.addEntity(movimentacao);
-							
-							//Obter a conta que sera debitado o valor da despesa
-							Conta conta = contaDao.findById(compra.getConta().getId());
-							
-							//Atualizando o Saldo da conta subtrainda o valor da despesa
-							conta.setSaldo(conta.getSaldo().subtract(compra.getValor()));
-							
-							//persistindo na base de dados
-							contaDao.updateEntity(conta);
-							
-						} catch (DAOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+					//Setando os dados da Movimentacao.
+					MovimentacaoCompra movimentacao = new MovimentacaoCompra();
+					movimentacao.setCompra(compra);
+					movimentacao.setData(compra.getData());
+					movimentacao.setTipoOperacao(TipoOperacaoEnum.D);
+					movimentacao.setValor(compra.getValor());
+					movimentacao.setConta(fornecedor.getConta());
+					
+					//inserindo a movimentacao no vanco de dados
+					movimentacaoDAO.addEntity(movimentacao);
+					
+					//Atualizando o Saldo da conta subtrainda o valor da despesa
+					fornecedor.getConta().setSaldo(fornecedor.getConta().getSaldo().subtract(compra.getValor()));
+					
+					//persistindo na base de dados
+					contaDao.updateEntity(fornecedor.getConta());
+				}
+				else{
+					
+				
+					if (compra.getModalidadePagamento() == FormaPagamentoEnum.C && compra.getChequeEmitido() != null){
+						try{
+							chequeEmitidoDAO.addEntity(compra.getChequeEmitido());
+						}catch(DAOException ex){
+							ex.printStackTrace();
+							result.include("erro", ex.getMessage());
 						}
 					}
 					
-					
-					
-				}
-				
-				
-				// Caso a forma de pagamento for à prazo
-				else{
-					
-					//Verificando se trata-se de uma compra a prazo parcelada.
-					if(compra.getParcelas() != null && compra.getParcelas().size()>0){
+					//Caso se trate de pagamento a Vista
+					if (compra.getFormaPagamento() == TipoPagamentoEnum.V ){
 						
-						for (ParcelaCompra parcela : compra.getParcelas()) {
+						//Caso o pagamento for em cheque. o saldo só devera ser atualizado e a movimentacao gerada quando o cheque tiver a sua compensação confirmada.
+						if(compra.getModalidadePagamento() != FormaPagamentoEnum.C){
 							
-							ContaAPagarCompra contaApagar = new ContaAPagarCompra();
-							contaApagar.setParcela(parcela);
-							if(compra.getModalidadePagamento() == FormaPagamentoEnum.C){
-								contaApagar.setConta(compra.getConta());
-							}else{
-								
-								contaApagar.setConta(null);
-							}
-							contaApagar.setDataPrevista(parcela.getDataVencimento());
-							contaApagar.setDescricao("Parcela da Compra - " + compra.getId().toString());
-							contaApagar.setStatus(StatusMovimentacaoEnum.A);
-							contaApagar.setValor(parcela.getValor());
-							contaApagar.setCompra(compra);
-							//contaApagar.setModalidadePagamento(bean.getModalidadePagamento());
+							//Setando os dados da Movimentacao.
+							MovimentacaoCompra movimentacao = new MovimentacaoCompra();
+							movimentacao.setCompra(compra);
+							movimentacao.setData(compra.getDataCompetencia());
+							movimentacao.setTipoOperacao(TipoOperacaoEnum.D);
+							movimentacao.setValor(compra.getValor());
+							movimentacao.setConta(compra.getConta());
+							
 							
 							try {
-								contaAPagarDAO.addEntity(contaApagar);
+								
+								//inserindo a movimentacao no vanco de dados
+								movimentacaoDAO.addEntity(movimentacao);
+								
+								//Obter a conta que sera debitado o valor da despesa
+								Conta conta = contaDao.findById(compra.getConta().getId());
+								
+								//Atualizando o Saldo da conta subtrainda o valor da despesa
+								conta.setSaldo(conta.getSaldo().subtract(compra.getValor()));
+								
+								//persistindo na base de dados
+								contaDao.updateEntity(conta);
+								
+							} catch (DAOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+						
+						
+						
+					}
+					
+					
+					// Caso a forma de pagamento for à prazo
+					else{
+						
+						//Verificando se trata-se de uma compra a prazo parcelada.
+						if(compra.getParcelas() != null && compra.getParcelas().size()>0){
+							
+							for (ParcelaCompra parcela : compra.getParcelas()) {
+								
+								ContaAPagarCompra contaApagar = new ContaAPagarCompra();
+								contaApagar.setParcela(parcela);
+								if(compra.getModalidadePagamento() == FormaPagamentoEnum.C){
+									contaApagar.setConta(compra.getConta());
+								}else{
+									
+									contaApagar.setConta(null);
+								}
+								contaApagar.setDataPrevista(parcela.getDataVencimento());
+								contaApagar.setDescricao("Parcela da Compra - " + compra.getId().toString());
+								contaApagar.setStatus(StatusMovimentacaoEnum.A);
+								contaApagar.setValor(parcela.getValor());
+								contaApagar.setCompra(compra);
+								//contaApagar.setModalidadePagamento(bean.getModalidadePagamento());
+								
+								try {
+									contaAPagarDAO.addEntity(contaApagar);
+								} catch (DAOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								
+							}
+							
+						}
+						//Caso a compra for à prazo e não for parcelada.
+						else{
+							
+							ContaAPagarCompra conta = new ContaAPagarCompra();
+							conta.setDataPrevista(compra.getDataVencimento());
+							conta.setStatus(StatusMovimentacaoEnum.A);
+							conta.setValor(compra.getValor());
+							conta.setCompra(compra);
+							conta.setDescricao("Compra " + compra.getId() );
+							//Se nao há parcelas o campo fica null
+							conta.setParcela(null);
+							//conta.setModalidadePagamento(bean.getModalidadePagamento());
+							
+							try {
+								contaAPagarDAO.addEntity(conta);
 							} catch (DAOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -345,29 +412,7 @@ public class CompraController {
 						}
 						
 					}
-					//Caso a compra for à prazo e não for parcelada.
-					else{
-						
-						ContaAPagarCompra conta = new ContaAPagarCompra();
-						conta.setDataPrevista(compra.getDataVencimento());
-						conta.setStatus(StatusMovimentacaoEnum.A);
-						conta.setValor(compra.getValor());
-						conta.setCompra(compra);
-						conta.setDescricao("Compra " + compra.getId() );
-						//Se nao há parcelas o campo fica null
-						conta.setParcela(null);
-						//conta.setModalidadePagamento(bean.getModalidadePagamento());
-						
-						try {
-							contaAPagarDAO.addEntity(conta);
-						} catch (DAOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						
-					}
-					
-				}
+			}
 				
 				
 				
@@ -380,16 +425,16 @@ public class CompraController {
 				
 				
 				
-				ContaAPagarCompra contaPagar = new ContaAPagarCompra();
-				contaPagar.setCompra(compra);
-				//contaPagar.setConta(compra.getConta());
-				contaPagar.setDataPrevista(new Date());
-				
-				contaPagar.setValor(compra.getValor());
-				contaPagar.setStatus(StatusMovimentacaoEnum.A);
-				contaPagar.setDescricao("Compra Fornecedor " + compra.getFornecedor().getApelido() + " - " + compra.getFornecedor().getNome());
-				
-				contaAPagarDAO.addEntity(contaPagar);
+//				ContaAPagarCompra contaPagar = new ContaAPagarCompra();
+//				contaPagar.setCompra(compra);
+//				
+//				contaPagar.setDataPrevista(new Date());
+//				
+//				contaPagar.setValor(compra.getValor());
+//				contaPagar.setStatus(StatusMovimentacaoEnum.A);
+//				contaPagar.setDescricao("Compra Fornecedor " + compra.getFornecedor().getApelido() + " - " + compra.getFornecedor().getNome());
+//				
+//				contaAPagarDAO.addEntity(contaPagar);
 				
 				//Adicionar no estoque.
 				for (ItemCompra item : compra.getItens()) {
@@ -413,7 +458,6 @@ public class CompraController {
 						estoque.setMaterial(item.getMaterial());
 						estoqueDAO.addEntity(estoque);
 					}
-			
 					
 				}
 				
