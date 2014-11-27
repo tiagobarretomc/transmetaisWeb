@@ -2,7 +2,7 @@ package br.com.transmetais.type;
 
 public enum TipoPagamentoEnum {
 	
-	V("A Vista"), P("A Prazo");
+	V("A Vista"), P("A Prazo"), A("Antecipada");
 	
 	private String descricao;
 	TipoPagamentoEnum tipo;

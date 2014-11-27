@@ -63,6 +63,7 @@ public class Compra {
 	@Enumerated(EnumType.STRING)
 	@Column(name="modalidade_pagamento")
 	private FormaPagamentoEnum modalidadePagamento;
+	@Enumerated(EnumType.STRING)
 	@Column(name="forma_pagamento")
 	private TipoPagamentoEnum formaPagamento;
 	@OneToMany(mappedBy="compra", fetch=FetchType.LAZY)
@@ -168,9 +169,9 @@ public class Compra {
 		return null;
 	}
 	public void setChequeEmitido(ChequeEmitidoCompra chequeEmitido){
-		if(chequeEmitidoList == null){
+		//if(chequeEmitidoList == null){
 			chequeEmitidoList = new ArrayList<ChequeEmitidoCompra>();
-		}
+		//}
 		chequeEmitidoList.add(chequeEmitido);
 	}
 	
