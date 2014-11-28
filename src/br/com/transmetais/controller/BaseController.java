@@ -80,7 +80,7 @@ public abstract class BaseController<E, T extends CrudDAO<E>> {
 	public void add(E bean) {
 		prePersistUpdate(bean);
 	 	validateForm(bean);
-		Long id = (Long)EntityUtil.getId(bean);
+		Long id = (Long)EntityUtil.getId(bean.getClass(), bean);
 		String msg = null;
 		if (id != null && id > 0){
 			if(update(bean)){

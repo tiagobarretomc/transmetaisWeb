@@ -14,6 +14,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlTransient;
 @Entity
 @Table(name="item_pesagem")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -28,6 +29,7 @@ public abstract class ItemPesagem {
 	private BigDecimal pesoLiquido;
 	@ManyToOne
 	@JoinColumn(name="comprov_pesagem_id")
+	@XmlTransient
 	private ComprovantePesagem comprovantePesagem;
 	public Long getId() {
 		return id;

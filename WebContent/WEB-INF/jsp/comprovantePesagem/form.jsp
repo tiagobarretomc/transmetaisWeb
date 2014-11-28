@@ -94,7 +94,7 @@
      	  }
  	   		
  	   	});
-       $("input[id^='pesoPercentual_']").change(function(){
+       $("input[id^='pesoPercentual_']").blur(function(){
     	   onchangePercentualPeso($(this));
        });
  	   $("input[id^='pesoLiquido_']").blur(function(){
@@ -255,7 +255,7 @@
         	
         	<div class="col-md-3">
 				<label for="cboTipoFrete">Forma de Frete/Entrega:</label>
-				<select style="width: 180px;" id="cboTipoFrete" name="bean.tipoFrete" class="selectpicker form-control required" ${not empty bean.id ? 'disabled="disabled"' : ''}>
+				<select style="width: 180px;" id="cboTipoFrete" name="bean.tipoFrete" class="selectpicker form-control required">
 					<option value="" >Selecione</option>
 					<c:forEach var="tipoFrete" items="${tiposFrete}">
 						<option value="${tipoFrete.name }" ${bean.tipoFrete eq tipoFrete ? 'selected' : ''}>${tipoFrete.descricao}</option>
@@ -264,7 +264,7 @@
 			</div>
         	<div class="col-md-2">
 				<label for="cboTipoVeiculo">Tipo de veículo:</label>
-				<select style="width: 180px;" id="cboTipoVeiculo" name="bean.tipoVeiculo.id" class="selectpicker form-control required" ${not empty bean.id ? 'disabled="disabled"' : ''}>
+				<select style="width: 180px;" id="cboTipoVeiculo" name="bean.tipoVeiculo.id" class="selectpicker form-control required">
 					<option value="" >Selecione</option>
 					<c:forEach var="tipoVeiculo" items="${tiposVeiculo}">
 						<option value="${tipoVeiculo.codigo }" ${bean.tipoVeiculo.id eq tipoVeiculo.codigo ? 'selected' : ''}>${tipoVeiculo.descricao}</option>
@@ -339,30 +339,30 @@
 				
 				<c:if test="${not empty bean.id}">
 					<c:forEach var="item" items="${bean.itens}" varStatus="contador">
-					<tr id="item_${contador.index}">
-						<td style="vertical-align: middle;">
-							<span title="Excluir" class="glyphicon glyphicon-remove" onclick="removerItem(${contador.index})"></span>
-						</td>
-						<td style="max-width:130px" >
-						    <input type="hidden" id="id_${contador.index}" name="bean.itens[${contador.index}].id" value="${item.id}"/>
-							<c:if test="${bean.class.simpleName eq 'ComprovantePesagemEntrada' }">
-								<select id="material_${contador.index}" name="bean.itens[${contador.index}].material.id" class="required form-control selectpicker"  data-live-search="true">
-								</select>
-							</c:if>
-							<c:if test="${bean.class.simpleName eq 'ComprovantePesagemSaida' }">
-								<select id="produto_${contador.index}" name="bean.itens[${contador.index}].produto.id" class="required form-control selectpicker"  data-live-search="true">
-								</select>
-							</c:if>
-						</td>
-						<td style="max-width:130px" >
-							<input type="text" name="bean.itens[${contador.index}].pesoPercentual" id="pesoPercentual_${contador.index}" class="required form-control" value="<fmt:formatNumber value="${bean.itens[contador.index].pesoPercentual}" minFractionDigits="2" type="number" />" readonly="readonly"/>
-						</td>
-						<td style="max-width:130px" >
-							<input type="text" name="bean.itens[${contador.index}].pesoLiquido" id="pesoLiquido_${contador.index}" class="required form-control" value="<fmt:formatNumber value="${bean.itens[contador.index].pesoLiquido}" minFractionDigits="2" type="number" />" readonly="readonly"/>
-						</td>
-						
-					</tr>
-				</c:forEach>
+						<tr id="item_${contador.index}">
+							<td style="vertical-align: middle;">
+								<span title="Excluir" class="glyphicon glyphicon-remove" onclick="removerItem(${contador.index})"></span>
+							</td>
+							<td style="max-width:130px" >
+							    <input type="hidden" id="id_${contador.index}" name="bean.itens[${contador.index}].id" value="${item.id}"/>
+								<c:if test="${bean.class.simpleName eq 'ComprovantePesagemEntrada' }">
+									<select id="material_${contador.index}" name="bean.itens[${contador.index}].material.id" class="required form-control selectpicker"  data-live-search="true">
+									</select>
+								</c:if>
+								<c:if test="${bean.class.simpleName eq 'ComprovantePesagemSaida' }">
+									<select id="produto_${contador.index}" name="bean.itens[${contador.index}].produto.id" class="required form-control selectpicker"  data-live-search="true">
+									</select>
+								</c:if>
+							</td>
+							<td style="max-width:130px" >
+								<input type="text" name="bean.itens[${contador.index}].pesoPercentual" id="pesoPercentual_${contador.index}" class="required form-control percent" value="<fmt:formatNumber value="${bean.itens[contador.index].pesoPercentual}" minFractionDigits="2" type="number" />"/>
+							</td>
+							<td style="max-width:130px" >
+								<input type="text" name="bean.itens[${contador.index}].pesoLiquido" id="pesoLiquido_${contador.index}" class="required form-control valor" value="<fmt:formatNumber value="${bean.itens[contador.index].pesoLiquido}" minFractionDigits="2" type="number" />"/>
+							</td>
+							
+						</tr>
+					</c:forEach>
 				</c:if>
 			</tbody>
 			</table>
@@ -386,7 +386,7 @@
 				
 	      	</div>
 	      	<div class="col-md-2">
-				<button type="button" id="btnAdicionar" class="btn btn-default btn-md form-control">
+				<button type="submit" id="bntSalvar" class="btn btn-default btn-md form-control">
 				  <span class="glyphicon glyphicon-floppy-disk"></span> Salvar
 				</button>
 	      	</div>

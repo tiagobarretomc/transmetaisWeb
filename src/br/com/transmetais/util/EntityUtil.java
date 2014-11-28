@@ -14,9 +14,8 @@ import br.com.transmetais.bean.Combo;
 import br.com.transmetais.dao.commons.DAOException;
 
 public class EntityUtil {
-	public static <E> Object getId(E bean){
-		if(bean == null) return null;
-		Class<E> clazz = (Class<E>) bean.getClass();
+	public static <E> Object getId(Class<?> clazz, E bean){
+		if(bean == null || bean.getClass().equals(Object.class)) return null;
 		if(clazz.isAnnotationPresent(Entity.class)){
 			    for (Field field : clazz.getDeclaredFields()) {
 					if(field.isAnnotationPresent(Id.class)){
@@ -33,7 +32,7 @@ public class EntityUtil {
 					}
 				}
 		}
-		return null;
+		return getId(bean.getClass().getSuperclass(),bean);
 	}
 	
 	public static <T, V> List<Combo<V>> retrieveCombo(List<T> lista,String idField, String valueField) throws DAOException{
