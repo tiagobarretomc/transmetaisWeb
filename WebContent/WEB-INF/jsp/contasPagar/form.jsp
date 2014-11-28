@@ -279,12 +279,12 @@ $("#btnVoltar").click(function(){
 						<div class="row">
 							<div class="col-md-2">
 								<label for="conta.compra.dataCompetencia">Dt Competência:</label> 
-							<input name="" id="conta.compra.dataCompetencia" value="<fmt:formatDate value="${conta.compra.dataCompetencia}" type="date" pattern="dd/MM/yyyy"/>" class="form-control "  maxlength="10" readonly="readonly"/>
+							<input name="" id="conta.compra.dataCompetencia" value="<fmt:formatDate value="${contaAPagar.compra.data}" type="date" pattern="dd/MM/yyyy"/>" class="form-control "  maxlength="10" readonly="readonly"/>
 							</div>
 							<c:if test="${empty  contaAPagar.parcela}">
 								<div class="col-md-2">
-									<label for="conta.compra.dataVencimento">Dt Competência:</label> 
-									<input name="" id="conta.compra.dataVencimento" value="<fmt:formatDate value="${conta.compra.dataVencimento}" type="date" pattern="dd/MM/yyyy"/>" class="form-control "  maxlength="10" readonly="readonly"/>
+									<label for="conta.compra.dataVencimento">Dt Vencimento:</label> 
+									<input name="" id="conta.compra.dataVencimento" value="<fmt:formatDate value="${contaAPagar.compra.dataVencimento}" type="date" pattern="dd/MM/yyyy"/>" class="form-control "  maxlength="10" readonly="readonly"/>
 								</div>
 							</c:if>
 							
@@ -292,9 +292,56 @@ $("#btnVoltar").click(function(){
 								<label for="contaAPagar.compra.modalidadePagamento.descricao">Mod. pagamento:</label> 
 							<input name="" id="contaAPagar.compra.modalidadePagamento.descricao" value="${contaAPagar.compra.modalidadePagamento.descricao }" class="form-control "   readonly="readonly"/>
 							</div>
+							<c:if test="${(empty contaApagar.parcela) && (contaAPagar.modalidadePagamento == 'C')}">
+								<div class="col-md-2">
+									<label for="contaAPagar.compra.chequeEmitido.numero">Num. Cheque:</label> 
+								<input name="" id="contaAPagar.compra.chequeEmitido.numero" value="${contaAPagar.compra.chequeEmitido.numeroCheque }" class="form-control "   readonly="readonly"/>
+								</div>
+								
+								<div class="col-md-4">
+								<label for="contaAPagar.compra.chequeEmitido.conta.descricao">Conta Bancária:</label> 
+								<input name="" id="contaAPagar.compra.chequeEmitido.conta.descricao" value="${contaAPagar.compra.chequeEmitido.conta.descricao }" class="form-control "  readonly="readonly" />
+									
+									
+							</div>
+							</c:if>
 							
 						</div>
+						<c:if test="${not empty contaAPagar.compra.itens }">
+						<br/>
+						<div id="divTabelaParcelas">
+								<table  class="table table-bordered table-striped" id="tabelaParcelas">
+								
+								<thead>
+							<tr>
+								<th >Material</th>
+								<th >Preço</th>
+								<th >Quantidade</th>
+								<th >Valor</th>
+								
+								
+							</tr>
+							</thead>
+							<tbody>
+							<c:forEach var="item" items="${contaAPagar.compra.itens}" >
+				
+								
+								<tr >
+								
+									<td style="vertical-align: middle;">${item.material.descricao}</td>
+									<td style="max-width:110px"><fmt:formatNumber value="${item.preco}" minFractionDigits="2" type="currency"/></td>
+									<td style="max-width:110px"><fmt:formatNumber value="${item.quantidade}" minFractionDigits="2" /></td>
+									
+									<td style="max-width:110px"><fmt:formatNumber value="${item.valor}" minFractionDigits="2" type="currency"/></td>
+									
 						
+								</tr>
+							</c:forEach>
+							</tbody>
+							</table>
+							</div>
+						
+						</c:if>
 						<c:if test="${not empty contaAPagar.parcela}">
 						<br/>
 		<div class="panel panel-default">

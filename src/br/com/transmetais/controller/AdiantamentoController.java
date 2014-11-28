@@ -9,7 +9,6 @@ import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.Adiantamento;
-import br.com.transmetais.bean.ChequeEmitido;
 import br.com.transmetais.bean.ChequeEmitidoAdiantamento;
 import br.com.transmetais.bean.Conta;
 import br.com.transmetais.bean.MovimentacaoAdiantamento;
