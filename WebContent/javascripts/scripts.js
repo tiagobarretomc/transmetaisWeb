@@ -22,6 +22,8 @@ function carregarCombo(obj, list, selecionado) {
 	$(obj).selectpicker({});
 };
 function initFields() {
+	
+	addRules();
 	try{
 		$(".percent").priceFormat({
 			prefix : '',
@@ -30,6 +32,9 @@ function initFields() {
 			limit : 5
 			
 		});
+	}catch(err) {
+	}
+	try{
 		$(".valor").priceFormat({
 			prefix : '',
 			centsSeparator : ',',
@@ -37,7 +42,13 @@ function initFields() {
 			limit : 12
 			
 		});
+	}catch(err) {
+	}
+	try{
 		$('.selectpicker').selectpicker();
+	}catch(err) {
+	}
+	try{
 		$('.datepicker').mask("99/99/9999");
 		$('.datepicker').datepicker({
 	   		language : 'pt-BR',
@@ -84,4 +95,34 @@ function roundNumber (rnum) {
 
 	   return Math.round(rnum*Math.pow(10,2))/Math.pow(10,2);
 
-	}
+}
+function somaSelectores(selector) {
+    var sum = 0;
+    $(selector).each(function() {
+        sum += moeda2float($(this).val());
+    });
+    return sum;
+}
+
+function addRules(){
+	jQuery.validator.addMethod( "dateLessThanToday", function( value, element ) {
+   	    /* ... regra de validação ... */
+   	    var isValid = false;
+   	    
+   	   var dataPagamento = Date.parseExact(value,'dd/MM/yyyy');
+   	   var hoje = Date.today();
+   	  
+   	  
+   	 	if(dataPagamento.compareTo(hoje) <= 0){
+   	 		return true;
+   	 	}else{
+   	 		return false;
+   	 	}
+   	 	
+   	 	//alert(dataPagamento <= hoje );
+   	 	
+   	    return  isValid;
+   	 
+   	}, "A data deve ser menor ou igual a data atual." );
+	
+}

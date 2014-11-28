@@ -25,12 +25,11 @@ CREATE TABLE `comprovante_pesagem` (
   KEY `comprovante_pesagem_cliente_idx` (`cliente_id`),
   CONSTRAINT `comprovante_pesagem_fornecedor` FOREIGN KEY (`tipo_veiculo_id`) REFERENCES `tipo_veiculo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `comprovante_pesagem_cliente` FOREIGN KEY (`cliente_id`) REFERENCES `cliente` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `comprovante_pesagem_tp_veiculo` FOREIGN KEY (`tipo_veiculo_id`) REFERENCES `tipoVeiculo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `comprovante_pesagem_tp_veiculo` FOREIGN KEY (`tipo_veiculo_id`) REFERENCES `tipo_veiculo` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
  CREATE TABLE `item_pesagem` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nr_item` varchar(45) COLLATE utf8_unicode_ci NOT NULL,
   `produto_id` int(11) DEFAULT NULL,
   `peso_perc` double NOT NULL,
   `peso_liquido` double NOT NULL,
