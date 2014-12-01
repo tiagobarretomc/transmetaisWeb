@@ -44,3 +44,14 @@ CREATE TABLE `comprovante_pesagem` (
   CONSTRAINT `item_pesagem_material` FOREIGN KEY (`material_id`) REFERENCES `material` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `item_pesagem_comprovante` FOREIGN KEY (`comprov_pesagem_id`) REFERENCES `comprovante_pesagem` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+ALTER TABLE `transmetais`.`comprovante_pesagem` 
+ADD COLUMN `arquivo_id` INT NULL AFTER `tipo`,
+ADD INDEX `comprovante_pesagem_arquivo_idx` (`arquivo_id` ASC);
+ALTER TABLE `transmetais`.`comprovante_pesagem` 
+ADD CONSTRAINT `comprovante_pesagem_arquivo`
+  FOREIGN KEY (`arquivo_id`)
+  REFERENCES `transmetais`.`arquivo` (`id`)
+  ON DELETE NO ACTION
+  ON UPDATE NO ACTION;
+

@@ -3,6 +3,7 @@ package br.com.transmetais.bean;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
@@ -16,6 +17,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -57,6 +59,9 @@ public abstract class ComprovantePesagem {
 	private Double percentualImpureza;
 	@Column(name="peso_impureza")
 	private BigDecimal pesoImpureza;
+	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true)
+	@JoinColumn(name="arquivo_id")
+	private Arquivo arquivo;
 
 	public Long getId() {
 		return id;
@@ -160,6 +165,14 @@ public abstract class ComprovantePesagem {
 
 	public void setPesoImpureza(BigDecimal pesoImpureza) {
 		this.pesoImpureza = pesoImpureza;
+	}
+
+	public Arquivo getArquivo() {
+		return arquivo;
+	}
+
+	public void setArquivo(Arquivo arquivo) {
+		this.arquivo = arquivo;
 	}
 
 }
