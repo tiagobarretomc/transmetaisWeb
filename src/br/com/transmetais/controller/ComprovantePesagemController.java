@@ -41,12 +41,16 @@ public abstract class ComprovantePesagemController<T extends ComprovantePesagem>
 	}
 	@Post
 	public void gravar(T bean, UploadedFile uFile) {
-		String nomeArquivo = uFile.getFileName().split(".")[0];
-		String extensaoArquivo = uFile.getFileName().split(".")[1];
-		Arquivo arquivo = new Arquivo(nomeArquivo, extensaoArquivo);
-		bean.setArquivo(arquivo);
-		super.add(bean);
-		FileUtil.addFile(this.getClass().getAnnotation(Path.class).value()[0], arquivo.getId().toString(), uFile.getFile());
+		if(uFile != null){
+			String nomeArquivo = uFile.getFileName().split("\\.")[0];
+			String extensaoArquivo = uFile.getFileName().split("\\.")[1];
+			Arquivo arquivo = new Arquivo(nomeArquivo, extensaoArquivo);
+			bean.setArquivo(arquivo);
+			super.add(bean);
+			FileUtil.addFile(this.getClass().getAnnotation(Path.class).value()[0], arquivo.getId().toString(), uFile.getFile());
+		}else{
+			super.add(bean);
+		}
 	}
 	
 	@Autowired

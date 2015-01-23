@@ -16,7 +16,10 @@
 		var produtoList = ${produtoList};
 	</c:if>
 	var itensPesagem = ${itensPesagem};
-    var qtdItensPesagem = ${fn:length(itensPesagem)};
+	var qtdItensPesagem = 0;
+	if(itensPesagem != null){
+		qtdItensPesagem = ${fn:length(itensPesagem)};
+	}
     $(document).ready(function(){
         
         $("#btnAdicionarItem").click(function(){
@@ -44,6 +47,10 @@
     		initFields();
     		onchangePercentualPeso($('#pesoPercentual_' + qtdItensPesagem));
     		onchangeValorPeso($('#pesoLiquido_' + qtdItensPesagem));
+    		if(qtdItensPesagem == 0){
+    			$('#pesoPercentual_' + qtdItensPesagem).val("100,00");
+    			$('#pesoLiquido_' + qtdItensPesagem).val($("#pesoLiquido").val());
+            }
     		qtdItensPesagem++;
     	});
         $('#formComprovantePesagem').validate({
@@ -273,7 +280,7 @@
 			</div>
         	<div class="col-md-2">
         		<label for="bean.placaVeiculo">Placa do veículo:</label>
-        		<input name="bean.placaVeiculo" id="bean.placaVeiculo" value="${bean.placaVeiculo}" class="form-control required" size="2" maxlength="8"/>
+        		<input name="bean.placaVeiculo" id="bean.placaVeiculo" onkeydown="Mascara(this, event, mascaraPlaca);" value="${bean.placaVeiculo}" class="form-control required" size="2" maxlength="8"/>
         	</div>
         	<div class="col-md-5">
         		<label for="bean.nomeTransportador">Nome do Transportador:</label>
@@ -305,8 +312,8 @@
       	</div>
       	<div class="row">
       		<div class="col-md-5">
-      			<label for="arquivo">Ticket de pesagem:</label>
-      			<input type="file" name="arquivo" id="arquivo">
+      			<label for="uFile">Ticket de pesagem:</label>
+      			<input type="file" name="uFile" id="uFile">
       		</div>
       	</div>
       	<br/>

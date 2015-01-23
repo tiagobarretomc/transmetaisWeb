@@ -1,14 +1,20 @@
 package br.com.transmetais.controller;
 
+import java.io.Serializable;
+
 import br.com.caelum.vraptor.ioc.Component;
 import br.com.caelum.vraptor.ioc.SessionScoped;
 import br.com.transmetais.bean.Usuario;
 
 @Component
 @SessionScoped
-public class UserSession {
+public class UserSession implements Serializable{
 
-    private Usuario user;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7335609776581390861L;
+	private Usuario user;
 
     public boolean isLogged() {
         return getUser() != null;

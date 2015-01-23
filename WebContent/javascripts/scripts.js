@@ -126,3 +126,62 @@ function addRules(){
    	}, "A data deve ser menor ou igual a data atual." );
 	
 }
+
+function Mascara(o, e, f){
+    v_obj=o;
+    v_fun=f;
+    enableMascara(e);
+        setTimeout("execmascara()",2);
+}
+
+/*Função que Executa os objetos*/
+function execmascara(){
+    v_fun(v_obj)
+}
+
+
+var mascaraEnabled = false;
+function enableMascara(event){
+
+        if( event.keyCode == 8 ||
+                        (event.keyCode >=37 && event.keyCode <=40)){
+                mascaraEnabled=false;
+        }else{
+                mascaraEnabled=true;
+        }
+
+}
+function mascaraPlaca(v){
+
+        if(mascaraEnabled){
+                var str = v.value.replace('-','');
+
+                var reg0 = new RegExp(/([A-z]{1})/);
+                var reg1 = new RegExp(/([A-z]{2})/);
+                var reg2 = new RegExp(/([A-z]{3})/);
+                var reg3 = new RegExp(/([0-9]{1,4})/);
+
+
+                if(reg2.test(str)){
+
+                        v.value = reg2.exec(str)[1].toUpperCase().concat('-');
+                        if(reg3.test(str)){
+                                v.value = v.value.concat(reg3.exec(str)[1]);
+                        }
+                }else if(reg1.test(str)){
+
+                        v.value = reg1.exec(str)[1].toUpperCase().concat('-');
+                        if(reg3.test(str)){
+                                v.value = v.value.concat(reg3.exec(str)[1]);
+                        }
+                }else if(reg0.test(str)){
+
+                        v.value = reg0.exec(str)[1].toUpperCase();
+
+                }else{
+                        v.value = '';
+                }
+        }
+
+
+}

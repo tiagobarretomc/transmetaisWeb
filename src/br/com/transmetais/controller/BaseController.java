@@ -78,6 +78,7 @@ public abstract class BaseController<E, T extends CrudDAO<E>> {
 	}
 	@Post
 	public void add(E bean) {
+		boolean isSucesso = false;
 		prePersistUpdate(bean);
 	 	validateForm(bean);
 		Long id = (Long)EntityUtil.getId(bean.getClass(), bean);
@@ -85,16 +86,19 @@ public abstract class BaseController<E, T extends CrudDAO<E>> {
 		if (id != null && id > 0){
 			if(update(bean)){
 				msg = "Registro alterado com sucesso." ;
+				isSucesso = true;
 			}
 		}else{
 			if(persist(bean)){
 				msg = "Registro incluído com sucesso." ;
+				isSucesso = true;
 			}
 		}
-		postPersistUpdate(bean, result);
-		result.include("mensagem", msg);
-		result.forwardTo(this.getClass()).lista();
-		
+		if(isSucesso){
+			postPersistUpdate(bean, result);
+			result.include("mensagem", msg);
+			result.forwardTo(this.getClass()).lista();
+		}
 	  }
 	
 	
