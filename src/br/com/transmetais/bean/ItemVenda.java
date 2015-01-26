@@ -1,10 +1,9 @@
 package br.com.transmetais.bean;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,52 +12,63 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="estoque")
-public class Estoque {
+@Table(name="item_venda")
+public class ItemVenda {
 	
 	@Id 
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Integer id;
+	private Long id;
+	
+	
 	@ManyToOne
 	@JoinColumn(name="material_id")
 	private Material material;
 	private BigDecimal quantidade;
-	@Column(name="data_alteracao")
-	private Date dataAlteracao;
 	private BigDecimal valor;
-	
-	public Integer getId() {
+	private BigDecimal precoUnitario;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="venda_id")
+	private Venda venda;
+	public Long getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
+	
 	public Material getMaterial() {
 		return material;
 	}
+	
 	public void setMaterial(Material material) {
 		this.material = material;
 	}
+	
 	public BigDecimal getQuantidade() {
 		return quantidade;
 	}
 	public void setQuantidade(BigDecimal quantidade) {
 		this.quantidade = quantidade;
 	}
-	public Date getDataAlteracao() {
-		return dataAlteracao;
-	}
-	public void setDataAlteracao(Date dataAlteracao) {
-		this.dataAlteracao = dataAlteracao;
-	}
-	
-	
 	public BigDecimal getValor() {
 		return valor;
 	}
-	
 	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
+	public BigDecimal getPrecoUnitario() {
+		return precoUnitario;
+	}
+	public void setPrecoUnitario(BigDecimal precoUnitario) {
+		this.precoUnitario = precoUnitario;
+	}
+	public Venda getVenda() {
+		return venda;
+	}
+	public void setVenda(Venda venda) {
+		this.venda = venda;
+	}
+	
+	
 
 }

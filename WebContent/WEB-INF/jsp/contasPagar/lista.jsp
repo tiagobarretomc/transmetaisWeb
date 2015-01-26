@@ -58,10 +58,10 @@
 	   	
 	   	
     	
-    	$("#btnFiltrar").click(function(){
+    	/* $("#btnFiltrar").click(function(){
     		
     		$("#divTabela").load( '<c:url value="/contasPagar/loadListaMovimentacao"/>', $('#formCompra').serialize() );
-    	});
+    	}); */
     	
     	
     	
@@ -78,8 +78,8 @@
 		<div class="alert alert-warning alert-dismissable" id="divError" style="display: none">Selecione um fornecedor!</div>
 		<div class="panel panel-default">
   	<div class="panel-body">
-		<form action="<c:url value='/compra/'/>" id="formCompra" name="formCompra" method="post">
-		<input type="hidden" name="_format" value="json">
+		<form action="<c:url value='/contasPagar/'/>" id="formCompra" name="formCompra" method="post">
+		<!-- <input type="hidden" name="_format" value="json"> -->
 		<div class="row">
         	
         	<div class="col-md-3">
@@ -96,7 +96,7 @@
         </div>
        
         <br/>
-        <button id="btnFiltrar" type="button" class="btn btn-default btn-sm">
+        <button id="btnFiltrar" type="submit" class="btn btn-default btn-sm">
   		<span class="glyphicon glyphicon-filter"></span> Filtrar
 		</button>
         </form>

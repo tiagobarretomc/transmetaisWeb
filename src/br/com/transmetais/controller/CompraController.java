@@ -445,9 +445,14 @@ public class CompraController {
 						estoque.setQuantidade(new BigDecimal(0));
 					}
 					
+					if (estoque.getValor() == null){
+						estoque.setValor(new BigDecimal(0));
+					}
+					
 					estoque.setDataAlteracao(new Date());
 					
 					estoque.setQuantidade(estoque.getQuantidade().add(item.getQuantidade()));
+					estoque.setValor(estoque.getValor().add(item.getValor()));
 					
 					//
 					if (estoque.getId() !=null && estoque.getId() != 0){

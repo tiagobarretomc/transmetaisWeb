@@ -15,13 +15,25 @@
 	        
 		});
 		
+		$('.selectpicker').selectpicker({
+            
+        });
+		
+		$('#precoMaterial').priceFormat({
+            prefix: '',
+            centsSeparator: ',',
+            thousandsSeparator: '.',
+            limit: 12
+        });
+		
 	});
   
 </script>
     <div class="container">
     <br>
 	<h2>Tabela de Preços do Cliente</h2>
-	
+	<div class="panel panel-default">
+	<div class="panel-body">
 	<form action="${pageContext.request.contextPath}/clienteMaterial/associar" id="formMateriais" name="formMateriais" method="post">
 	<input type="hidden" id="clienteId" name="clienteMaterial.cliente.id" value="${cliente.id}"/>
 	<table style="width:  600px;">
@@ -53,21 +65,21 @@
 	<br/>
 	
 	
-	<div class="row" style="width: 600px;">
+	<div class="row" >
         	<div class="col-md-4">Material:<br/>
-				<select style="width: 180px;" id="cboMaterial" name="clienteMaterial.material.id" class="required">
+				<select style="width: 180px;" id="cboMaterial" name="clienteMaterial.material.id" class="required form-control selectpicker">
 					<option value="" >--Selecione--</option>
 					<c:forEach var="material" items="${materiais}">
 						<option value="${material.id }" >${material.descricao}</option>
 					</c:forEach>
 				</select></div>
-        	<div class="col-md-4">Preço:<br/>
+        	<div class="col-md-2">Preço:<br/>
 				
 			
-				<input  type="text" id="precoMaterial" size="15" name="clienteMaterial.valor" class="required"/></div>
+				<input  type="text" id="precoMaterial" size="15" name="clienteMaterial.valor" class="required form-control"/></div>
         	<div class="col-md-4">Forma de Frete/Entrega:<br/>
 				
-				<select style="width: 180px;" id="cboTipoFrete" name="clienteMaterial.tipoFrete" class="required">
+				<select style="width: 180px;" id="cboTipoFrete" name="clienteMaterial.tipoFrete" class="required selectpicker form-control">
 					<option value="" >--Selecione--</option>
 					<c:forEach var="tipoFrete" items="${tiposFrete}">
 						<option value="${tipoFrete.name }" >${tipoFrete.descricao}</option>
@@ -87,7 +99,7 @@
 	
 	
           
-	<table  class="table table-bordered table-striped" style="width: 800px">
+	<table  class="table table-bordered table-striped">
 		<thead>
 			<tr>
 				<th>Material</th>
@@ -125,6 +137,7 @@
     
     
 </form>
-		
+	</div>
+	</div>	
 </div>
 

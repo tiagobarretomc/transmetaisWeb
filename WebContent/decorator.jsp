@@ -185,7 +185,7 @@ form {
 	             <li><a href="<c:url value='/contaBancaria/'/>">Contas Bancárias</a></li>
 	              <li><a href="<c:url value='/contaFornecedor/'/>">Contas de Fornecedores</a></li>
 	               <li><a href="<c:url value='/contaFundoFixo/lista'/>">Contas de Fundo Fixo</a></li>
-	               <li><a href="<c:url value='/contaCliente/'/>">Contas de Clientes</a></li>
+	               <li><a href="<c:url value='/contaCliente/lista'/>">Contas de Clientes</a></li>
 	             <li><a href="<c:url value='/contaContabil/'/>">Contas Contábeis</a></li>
 
 								</ul></li>
