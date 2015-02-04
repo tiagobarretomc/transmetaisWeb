@@ -56,6 +56,7 @@
 				        url: '${pageContext.request.contextPath}/fornecedor/loadCidades?_format=json',
 				        data:	{id: $("#estado").val()},
 				 	    success: function(json){
+				 	    	
 				 	    	//alert(json);
 				 	    	var jsonObject = eval(json);
 				 	    	//alert(jsonObject);

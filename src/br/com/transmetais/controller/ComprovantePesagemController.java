@@ -63,7 +63,7 @@ public abstract class ComprovantePesagemController<T extends ComprovantePesagem>
 	
 	
 	public File downloadArquivo(String id) {
-		  File file = new File(FileUtil.FOLDER_FILES_UPLOAD + "cpe/", id+".pdf");
+		  File file = new File(FileUtil.FOLDER_FILES_UPLOAD + this.getClass().getAnnotation(Path.class).value()[0], id+".pdf");
 		  return (file.exists()) ? file : new File(FileUtil.FOLDER_FILES_UPLOAD + "/default.jpg");
 		}
 	

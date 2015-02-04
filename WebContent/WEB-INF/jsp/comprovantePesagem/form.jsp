@@ -306,7 +306,12 @@
       	<div class="row">
       		<div class="col-md-5">
       			<label for="arquivo">Ticket de pesagem:</label>
+      			<c:if test="${ not empty  bean.arquivo }">
+      				<a href="<c:url value='/${controller }/downloadArquivo'/>?id=${bean.id}">${bean.arquivo.nome}${bean.arquivo.extensao}</a>
+      			</c:if>
+      			<c:if test="${  empty  bean.arquivo }">
       			<input type="file" name="arquivo" id="arquivo">
+      			</c:if>
       		</div>
       	</div>
       	<br/>

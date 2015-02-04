@@ -1,5 +1,7 @@
 package br.com.transmetais.controller;
 
+import static br.com.caelum.vraptor.view.Results.json;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -170,6 +172,20 @@ public class FornecedorController {
 		}
 		
 		return lista;
+	}
+	
+	public void loadCidades(Integer id) throws Exception{
+		Estado estadoSelecionado = null;
+		
+		
+		if (id != null && id>0){
+			estadoSelecionado = estadoDAO.findById(id);
+		}
+		
+		result.use(json()).from(estadoSelecionado.getCidades()).serialize();
+		
+		result.nothing();
+		
 	}
 
 }

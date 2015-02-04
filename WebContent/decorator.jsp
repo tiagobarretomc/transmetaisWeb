@@ -214,6 +214,8 @@ form {
 	          	 <li><a href="<c:url value='/chequeEmitido/lista'/>">Cheque Emitido</a></li>
 	          	 <li class="divider"></li>
 	          	<li><a href="<c:url value='/contasReceber/'/>">Contas a Receber</a></li>
+	          	<li><a href="<c:url value='/transferencia/lista'/>">Transferências</a></li>
+	          	<li><a href="<c:url value='/contaBancaria/extrato/'/>">Movimentação das Contas</a></li>
 	          </ul>
 	        </li>
 							<li><a href="#">Consultas</a></li>
