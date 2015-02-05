@@ -91,6 +91,11 @@
 							Adiantamento - ${movimentacao.adiantamento.id} - Fornecedor: ${movimentacao.adiantamento.fornecedor.nome}
 						
 					</c:if>
+					<c:if test="${movimentacao.class.name  == 'br.com.transmetais.bean.MovimentacaoTransferencia'}">
+						
+							Transferência - ${movimentacao.transferencia.id} - de: ${movimentacao.transferencia.contaOrigem.descricao } para:  ${movimentacao.transferencia.contaDestino.descricao }
+						
+					</c:if>
 				</td>
 				
 				<td >

@@ -185,7 +185,7 @@ form {
 	             <li><a href="<c:url value='/contaBancaria/'/>">Contas Bancárias</a></li>
 	              <li><a href="<c:url value='/contaFornecedor/'/>">Contas de Fornecedores</a></li>
 	               <li><a href="<c:url value='/contaFundoFixo/lista'/>">Contas de Fundo Fixo</a></li>
-	               <li><a href="<c:url value='/contaCliente/'/>">Contas de Clientes</a></li>
+	               <li><a href="<c:url value='/contaCliente/lista'/>">Contas de Clientes</a></li>
 	             <li><a href="<c:url value='/contaContabil/'/>">Contas Contábeis</a></li>
 
 								</ul></li>
@@ -214,6 +214,8 @@ form {
 	          	 <li><a href="<c:url value='/chequeEmitido/lista'/>">Cheque Emitido</a></li>
 	          	 <li class="divider"></li>
 	          	<li><a href="<c:url value='/contasReceber/'/>">Contas a Receber</a></li>
+	          	<li><a href="<c:url value='/transferencia/lista'/>">Transferências</a></li>
+	          	<li><a href="<c:url value='/contaBancaria/extrato/'/>">Movimentação das Contas</a></li>
 	          </ul>
 	        </li>
 							<li><a href="#">Consultas</a></li>

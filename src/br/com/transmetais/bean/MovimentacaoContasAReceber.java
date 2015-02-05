@@ -18,5 +18,11 @@ public class MovimentacaoContasAReceber extends Movimentacao{
 	private ContaAReceber contaAReceber;
 
 	
+	public ContaAReceber getContaAReceber() {
+		return contaAReceber;
+	}
 	
+	public void setContaAReceber(ContaAReceber contaAReceber) {
+		this.contaAReceber = contaAReceber;
+	}
 }

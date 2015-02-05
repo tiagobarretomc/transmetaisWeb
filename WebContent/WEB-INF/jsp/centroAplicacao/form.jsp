@@ -51,7 +51,7 @@
 						<option value ="">Selecione</option>
 						<c:forEach var="centro" items="${centrosCustos}" varStatus="contador">
 						
-							<option value ="${centro.id}" ${centroAplicacao.centroCusto.id eq centro.id ? 'selected' : ''}>${centro.descricao}</option>
+							<option value ="${centro.id}" ${centroAplicacao.centroCusto.id eq centro.id ? 'selected' : ''}>${centro.numero} - ${centro.descricao}</option>
 		
 						</c:forEach>	
 					</select></div>

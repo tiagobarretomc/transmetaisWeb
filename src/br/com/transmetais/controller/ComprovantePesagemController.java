@@ -1,8 +1,6 @@
 package br.com.transmetais.controller;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +20,7 @@ import br.com.transmetais.util.FileUtil;
 
 public abstract class ComprovantePesagemController<T extends ComprovantePesagem> extends BaseController<T, ComprovantePesagemDAO<T>> {
 	private TipoVeiculoDaoImpl tipoVeiculoDaoImpl;
-	private ArquivoDaoImpl arquivoDaoImpl;
+	
 	
 	protected void initForm(ComprovantePesagem bean)  {
 		if(bean.getId() == null || bean.getId() == 0){
@@ -40,26 +38,39 @@ public abstract class ComprovantePesagemController<T extends ComprovantePesagem>
 		super.initFilter(filter);
 	}
 	@Post
-	public void gravar(T bean, UploadedFile uFile) {
-		if(uFile != null){
-			String nomeArquivo = uFile.getFileName().split("\\.")[0];
-			String extensaoArquivo = uFile.getFileName().split("\\.")[1];
-			Arquivo arquivo = new Arquivo(nomeArquivo, extensaoArquivo);
-			bean.setArquivo(arquivo);
-			super.add(bean);
-			FileUtil.addFile(this.getClass().getAnnotation(Path.class).value()[0], arquivo.getId().toString(), uFile.getFile());
-		}else{
-			super.add(bean);
+	public void gravar(T bean, UploadedFile arquivo) {
+		
+		
+		String extensao = null;
+		if (arquivo != null){
+			
+		    String nomeArquivo = arquivo.getFileName();
+		    
+		    extensao = nomeArquivo.substring(nomeArquivo.lastIndexOf("."), nomeArquivo.length());
+		    
+			//String extensaoArquivo = arquivo.getFileName().split(".")[1];
+			Arquivo arq = new Arquivo( nomeArquivo, extensao);
+			bean.setArquivo(arq);
+			
 		}
+		
+			super.add(bean);
+		
+		if (arquivo != null)
+			FileUtil.addFile(this.getClass().getAnnotation(Path.class).value()[0], bean.getId().toString() + extensao, arquivo.getFile());
+		
 	}
+	
+	
+	public File downloadArquivo(String id) {
+		  File file = new File(FileUtil.FOLDER_FILES_UPLOAD + this.getClass().getAnnotation(Path.class).value()[0], id+".pdf");
+		  return (file.exists()) ? file : new File(FileUtil.FOLDER_FILES_UPLOAD + "/default.jpg");
+		}
 	
 	@Autowired
 	public void setTipoVeiculoDaoImpl(TipoVeiculoDaoImpl tipoVeiculoDaoImpl) {
 		this.tipoVeiculoDaoImpl = tipoVeiculoDaoImpl;
 	}
-	@Autowired
-	public void setArquivoDaoImpl(ArquivoDaoImpl arquivoDaoImpl) {
-		this.arquivoDaoImpl = arquivoDaoImpl;
-	}
+	
 	
 }

@@ -2,123 +2,143 @@ package br.com.transmetais.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
-import br.com.transmetais.bean.ContaAPagar;
+import br.com.transmetais.bean.Conta;
+import br.com.transmetais.bean.MovimentacaoTransferencia;
 import br.com.transmetais.bean.Transferencia;
 import br.com.transmetais.dao.ContaDAO;
 import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.TransferenciaDAO;
 import br.com.transmetais.dao.commons.DAOException;
-import br.com.transmetais.type.StatusMovimentacaoEnum;
+import br.com.transmetais.type.TipoOperacaoEnum;
 
 @Resource
-public class TransferenciaController {
+@Path("/transferencia")
+public class TransferenciaController extends BaseController<Transferencia, TransferenciaDAO>{
 	
-	private TransferenciaDAO dao;
 	private MovimentacaoDAO movimentacaoDao;
 	private ContaDAO contaDao;
-	private final Result result;
 	
 	
-	public TransferenciaController(Result result, TransferenciaDAO dao, MovimentacaoDAO movimentacaoDao, ContaDAO contaDao) {
-		this.result = result;
-		this.dao = dao;
-		this.movimentacaoDao = movimentacaoDao;
-		this.contaDao = contaDao;
+	@Override
+	protected void prePersistUpdate(Transferencia bean) {
+		// TODO Auto-generated method stub
 		
 	}
-	
-	@Path({"/transferencia/","/transferencia","/transferencia/lista"})
-	public List<Transferencia> lista() throws DAOException{
-		List<Transferencia> lista = null;
-		
-		lista = dao.findAll();
-		
-		result.include("contas",contaDao.findAll());
-		
-		return lista;
-	}
-	
-	
-	@Path({"/transferencia/{transferencia.id}","/transferencia/form","/transferencia/novo"})
-	public Transferencia form(Transferencia transferencia) throws DAOException{
-		
-		
-		if (transferencia != null && transferencia.getId() != null && transferencia.getId()>0){
-			
-			transferencia = dao.findById(transferencia.getId());
-			
-		}
-		
-		
-		return transferencia;
-	}
-	
-	@Path({"/transferencia/add"})
-	public void add(Transferencia transferencia) throws DAOException {
-		try {
-			
-			
-			
-			if (transferencia.getId() != null && transferencia.getId()>0){
-				dao.updateEntity(transferencia);
-			}else{
-				
-				dao.addEntity(transferencia);
-				
-				ContaAPagar contaaPagar = new ContaAPagar();
-				contaaPagar.setConta(transferencia.getContaOrigem());
-				contaaPagar.setDataPrevista(transferencia.getData());
-				contaaPagar.setStatus(StatusMovimentacaoEnum.A);
-				contaaPagar.setDescricao("Tansferencia " + transferencia.getId().toString() + transferencia.getDescricao());
-				contaaPagar.setValor(transferencia.getValor());
-				
-					/*
-					MovimentacaoContasAPagar movimentacao = new MovimentacaoContasAPagar();
-					movimentacao.setConta(transferencia.getContaOrigem());
-					movimentacao.setData(transferencia.getData());
-					TipoOperacaoEnum tipoOperacao = null;
-					
-					movimentacao.setTipoOperacao( TipoOperacaoEnum.D);
-					movimentacao.setValor(transferencia.getValor());
-					movimentacaoDao.addEntity(movimentacao);
-					
-					MovimentacaoContasAReceber movimentacaoReceber = new MovimentacaoContasAReceber();
-					movimentacaoReceber.setConta(transferencia.getContaDestino());
-					movimentacaoReceber.setData(transferencia.getData());
-					
-					
-					movimentacaoReceber.setTipoOperacao( TipoOperacaoEnum.C);
-					movimentacaoReceber.setValor(transferencia.getValor());
-					movimentacaoDao.addEntity(movimentacaoReceber);
-					*/
-					
-					
-				
-			}
-			
-		} catch (DAOException e) {
-			
-			e.printStackTrace();
-		}
-		
-		result.redirectTo(TransferenciaController.class).lista();
-	  }
-	
-	
-	@Path("/transferencia/remove/{conta.id}")
-	public void remove(Transferencia transferencia) throws DAOException {
-		
-		if (transferencia.getId() != null && transferencia.getId()>0){
-			dao.removeEntity(transferencia);
-		
-		}
-		result.redirectTo(TransferenciaController.class).lista();
-	  }
-	
 
+	@Override
+	protected void postPersistUpdate(Transferencia bean, Result result) {
+		
+//		ContaAPagar contaaPagar = new ContaAPagar();
+//		contaaPagar.setConta(bean.getContaOrigem());
+//		contaaPagar.setDataPrevista(bean.getData());
+//		contaaPagar.setStatus(StatusMovimentacaoEnum.A);
+//		contaaPagar.setDescricao("Tansferencia " + bean.getId().toString() + bean.getDescricao());
+//		contaaPagar.setValor(bean.getValor());
+		
+		
+		MovimentacaoTransferencia movimentacaoOrigem = new MovimentacaoTransferencia();
+		movimentacaoOrigem.setConta(bean.getContaOrigem());
+		movimentacaoOrigem.setData(bean.getData());
+		movimentacaoOrigem.setTransferencia(bean);
+		movimentacaoOrigem.setTipoOperacao(TipoOperacaoEnum.D);
+		movimentacaoOrigem.setValor(bean.getValor());
+		
+		
+		
+		try{
+			movimentacaoDao.addEntity(movimentacaoOrigem);
+		}catch(DAOException ex){
+			ex.printStackTrace();
+			result.include("erro", ex.getMessage());
+		}
+		
+		//Atualizando saldo da conta origem
+		Conta contaOrigem = bean.getContaOrigem();
+		try {
+			contaOrigem = contaDao.findById(contaOrigem.getId());
+		} catch (DAOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			result.include("erro", e1.getMessage());
+		}
+		contaOrigem.setSaldo(contaOrigem.getSaldo().subtract(bean.getValor()));
+		
+		try{
+			contaDao.updateEntity(contaOrigem);
+		}catch(DAOException ex){
+			ex.printStackTrace();
+			result.include("erro", ex.getMessage());
+		}
+		
+		
+		MovimentacaoTransferencia movimentacaoDestino = new MovimentacaoTransferencia();
+		movimentacaoDestino.setConta(bean.getContaDestino());
+		movimentacaoDestino.setData(bean.getData());
+		movimentacaoDestino.setTransferencia(bean);
+		movimentacaoDestino.setTipoOperacao(TipoOperacaoEnum.C);
+		movimentacaoDestino.setValor(bean.getValor());
+		try{
+			
+			movimentacaoDao.addEntity(movimentacaoDestino);
+		}catch(DAOException ex){
+			ex.printStackTrace();
+			result.include("erro", ex.getMessage());
+		}
+		
+		//Atualizando saldo da conta de Destino
+		Conta contaDestino = bean.getContaDestino();
+		try {
+			contaDestino = contaDao.findById(contaDestino.getId());
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			result.include("erro", e.getMessage());
+		}
+		contaDestino.setSaldo(contaDestino.getSaldo().add(bean.getValor()));
+		
+		try{
+			contaDao.updateEntity(contaDestino);
+		}catch(DAOException ex){
+			ex.printStackTrace();
+			result.include("erro", ex.getMessage());
+		}
+		
+	}
+	
+	
+	
+	
+	
+	
+	@Autowired 
+	public void setContaDao(ContaDAO contaDao) {
+		this.contaDao = contaDao;
+	}
+	
+	@Autowired
+	public void setMovimentacaoDao(MovimentacaoDAO movimentacaoDao) {
+		this.movimentacaoDao = movimentacaoDao;
+	}
+
+	@Override
+	protected Transferencia createInstance() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected void initForm(Transferencia bean) {
+		List<Conta> contas = contaDao.obterContasFinanceiras();
+		result.include("contas", contas);
+		
+	}
+	
+	
 	
 	
 //	@Path({"/contaBancaria/transferencia/","/contaBancaria/transferencia"})

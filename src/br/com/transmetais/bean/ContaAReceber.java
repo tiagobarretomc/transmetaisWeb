@@ -38,6 +38,15 @@ public class ContaAReceber {
 	@Enumerated(EnumType.STRING)
 	protected StatusMovimentacaoEnum status;
 	protected String descricao;
+	protected BigDecimal juros;
+	protected BigDecimal multa;
+	@Column(name="valor_total")
+	protected BigDecimal valorTotal;
+	@ManyToOne
+	@JoinColumn(name="parcela_id")
+	private Parcela parcela;
+	@Column(name="data_cancelamento")
+	private Date dataCancelamento;
 	
 	public Integer getId() {
 		return id;
@@ -83,6 +92,36 @@ public class ContaAReceber {
 	}
 	public void setDataPrevista(Date dataPrevista) {
 		this.dataPrevista = dataPrevista;
+	}
+	public BigDecimal getJuros() {
+		return juros;
+	}
+	public void setJuros(BigDecimal juros) {
+		this.juros = juros;
+	}
+	public BigDecimal getMulta() {
+		return multa;
+	}
+	public void setMulta(BigDecimal multa) {
+		this.multa = multa;
+	}
+	public BigDecimal getValorTotal() {
+		return valorTotal;
+	}
+	public void setValorTotal(BigDecimal valorTotal) {
+		this.valorTotal = valorTotal;
+	}
+	public Parcela getParcela() {
+		return parcela;
+	}
+	public void setParcela(Parcela parcela) {
+		this.parcela = parcela;
+	}
+	public Date getDataCancelamento() {
+		return dataCancelamento;
+	}
+	public void setDataCancelamento(Date dataCancelamento) {
+		this.dataCancelamento = dataCancelamento;
 	}
 
 	

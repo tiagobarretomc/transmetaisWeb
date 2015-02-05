@@ -84,6 +84,9 @@ public class Compra {
 	@ManyToOne
 	@JoinColumn(name="conta_contabil_id")
 	private ContaContabil contaContabil;
+	@ManyToOne
+	@JoinColumn(name="comprovante_pesagem_id")
+	private ComprovantePesagemEntrada comprovantePesagem;
 	
 	public Long getId() {
 		return id;
