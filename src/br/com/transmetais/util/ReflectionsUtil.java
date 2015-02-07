@@ -46,6 +46,7 @@ public final class ReflectionsUtil {
 	public static Object getValue(Object o, String fieldName) {
 		try {
 			Field field = getField(o, fieldName);
+			field.setAccessible(true);
 			if (field != null) {
 				return field.get(o);
 			}
@@ -56,11 +57,13 @@ public final class ReflectionsUtil {
 	}
 	
 	public static Object getValue(Object o, Field field) {
+		field.setAccessible(true);
 		try {
 			if (field != null) {
 				return field.get(o);
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return null;
 	}
@@ -86,6 +89,7 @@ public final class ReflectionsUtil {
 	public static void setValue(Object o, String fieldName, Object value) {
 		try {
 			Field field = getField(o, fieldName);
+			field.setAccessible(true);
 			if (field != null) {
 				field.set(o, value);
 			}

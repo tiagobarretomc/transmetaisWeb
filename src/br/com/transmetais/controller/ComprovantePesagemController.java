@@ -2,17 +2,21 @@ package br.com.transmetais.controller;
 
 import java.io.File;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+
 
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Post;
 import br.com.caelum.vraptor.interceptor.multipart.UploadedFile;
 import br.com.transmetais.bean.Arquivo;
 import br.com.transmetais.bean.ComprovantePesagem;
+import br.com.transmetais.bean.Fornecedor;
 import br.com.transmetais.dao.ComprovantePesagemDAO;
+import br.com.transmetais.dao.FornecedorDAO;
 import br.com.transmetais.dao.commons.DAOException;
-import br.com.transmetais.dao.impl.ArquivoDaoImpl;
 import br.com.transmetais.dao.impl.TipoVeiculoDaoImpl;
 import br.com.transmetais.type.TipoFreteEnum;
 import br.com.transmetais.util.EntityUtil;
@@ -20,6 +24,7 @@ import br.com.transmetais.util.FileUtil;
 
 public abstract class ComprovantePesagemController<T extends ComprovantePesagem> extends BaseController<T, ComprovantePesagemDAO<T>> {
 	private TipoVeiculoDaoImpl tipoVeiculoDaoImpl;
+	private FornecedorDAO fornecedorDao;
 	
 	
 	protected void initForm(ComprovantePesagem bean)  {
@@ -35,6 +40,16 @@ public abstract class ComprovantePesagemController<T extends ComprovantePesagem>
 	}
 	@Override
 	protected void initFilter(T filter) {
+		
+		List<Fornecedor> fornecedores = null;
+		 try {
+			fornecedores = fornecedorDao.findAll();
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		 result.include("fornecedores", fornecedores);
 		super.initFilter(filter);
 	}
 	@Post
@@ -70,6 +85,11 @@ public abstract class ComprovantePesagemController<T extends ComprovantePesagem>
 	@Autowired
 	public void setTipoVeiculoDaoImpl(TipoVeiculoDaoImpl tipoVeiculoDaoImpl) {
 		this.tipoVeiculoDaoImpl = tipoVeiculoDaoImpl;
+	}
+	
+	@Autowired
+	public void setFornecedorDao(FornecedorDAO fornecedorDao) {
+		this.fornecedorDao = fornecedorDao;
 	}
 	
 	

@@ -9,6 +9,7 @@
 					<th></th>
 					<th>Data de emissão</th>
 					<th>Número do ticket</th>
+					<th>Fornecedor</th>
 					<th>Placa do veículo</th>
 					<th>Peso Líquido</th>
 	
@@ -23,10 +24,11 @@
 								title="Alterar" class="glyphicon glyphicon-edit"></span></a> <a
 							href="<c:url value='/${controller }/remove/'/>${comprovantePesagem.id}"><span
 								title="Excluir" class="glyphicon glyphicon-remove"></span></a></td>
-						<td>${comprovantePesagem.dataEmissao}</td>
+						<td><fmt:formatDate value="${comprovantePesagem.dataEmissao}" type="date" pattern="dd/MM/yyyy"/></td>
 						<td>${comprovantePesagem.numeroTicket}</td>
+						<td>${comprovantePesagem.fornecedor.apelido} - ${comprovantePesagem.fornecedor.nome}</td>
 						<td>${comprovantePesagem.placaVeiculo}</td>
-						<td>${comprovantePesagem.pesoLiquido}</td>
+						<td><fmt:formatNumber value="${comprovantePesagem.pesoLiquido}" minFractionDigits="2" type="number"/></td>
 	
 					</tr>
 				</c:forEach>
