@@ -15,11 +15,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Persistence;
 
-import org.hibernate.MappingException;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.AnnotationConfiguration;
 
 import br.com.transmetais.util.ReflectionsUtil;
 /**
