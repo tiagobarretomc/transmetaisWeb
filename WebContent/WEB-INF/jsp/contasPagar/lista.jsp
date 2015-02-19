@@ -6,6 +6,10 @@
 
     $(document).ready(function(){
     	
+    	$('.selectpicker').selectpicker({
+            //'selectedText': 'cat'
+        });
+    	
     	$.validator.addMethod( "dateLessThanToday", function( value, element ) {
 	   	    /* ... regra de validação ... */
 	   	    var isValid = false;
@@ -85,14 +89,24 @@
         	<div class="col-md-3">
         	<label for="dataInicio">Data Início:</label>
         	
-        		<input type="datetime"  name="dataInicio" id="dataInicio" class="datepicker form-control" data-date-format="dd/mm/yyyy" value="" />
+        		<input type="datetime"  name="dataInicio" id="dataInicio" class="datepicker form-control" data-date-format="dd/mm/yyyy" value="<fmt:formatDate value="${dataInicio}" type="date" pattern="dd/MM/yyyy"/>" />
 					
         	</div>
         	<div class="col-md-3">
         	<label for="dataFim">Data Fim:</label>
-        		<input type="datetime"  name="dataFim" id="dataFim" class="datepicker form-control" data-date-format="dd/mm/yyyy" value="" />
+        		<input type="datetime"  name="dataFim" id="dataFim" class="datepicker form-control" data-date-format="dd/mm/yyyy" value="<fmt:formatDate value="${dataFim}" type="date" pattern="dd/MM/yyyy"/>" />
 					
         	</div>
+        	<div class="col-md-3">
+        		<label for="status">Status:</label>
+				<select  id="status" name="status" class="selectpicker form-control"  >
+					<option value="" ></option>
+					<c:forEach var="statusL" items="${statusList}">
+						<option value="${statusL.name }" ${statusL.name eq status.name ? 'selected' : ''}>${statusL.descricao}</option>
+					</c:forEach>
+				</select>
+        	</div>
+        	
         </div>
        
         <br/>

@@ -199,6 +199,8 @@ public class ChequeEmitidoController extends BaseController<ChequeEmitido, Chequ
 			
 			//Atualizando saldo da conta destino
 			Conta contaDestino = adiantamento.getFornecedor().getConta();
+			if (contaDestino.getSaldo() == null)
+				contaDestino.setSaldo(BigDecimal.ZERO);
 			contaDestino.setSaldo(contaDestino.getSaldo().add(adiantamento.getValor()));
 			contaDao.updateEntity(contaDestino);
 		}

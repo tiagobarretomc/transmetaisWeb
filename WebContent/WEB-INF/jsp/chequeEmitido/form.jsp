@@ -114,6 +114,63 @@
 				</c:if>
 		</c:if>
 		
+		
+		
+		
+		
+		
+		
+		<c:if test="${bean.class.name  == 'br.com.transmetais.bean.ChequeEmitidoCompra'}" >
+			<h4 style="margin-top: 0px">Compra</h4>
+			<div class="row">
+			<div class="col-md-1">
+					<label for="bean.compra.id">Cód.:</label> 
+				<input name="" id="bean.compra.id" value="${bean.compra.id }" class="form-control "  maxlength="10" readonly="readonly"/>
+				</div>
+				<div class="col-md-4">
+					<label for="bean.compra.fornecedor.nome">Fornecedor:</label> 
+				<input name="" id="bean.compra.fornecedor.nome" value="${bean.compra.fornecedor.apelido} - ${bean.compra.fornecedor.nome}" class="form-control "  maxlength="10" readonly="readonly"/>
+				</div>
+				<div class="col-md-2">
+					<label for="bean.compra.valor">Valor:</label> 
+				<input name="" id="bean.compra.valor" value="<fmt:formatNumber value="${bean.compra.valor}" minFractionDigits="2" type="currency"/>" class="form-control "  maxlength="10" readonly="readonly"/>
+				</div>
+				<div class="col-md-2">
+					<label for="bean.compra.dataCompetencia">Dt Competência:</label> 
+				<input name="" id="bean.compra.dataCompetencia" value='<fmt:formatDate value="${bean.compra.dataCompetencia}" type="date" pattern="dd/MM/yyyy"/>' class="form-control "  maxlength="10" readonly="readonly"/>
+				</div>
+				<div class="col-md-3">
+					<label for="bean.compra.centroAplicacao.descricao">Centro de Aplicação:</label> 
+				<input name="" id="bean.compra.centroAplicacao.descricao" value='${bean.compra.centroAplicacao.descricao}' class="form-control "   readonly="readonly"/>
+				</div>
+				</div>
+				<c:if test="${not empty bean.parcela}">
+				<br/>
+				<div class="panel panel-default">
+	  				<div class="panel-body">
+		  				<div class="row">
+							<div class="col-md-1">
+								<label for="bean.parcela.numero">Parcela:</label> 
+								<input name="" id="bean.parcela.numero" value="${bean.parcela.numero}/${fn:length(bean.despesa.parcelas)}" class="form-control "  maxlength="10" readonly="readonly"/>
+							</div>
+							
+							<div class="col-md-2">
+								<label for="bean.parcela.dataVencimento">Vencimento:</label> 
+								<input name="" id="bean.parcela.dataVencimento" value='<fmt:formatDate value="${bean.parcela.dataVencimento}" type="date" pattern="dd/MM/yyyy"/>' class="form-control "  maxlength="10" readonly="readonly"/>
+							</div>
+							
+							<div class="col-md-2">
+								<label for="bean.parcela.valor">Valor:</label> 
+							<input name="" id="bean.parcela.valor" value="<fmt:formatNumber value="${bean.parcela.valor}" minFractionDigits="2" type="currency"/>" class="form-control "  maxlength="10" readonly="readonly"/>
+							</div>
+						</div>
+					</div>
+				</div>
+				</c:if>
+		</c:if>
+		
+		
+		
 	</div>
 	</div>
 	<div class="panel panel-default">

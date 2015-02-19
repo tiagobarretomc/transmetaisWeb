@@ -16,11 +16,12 @@ import br.com.transmetais.bean.Parcela;
 import br.com.transmetais.dao.ContaAPagarDAO;
 import br.com.transmetais.dao.commons.CrudDAOJPA;
 import br.com.transmetais.dao.commons.DAOException;
+import br.com.transmetais.type.StatusMovimentacaoEnum;
 
 @Component
 public class ContaAPagarDaoImpl extends CrudDAOJPA<ContaAPagar> implements ContaAPagarDAO{
 	
-	public List<ContaAPagar> findByFilter(Date dataInicio, Date dataFim) throws DAOException {
+	public List<ContaAPagar> findByFilter(Date dataInicio, Date dataFim, StatusMovimentacaoEnum status) throws DAOException {
 		EntityManager manager = factory.createEntityManager(); 
 		
 		try {
@@ -41,6 +42,13 @@ public class ContaAPagarDaoImpl extends CrudDAOJPA<ContaAPagar> implements Conta
 				clausulaWhere += " c.dataPrevista <= :dataFim";
 			}
 			
+			if (status !=null){
+				if(clausulaWhere != " WHERE "){
+					clausulaWhere += " AND ";
+				}
+				clausulaWhere += " c.status = :status";
+			}
+			
 			
 			if (clausulaWhere != " WHERE ")
 				query += clausulaWhere;
@@ -57,6 +65,11 @@ public class ContaAPagarDaoImpl extends CrudDAOJPA<ContaAPagar> implements Conta
 			if (dataFim !=null){
 				
 				hqlQuery.setParameter("dataFim", dataFim);
+			}
+			
+			if (status !=null){
+				
+				hqlQuery.setParameter("status", status);
 			}
 			
 			

@@ -296,6 +296,10 @@ public class CompraController {
 					//inserindo a movimentacao no vanco de dados
 					movimentacaoDAO.addEntity(movimentacao);
 					
+					if (fornecedor.getConta().getSaldo() == null){
+						fornecedor.getConta().setSaldo(BigDecimal.ZERO);
+					}
+					
 					//Atualizando o Saldo da conta subtrainda o valor da despesa
 					fornecedor.getConta().setSaldo(fornecedor.getConta().getSaldo().subtract(compra.getValor()));
 					

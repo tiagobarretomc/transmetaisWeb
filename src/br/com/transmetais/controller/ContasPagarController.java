@@ -60,13 +60,17 @@ public class ContasPagarController {
 	
 	//tela de listagem de compras
 	@Path({"/contasPagar/","/contasPagar","/contasPagar/lista"})
-	public List<ContaAPagar> lista(Date dataInicio, Date dataFim){
+	public List<ContaAPagar> lista(Date dataInicio, Date dataFim, StatusMovimentacaoEnum status){
 		List<ContaAPagar> lista = null;
 		
 		try {
 			
 			
-			lista = dao.findByFilter(dataInicio, dataFim);
+			lista = dao.findByFilter(dataInicio, dataFim, status);
+			result.include("statusList",StatusMovimentacaoEnum.values());
+			result.include("dataInicio",dataInicio);
+			result.include("dataFim",dataFim);
+			result.include("status",status);
 
 			
 		} catch (DAOException e) {
@@ -78,13 +82,13 @@ public class ContasPagarController {
 	}
 	
 	
-		public List<ContaAPagar> loadListaMovimentacao(Date dataInicio, Date dataFim){
+		public List<ContaAPagar> loadListaMovimentacao(Date dataInicio, Date dataFim, StatusMovimentacaoEnum status){
 			List<ContaAPagar> lista = null;
 			
 			try {
 				
 				
-				lista = dao.findByFilter(dataInicio, dataFim);
+				lista = dao.findByFilter(dataInicio, dataFim, status);
 
 			} catch (DAOException e) {
 				// TODO Auto-generated catch block
@@ -96,7 +100,7 @@ public class ContasPagarController {
 	
 	public void salvar(Movimentacao movimentacao) {
 		
-		result.redirectTo(ContasPagarController.class).lista(null, null);
+		result.redirectTo(ContasPagarController.class).lista(null, null, null);
 	}
 	
 	@Path({"/contasPagar/{contaAPagar.id}"})
@@ -296,7 +300,7 @@ public class ContasPagarController {
 		}
 		
 		result.include("mensagem", "Confirmação de pagamento da conta efetuado com sucesso!");
-		result.redirectTo(this.getClass()).lista(null,null);
+		result.redirectTo(this.getClass()).lista(null,null, null);
 	}
 	
 	

@@ -11,10 +11,11 @@ import br.com.transmetais.bean.Despesa;
 import br.com.transmetais.bean.Parcela;
 import br.com.transmetais.dao.commons.CrudDAO;
 import br.com.transmetais.dao.commons.DAOException;
+import br.com.transmetais.type.StatusMovimentacaoEnum;
 
 public interface ContaAPagarDAO extends CrudDAO<ContaAPagar>{
 	
-	public List<ContaAPagar> findByFilter(Date dataInicio, Date dataFim) throws DAOException;
+	public List<ContaAPagar> findByFilter(Date dataInicio, Date dataFim, StatusMovimentacaoEnum status) throws DAOException;
 	
 	public ContaAPagarDespesa obterPorDespesa(Despesa despesa, Parcela parcela) throws DAOException ;
 	
