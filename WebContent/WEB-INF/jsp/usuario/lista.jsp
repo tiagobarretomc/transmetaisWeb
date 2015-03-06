@@ -16,7 +16,7 @@
 <div class="container">
 		
         <br/>
-		<h2>Unidades da Transmetais</h2>
+		<h2>Usuários</h2>
 		<br>
 		
 		<button type="button" id="btnAdicionar" class="btn btn-default btn-md">
@@ -31,28 +31,24 @@
 		<thead>
 	<tr>
 		<th ></th>
-		<th >Nome<th>
+		<th >Nome</th>
 		<th >E-mail</th>
-		<th >Ativo</th>
 		
 	</tr>
 	</thead>
 	<tbody>
-		<c:forEach var="usuario" items="${usuario}" varStatus="contador">
+		<c:forEach var="bean" items="${beanList}" varStatus="contador">
 	
 		<tr>
 			<td>
-				<a href="<c:url value='/usuario/'/>${usuario.id}"><span title="Alterar"  class="glyphicon glyphicon-edit"></span></a>
-				<a href="<c:url value='/usuario/remove/'/>${usuario.id}"><span title="Excluir" class="glyphicon glyphicon-remove"></span></a> 
+				<a href="<c:url value='/usuario/'/>${bean.id}"><span title="Alterar"  class="glyphicon glyphicon-edit"></span></a>
+				<a href="<c:url value='/usuario/remove/'/>${bean.id}"><span title="Excluir" class="glyphicon glyphicon-remove"></span></a> 
 			</td>
 			<td>
-				${usuario.nome} 
+				${bean.nome} 
 			</td>
 			<td>
-				${usuario.email} 
-			</td>
-			<td>
-				${usuario.ativo} 
+				${bean.email} 
 			</td>
 			
 		</tr>

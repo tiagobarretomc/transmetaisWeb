@@ -33,8 +33,7 @@ public class PermissionInterceptor implements Interceptor {
 	public void intercept(InterceptorStack stack, ResourceMethod method, Object resource) {
 		Permission methodPermission = method.getMethod().getAnnotation(Permission.class);
 		Permission controllerPermission = method.getResource().getType().getAnnotation(Permission.class);
-		
-		if (this.hasAccess(methodPermission) && this.hasAccess(controllerPermission)) {
+		if (this.hasAccess(methodPermission) || this.hasAccess(controllerPermission)) {
 			stack.next(method, resource);
 		} else {
 			//TODO Ver como tratar exceção

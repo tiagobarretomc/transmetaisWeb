@@ -8,9 +8,11 @@ import java.util.List;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.transmetais.annotations.Permission;
 import br.com.transmetais.bean.Adiantamento;
 import br.com.transmetais.bean.ChequeEmitidoAdiantamento;
 import br.com.transmetais.bean.Conta;
+import br.com.transmetais.bean.GrupoUsuario;
 import br.com.transmetais.bean.MovimentacaoAdiantamento;
 import br.com.transmetais.dao.AdiantamentoDAO;
 import br.com.transmetais.dao.ChequeEmitidoDAO;
@@ -24,6 +26,7 @@ import br.com.transmetais.type.SituacaoChequeEnum;
 import br.com.transmetais.type.TipoOperacaoEnum;
 
 @Resource
+@Permission(value=GrupoUsuario.FINANCEIRO)
 public class AdiantamentoController {
 	
 	private AdiantamentoDAO dao;

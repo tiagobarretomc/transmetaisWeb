@@ -8,15 +8,7 @@
 	</classpathentry>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/Java SE 6 (MacOS X Default)"/>
-	<classpathentry exported="true" kind="lib" path="/repAPI-project/libs/hibernate-jpa-2.0-api-1.0.0.Final.jar"/>
-	<classpathentry exported="true" kind="lib" path="/repAPI-project/libs/hibernate-jpamodelgen-1.0.0.Final.jar"/>
-	<classpathentry exported="true" kind="lib" path="/repAPI-project/libs/hibernate3.jar"/>
-	<classpathentry exported="true" kind="lib" path="/repAPI-project/libs/mysql-connector-java-5.1.13-bin.jar"/>
-	<classpathentry exported="true" kind="lib" path="/repAPI-project/libs/dom4j-1.6.1.jar"/>
-	<classpathentry exported="true" kind="lib" path="/repAPI-project/libs/dom4j.jar"/>
-	<classpathentry exported="true" kind="lib" path="/repAPI-project/libs/jta.jar"/>
-	<classpathentry exported="true" kind="lib" path="/repAPI-project/libs/antlr-2.7.6.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre7"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/sitemesh-3.0.0-20130909.232332-2.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-fileupload-1.2.1.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/commons-io-2.0.jar"/>

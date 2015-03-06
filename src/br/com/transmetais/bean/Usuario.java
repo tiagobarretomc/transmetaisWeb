@@ -16,21 +16,22 @@ import javax.persistence.Table;
 public class Usuario {
 	@Id
 	@GeneratedValue
-	private Integer id;
+	private Long id;
 	private String login;
 	private String nome;
 	private String email;
 	private String senha;
 	@Column(name="senha_inicial")
 	private String senhaInicial;
+	@Column(name="ativo")
 	private boolean ativo;
 	@ManyToMany(mappedBy="usuario",fetch=FetchType.LAZY)
 	private List<UsuarioGrupo> gruposUsuario;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public String getNome() {

@@ -18,43 +18,22 @@ package br.com.transmetais.controller;
 
 
 
-import java.util.List;
-
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
-import br.com.transmetais.bean.Fornecedor;
-import br.com.transmetais.dao.commons.DAOException;
-import br.com.transmetais.dao.impl.FornecedorDaoImpl;
 
 @Resource
 public class IndexController {
 
 	private final Result result;
 	
-	private FornecedorDaoImpl dao;
 
-	public IndexController(Result result, FornecedorDaoImpl dao) {
+	public IndexController(Result result) {
 		this.result = result;
-		this.dao = dao;
 	}
 
-	@Path("/")
+	@Path("/index")
 	public void index() {
-		result.include("variable", "VRaptor!");
-		
-		try {
-			List<Fornecedor> lista = dao.findAll();
-			//System.out.println();
-			for (Fornecedor fornecedor : lista) {
-				System.out.println(fornecedor.getNome());
-			}
-			
-			result.include("fornecedores",lista);
-		} catch (DAOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 		
 	}

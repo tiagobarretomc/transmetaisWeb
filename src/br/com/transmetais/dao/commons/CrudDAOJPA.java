@@ -215,6 +215,18 @@ public class CrudDAOJPA<T> implements CrudDAO<T> {
 	public List<T> findByCriteria(final Criterion... criterion) {
 		return findByCriteria(-1, -1, criterion);
 	}
+	
+	/**
+	 * Use this inside subclasses as a convenience method.
+	 */
+	public T findSingleByCriteria(final Criterion... criterion) {
+		List<T> t = findByCriteria(-1, 1, criterion);
+		if(!t.isEmpty()){
+			return t.get(0);
+		}
+		return null;
+	}
+
 
 	/**
 	 * Use this inside subclasses as a convenience method.
@@ -237,7 +249,7 @@ public class CrudDAOJPA<T> implements CrudDAO<T> {
 		if (maxResults > 0) {
 			crit.setMaxResults(maxResults);
 		}
-
+		
 		final List<T> result = crit.list();
 		return result;
 	}

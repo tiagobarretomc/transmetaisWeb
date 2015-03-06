@@ -155,7 +155,7 @@ form {
 							<li class="dropdown"><a href="#" class="dropdown-toggle"
 								data-toggle="dropdown">Segurança <b class="caret"></b></a>
 								<ul class="dropdown-menu">
-									<li><a href="<c:url value='/usuario/'/>">Usuários</a></li>
+									<li><a href="<c:url value='/usuario/lista/'/>">Usuários</a></li>
 									<li><a href="<c:url value='/grupoUsuario/'/>">Grupo de usuários</a></li>
 								</ul>
 							</li>

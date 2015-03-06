@@ -10,6 +10,7 @@ import br.com.transmetais.bean.Usuario;
 import br.com.transmetais.dao.UsuarioDAO;
 import br.com.transmetais.dao.commons.CrudDAOJPA;
 import br.com.transmetais.dao.commons.DAOException;
+import br.com.transmetais.util.SecurityUtil;
 
 @Component
 @ApplicationScoped
@@ -34,6 +35,10 @@ public class UsuarioDAOImpl extends CrudDAOJPA<Usuario> implements UsuarioDAO{
 			return l.get(0);
 		}
 		return null;
+	}
+	public Usuario getUsuarioByLoginSenha(String login, String senha) throws DAOException {
+		String senhaCriptografada = SecurityUtil.encriptyWord(senha);
+		return findSingleByCriteria(Restrictions.eq("login", login), Restrictions.eq("login", login));
 	}
 	 
 	 

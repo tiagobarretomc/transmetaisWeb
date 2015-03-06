@@ -5,8 +5,6 @@
 <title>Transmetais</title>
 </head>
 <body>
-	It works!! ${variable} ${linkTo[IndexController].index}
-	<br>
 
 </body>
 </html>

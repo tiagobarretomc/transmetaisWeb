@@ -76,6 +76,7 @@ public abstract class BaseController<E, T extends CrudDAO<E>> {
 		
 		return bean;
 	}
+	@SuppressWarnings("unchecked")
 	@Post
 	public void add(E bean) {
 		boolean isSucesso = false;
@@ -87,7 +88,7 @@ public abstract class BaseController<E, T extends CrudDAO<E>> {
 			if(update(bean)){
 				msg = "Registro alterado com sucesso." ;
 				isSucesso = true;
-			}
+			} 
 		}else{
 			if(persist(bean)){
 				msg = "Registro incluído com sucesso." ;
@@ -98,6 +99,9 @@ public abstract class BaseController<E, T extends CrudDAO<E>> {
 			postPersistUpdate(bean, result);
 			result.include("mensagem", msg);
 			result.forwardTo(this.getClass()).lista();
+		}else{
+			result.include("erro","Erro ao incluir registro.");
+			result.forwardTo(this.getClass()).form(bean);;
 		}
 	  }
 	
@@ -107,7 +111,6 @@ public abstract class BaseController<E, T extends CrudDAO<E>> {
 			dao.addEntity(bean);
 			return true;
 		} catch (DAOException e) {
-			result.include("erro","Erro ao incluir registro.");
 			e.printStackTrace();
 			return false;
 		}
