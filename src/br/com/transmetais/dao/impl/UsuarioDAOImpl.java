@@ -6,6 +6,7 @@ import org.hibernate.criterion.Restrictions;
 
 import br.com.caelum.vraptor.ioc.ApplicationScoped;
 import br.com.caelum.vraptor.ioc.Component;
+import br.com.transmetais.bean.GrupoUsuario;
 import br.com.transmetais.bean.Usuario;
 import br.com.transmetais.dao.UsuarioDAO;
 import br.com.transmetais.dao.commons.CrudDAOJPA;
@@ -39,6 +40,11 @@ public class UsuarioDAOImpl extends CrudDAOJPA<Usuario> implements UsuarioDAO{
 	public Usuario getUsuarioByLoginSenha(String login, String senha) throws DAOException {
 		String senhaCriptografada = SecurityUtil.encriptyWord(senha);
 		return findSingleByCriteria(Restrictions.eq("login", login), Restrictions.eq("login", login));
+	}
+	public boolean verificarAcesso(Usuario usuario, GrupoUsuario grupo)
+			throws DAOException {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	 
 	 

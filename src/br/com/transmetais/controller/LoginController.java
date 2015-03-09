@@ -32,10 +32,10 @@ public class LoginController {
 
     @Public
     @Post("/autenticar")
-    public void autenticar(Usuario usuario) {
+    public void autenticar(String login, String senha) {
         Usuario user = null;
 		try {
-			user = usuarioDAO.getUsuarioByLoginSenha(usuario.getEmail(), usuario.getSenha());
+			user = usuarioDAO.getUsuarioByLoginSenha(login, senha);
 		} catch (DAOException e) {
 			
 		}

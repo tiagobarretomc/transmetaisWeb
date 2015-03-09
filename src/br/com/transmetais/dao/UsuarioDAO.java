@@ -9,5 +9,6 @@ public interface UsuarioDAO extends CrudDAO<Usuario> {
 	public Usuario login(String email, String senha) throws DAOException;
 	public Usuario getUsuarioByEmail(String email) throws DAOException;
 	public boolean verificarAcesso(Usuario usuario, GrupoUsuario grupo) throws DAOException;
+	public Usuario getUsuarioByLoginSenha(String login, String senha) throws DAOException;
 
 }
