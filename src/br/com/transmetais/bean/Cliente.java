@@ -4,18 +4,23 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+
+import br.com.transmetais.type.TipoFaturamentoEnum;
 
 @Entity
 @Table(name="cliente")
@@ -51,6 +56,12 @@ public class Cliente {
 	@LazyCollection(LazyCollectionOption.TRUE)
 	@Fetch(FetchMode.SELECT)
 	private List<ClienteMaterial> clientesMateriais;
+	@OneToOne
+	@JoinColumn(name="conta_id")
+	private ContaCliente conta;
+	@Enumerated(EnumType.STRING)
+	@Column(name="tipo_faturamento")
+	private TipoFaturamentoEnum tipoFaturamento;
 	
 	public Long getId() {
 		return id;
@@ -143,7 +154,18 @@ public class Cliente {
 		this.clientesMateriais = clientesMateriais;
 	}
 	
-	
+	public ContaCliente getConta() {
+		return conta;
+	}
+	public void setConta(ContaCliente conta) {
+		this.conta = conta;
+	}
+	public TipoFaturamentoEnum getTipoFaturamento() {
+		return tipoFaturamento;
+	}
+	public void setTipoFaturamento(TipoFaturamentoEnum tipoFaturamento) {
+		this.tipoFaturamento = tipoFaturamento;
+	}
 	
 	 
 

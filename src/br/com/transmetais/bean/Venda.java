@@ -18,7 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import br.com.transmetais.type.FormaPagamentoEnum;
-import br.com.transmetais.type.StatusCompraEnum;
+import br.com.transmetais.type.StatusVendaEnum;
 import br.com.transmetais.type.TipoFreteCliente;
 import br.com.transmetais.type.TipoPagamentoEnum;
 
@@ -30,9 +30,9 @@ public class Venda {
 	private Long id;
 	private Date data;
 	
-	@ManyToOne
-	@JoinColumn(name="cliente_material_id")
-	private ClienteMaterial clienteMaterial;
+//	@ManyToOne
+//	@JoinColumn(name="cliente_material_id")
+//	private ClienteMaterial clienteMaterial;
 	
 	@ManyToOne
 	@JoinColumn(name="cliente_id")
@@ -55,7 +55,7 @@ public class Venda {
 	
 	@Column(name="status")
 	@Enumerated(EnumType.STRING)
-	private StatusCompraEnum status;
+	private StatusVendaEnum status;
 	
 	@Enumerated(EnumType.STRING)
 	@Column(name="modalidade_pagamento")
@@ -67,6 +67,8 @@ public class Venda {
 	private Date dataRecebimento;
 	@Column(name="data_cancelamento")
 	private Date dataCancelamento;
+	@Column(name="data_vencimento")
+	private Date dataVencimento;
 	@OneToMany(mappedBy="venda", fetch = FetchType.LAZY, cascade = CascadeType.ALL,orphanRemoval=true)
 	private List<ParcelaVenda> parcelas;
 	
@@ -90,13 +92,13 @@ public class Venda {
 		this.data = data;
 	}
 
-	public ClienteMaterial getClienteMaterial() {
-		return clienteMaterial;
-	}
-
-	public void setClienteMaterial(ClienteMaterial clienteMaterial) {
-		this.clienteMaterial = clienteMaterial;
-	}
+//	public ClienteMaterial getClienteMaterial() {
+//		return clienteMaterial;
+//	}
+//
+//	public void setClienteMaterial(ClienteMaterial clienteMaterial) {
+//		this.clienteMaterial = clienteMaterial;
+//	}
 
 	public Cliente getCliente() {
 		return cliente;
@@ -154,11 +156,11 @@ public class Venda {
 		this.tipoFrete = tipoFrete;
 	}
 
-	public StatusCompraEnum getStatus() {
+	public StatusVendaEnum getStatus() {
 		return status;
 	}
 
-	public void setStatus(StatusCompraEnum status) {
+	public void setStatus(StatusVendaEnum status) {
 		this.status = status;
 	}
 
@@ -213,7 +215,12 @@ public class Venda {
 	}
 	
 	
-	
+	public Date getDataVencimento() {
+		return dataVencimento;
+	}
+	public void setDataVencimento(Date dataVencimento) {
+		this.dataVencimento = dataVencimento;
+	}
 	
 	
 }

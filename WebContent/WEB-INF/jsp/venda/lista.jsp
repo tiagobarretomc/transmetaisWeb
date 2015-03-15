@@ -15,12 +15,12 @@
     	
     	$("#btnFiltrar").click(function(){
     		
-    		$("#divTabela").load( '<c:url value="/compra/loadListaCompra"/>', $('#formCompra').serialize() );
+    		$("#divTabela").load( '<c:url value="/venda/loadListaVenda"/>', $('#formVenda').serialize() );
     	});
     	
     	$("#btnAdicionar").click(function(){
-    		if ($("#fornecedor").val())
-    			document.location.href = "${pageContext.request.contextPath}/compra/novo/" + $("#fornecedor").val();
+    		if ($("#cliente").val())
+    			document.location.href = "${pageContext.request.contextPath}/venda/novo/" + $("#cliente").val();
     		else
     			$("#divError").css('display', 'block');
     	});
@@ -33,20 +33,20 @@
  
 <div class="container">
 		<br/>
-		<h2>Compras</h2>
+		<h2>Vendas</h2>
 		<br>
-		<div class="alert alert-warning alert-dismissable" id="divError" style="display: none">Selecione um fornecedor!</div>
+		<div class="alert alert-warning alert-dismissable" id="divError" style="display: none">Selecione um cliente!</div>
 		<div class="panel panel-default">
   	<div class="panel-body">
-		<form action="<c:url value='/compra/'/>" id="formCompra" name="formCompra" method="post">
+		<form action="<c:url value='/venda/'/>" id="formVenda" name="formVenda" method="post">
 		<input type="hidden" name="_format" value="json">
 		<div class="row">
         	<div class="col-md-5">
-        		<label for="fornecedorId">Fornecedor:</label>
-	        	<select id="fornecedor" name="fornecedorId" class="selectpicker form-control" data-live-search="true">
+        		<label for="clienteId">Cliente:</label>
+	        	<select id="cliente" name="clienteId" class="selectpicker form-control" data-live-search="true">
 					<option value ="">Selecione</option>
-					<c:forEach var="fornecedor" items="${fornecedores}" varStatus="contador">
-						<option value ="${fornecedor.id}">${fornecedor.apelido} - ${fornecedor.nome}</option>
+					<c:forEach var="cliente" items="${cliente}" varStatus="contador">
+						<option value ="${cliente.id}">${cliente.razaoSocial}</option>
 					</c:forEach>	
 				</select>
 				
@@ -102,8 +102,8 @@
 				</select>
 				</div>
         	<div class="col-md-4">
-        		<label for="compra.status">Status Compra:</label>
-				<select style="width: 180px;" id="compra.status" name="statusCompas" class="selectpicker form-control" multiple >
+        		<label for="compra.status">Status Venda:</label>
+				<select style="width: 180px;" id="venda.status" name="statusVenda" class="selectpicker form-control" multiple >
 					
 					<c:forEach var="status" items="${statusList}">
 						<option value="${status.name }" >${status.descricao}</option>
@@ -128,7 +128,7 @@
 	<tr>
 		<th ></th>
 		<th >Data</th>
-		<th >Fornecedor</th>
+		<th >Cliente</th>
 		<th >Tipo Frete</th>
 		<th>Total</th>
 		<th>Status</th>
@@ -140,37 +140,37 @@
 	</thead>
 	<tbody>
 	<c:set var="varCont" value="1" />
-		<c:forEach var="compra" items="${compras}" varStatus="contador">
+		<c:forEach var="venda" items="${vendas}" varStatus="contador">
 	
 		<tr>
 			
 			
-				<td rowspan="${fn:length(compra.itens)}">
-					<a href="${pageContext.request.contextPath}/compra/${compra.id}"><span title="Detalhar" style="color: black;" class="glyphicon glyphicon-search"></span></a>
+				<td rowspan="${fn:length(venda.itens)}">
+					<a href="${pageContext.request.contextPath}/venda/${venda.id}"><span title="Detalhar" style="color: black;" class="glyphicon glyphicon-search"></span></a>
 					 
 				</td>
-				<td rowspan="${fn:length(compra.itens)}">
-					<fmt:formatDate value="${compra.data}" type="date" pattern="dd/MM/yyyy"/>
+				<td rowspan="${fn:length(venda.itens)}">
+					<fmt:formatDate value="${venda.data}" type="date" pattern="dd/MM/yyyy"/>
 					
 				</td>
-				<td rowspan="${fn:length(compra.itens)}">
-					${compra.fornecedor.apelido} - ${compra.fornecedor.nome} 
+				<td rowspan="${fn:length(venda.itens)}">
+					${compra.cliente.razaoSocial}
 				</td>
 				
 				
-				<td rowspan="${fn:length(compra.itens)}">
-					${compra.tipoFrete}
+				<td rowspan="${fn:length(venda.itens)}">
+					${venda.tipoFrete}
 				</td>
-				<td rowspan="${fn:length(compra.itens)}">
+				<td rowspan="${fn:length(venda.itens)}">
 						
-						<fmt:formatNumber value="${compra.valor}" minFractionDigits="2" type="currency"/>
+						<fmt:formatNumber value="${venda.valor}" minFractionDigits="2" type="currency"/>
 					</td>
 					
-				<td rowspan="${fn:length(compra.itens)}">
-					${compra.status.descricao}
+				<td rowspan="${fn:length(venda.itens)}">
+					${venda.status.descricao}
 				</td>
 				
-				<c:forEach var="item" items="${compra.itens}" varStatus="cont" >
+				<c:forEach var="item" items="${venda.itens}" varStatus="cont" >
 					<c:if test="${cont.count gt '1'}">
 						</tr>
 						
