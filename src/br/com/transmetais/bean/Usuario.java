@@ -1,14 +1,17 @@
 package br.com.transmetais.bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlTransient;
 
 
 @Entity
@@ -25,8 +28,8 @@ public class Usuario {
 	private String senhaInicial;
 	@Column(name="ativo")
 	private boolean ativo;
-	@ManyToMany(mappedBy="usuario",fetch=FetchType.LAZY)
-	private List<UsuarioGrupo> gruposUsuario;
+	@OneToMany(mappedBy="usuario",fetch=FetchType.LAZY, cascade={CascadeType.ALL})
+	private List<UsuarioGrupo> gruposUsuario = new ArrayList<UsuarioGrupo>();
 
 	public Long getId() {
 		return id;

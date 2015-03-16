@@ -24,7 +24,7 @@
 	<br />
 	<div class="panel panel-default">
 		<div class="panel-body">
-			<form action="<c:url value='/login/autenticar'/>" id="formLogin"
+			<form action="<c:url value='/autenticar'/>" id="formLogin"
 				name="formLogin" method="post">
 
 				<div class="row">
