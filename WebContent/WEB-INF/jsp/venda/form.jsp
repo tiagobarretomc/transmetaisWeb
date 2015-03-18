@@ -21,17 +21,17 @@
        	$(".datepicker").mask('99/99/9999');
 
     	$("#btnAdicionarItem").click(function(){
-    		var strLinha = '<tr><td><select id="fornecedorMaterial_' + qtdItens + '" name="compra.itens[' + qtdItens + '].material.id" class= "required form-control"><option value ="">Selecione</option></select></td>';
-    		strLinha += '<td><input type="text" name="compra.itens[' + qtdItens + '].quantidade" id="quantidade_' + qtdItens + '" value="" class="required form-control"/></td>';
-    		strLinha += '<td><input type="text" name="compra.itens[' + qtdItens + '].preco" id="preco_' + qtdItens + '" value="" class="form-control	" readonly="readonly"></td>';
-    		strLinha += '<td><input type="text" name="compra.itens[' + qtdItens + '].valor" id="valor_' + qtdItens + '" class="required form-control" value="" readonly="readonly"/></td>';
+    		var strLinha = '<tr><td><select id="clienteMaterial_' + qtdItens + '" name="venda.itens[' + qtdItens + '].material.id" class= "required form-control"><option value ="">Selecione</option></select></td>';
+    		strLinha += '<td><input type="text" name="venda.itens[' + qtdItens + '].quantidade" id="quantidade_' + qtdItens + '" value="" class="required form-control"/></td>';
+    		strLinha += '<td><input type="text" name="venda.itens[' + qtdItens + '].preco" id="preco_' + qtdItens + '" value="" class="form-control	" readonly="readonly"></td>';
+    		strLinha += '<td><input type="text" name="venda.itens[' + qtdItens + '].valor" id="valor_' + qtdItens + '" class="required form-control" value="" readonly="readonly"/></td>';
     		strLinha += '</tr>';
     		$('#tabelaItens > tbody:last').append(strLinha);
     		
     		$.each(materiais.list, function(i){
 				
 				
-					$('#fornecedorMaterial_' + qtdItens).append($("<option></option>")
+					$('#clienteMaterial_' + qtdItens).append($("<option></option>")
 		                    .attr("value",materiais.list[i].material.id)
 		                    .text(materiais.list[i].material.descricao));
 	    		
@@ -39,14 +39,14 @@
 			    
 			});
     		
-    		$("#fornecedorMaterial_" + qtdItens).change(function(){
+    		$("#clienteMaterial_" + qtdItens).change(function(){
     			var indiceCampo = $(this).attr('id').split("_")[1];
         		
     	        if($(this).val()) {
     	        		$.ajax({
     			        type: 'GET',
-    			        url: '${pageContext.request.contextPath}/fornecedorMaterial/obterPreco?_format=json',
-    			        data:	{'fornecedorMaterial.material.id': $(this).val(), 'fornecedorMaterial.fornecedor.id' : $("#fornecedor").val(), 'fornecedorMaterial.tipoFrete': $("#cboTipoFrete").val()},
+    			        url: '${pageContext.request.contextPath}/clienteMaterial/obterPreco?_format=json',
+    			        data:	{'clienteMaterial.material.id': $(this).val(), 'clienteMaterial.cliente.id' : $("#cliente").val(), 'clienteMaterial.tipoFrete': $("#cboTipoFrete").val()},
     			 	    success: function(json){
     			 	    	var preco = float2moeda(parseFloat(json));
     			 	    	
@@ -96,7 +96,7 @@
         			valorTotalItens +=moeda2float($("#valor_"+i).val());
         			
         		}
-        		$("#compra\\.valor").attr("value",float2moeda(valorTotalItens));
+        		$("#venda\\.valor").attr("value",float2moeda(valorTotalItens));
         		
         	});
         	   
@@ -128,18 +128,18 @@
     	$("#cboTipoFrete").change(function(){
     		
     		for(i=0;i<qtdItens;i++){
-    			$('#fornecedorMaterial_' + i + ' option[value!=""]').remove();
+    			$('#clienteMaterial' + i + ' option[value!=""]').remove();
     		}
     		
     		
-    		$.getJSON('<c:url value="/compra/loadJsonMaterial"/>?tipoFrete=' + $(this).val() + '&fornecedor.id=' + $("#fornecedor").val(), function (json) {
+    		$.getJSON('<c:url value="/venda/loadJsonMaterial"/>?tipoFrete=' + $(this).val() + '&cliente.id=' + $("#cliente").val(), function (json) {
                 
     			materiais = json;
     			
    				for(j=0;j<qtdItens;j++){
 	    			$.each(json.list, function(i){
 	    				
-	    					$('#fornecedorMaterial_' + j).append($("<option></option>")
+	    					$('#clienteMaterial_' + j).append($("<option></option>")
 				                    .attr("value",json.list[i].material.id)
 				                    .text(json.list[i].material.descricao));
 	    				
@@ -152,20 +152,18 @@
     		
     		
     	});
-    	$("select[id^='fornecedorMaterial_']").change(function(){
+    	$("select[id^='clienteMaterial_']").change(function(){
     		
     		var indiceCampo = $(this).attr('id').split("_")[1];
     		
 	        if($(this).val()) {
 	        		$.ajax({
 			        type: 'GET',
-			        url: '${pageContext.request.contextPath}/fornecedorMaterial/obterPreco?_format=json',
-			        data:	{'fornecedorMaterial.material.id': $(this).val(), 'fornecedorMaterial.fornecedor.id' : $("#fornecedor").val(), 'fornecedorMaterial.tipoFrete': $("#cboTipoFrete").val()},
-			        //data:	{'fornecedorMaterial.id': $(this).val()},
+			        url: '${pageContext.request.contextPath}/clienteMaterial/obterPreco?_format=json',
+			        data:	{'clienteMaterial.material.id': $(this).val(), 'clienteMaterial.cliente.id' : $("#cliente").val(), 'clienteMaterial.tipoFrete': $("#cboTipoFrete").val()},
+			        //data:	{'clienteMaterial.id': $(this).val()},
 			 	    success: function(json){
 			 	    	var preco = float2moeda(parseFloat(json));
-			 	    	
-			 	    	//$("#preco").attr('value',preco.toFixed(2));
 			 	    	
 			 	    	
 			 	    	$("#preco_"+indiceCampo).attr('value',preco);
@@ -213,7 +211,7 @@
     			valorTotalItens +=moeda2float($("#valor_"+k).val());
     			
     		}
-    		$("#compra\\.valor").attr("value",float2moeda(valorTotalItens));
+    		$("#venda\\.valor").attr("value",float2moeda(valorTotalItens));
     	});
     	   
     	$("input[id^='quantidade_']").priceFormat({
@@ -225,10 +223,10 @@
         });
 		
 		$("#btnAdicionar").click(function(){
-    		$("#formCompra").submit();
+    		$("#formVenda").submit();
     	});
     	
-        $('#formCompra').validate({
+        $('#formVenda').validate({
             
         
     	});
@@ -236,8 +234,8 @@
         
         $("#optPagamentoAVista").click(function(){
     		
-	    	$('#copra\\.dataVencimento').attr('disabled', true);
-	    	$("#compra\\.conta\\.id").attr('disabled', false);
+	    	$('#venda\\.dataVencimento').attr('disabled', true);
+	    	$("#venda\\.conta\\.id").attr('disabled', false);
 	    	$("#qtdParcelas").attr('readonly', true);
 	    	$("#qtdParcelas").val('');
 	    	
@@ -267,7 +265,7 @@
 	    	
 	    	
 	    	
-	    	 if ($('#compra\\.dataVencimento').val() == '') {
+	    	 if ($('#venda\\.dataVencimento').val() == '') {
 	    		 alert('Informe a Data de Vencimento da primeira parcela!');
 		    		return;
 	    		  }
@@ -300,13 +298,13 @@
     	});
         
         $("#optPagamentoAPrazo").click(function(){
-	    	$('#compra\\.dataVencimento').attr('disabled', false);
-	    	$("#compra\\.conta\\.id").attr('disabled', true);
+	    	$('#venda\\.dataVencimento').attr('disabled', false);
+	    	$("#venda\\.conta\\.id").attr('disabled', true);
 	    	$("#qtdParcelas").attr('readonly', false);
 	    	
 	   
 	    	
-	    	$('#compra\\.conta\\.id').children('option').remove();
+	    	$('#venda\\.conta\\.id').children('option').remove();
 	    	
 	    	$("#divPainelParcelas").show();
 	    	
@@ -408,7 +406,7 @@
 	 	    	
 	 	    	
 	 	    	var html = "";  
-	 	       html += "<select name='compra.modalidadePagamento' id='compra.modalidadePagamento' class=' form-control' onchange='atualizaContas()'>" ;  
+	 	       html += "<select name='venda.modalidadePagamento' id='venda.modalidadePagamento' class=' form-control' onchange='atualizaContas()'>" ;  
 	 	      html += "<option value=''>Selecione</option>";
 	 	       for(i=0;i<modalidades.length;i++) {  
 	 	           html += "<option value='"+modalidades[i][0] +"'>"+modalidades[i][1]+"</option>";                           
@@ -419,7 +417,7 @@
 	 	       div.innerHTML = html; 
 	 	      $('.selectpicker').selectpicker();
 	 	      
-	 	     	$('#compra\\.modalidadePagamento').change(function(){
+	 	     	$('#venda\\.modalidadePagamento').change(function(){
 	 	    		
 	     	 	});
 	 	        
@@ -440,19 +438,19 @@
     } 
 	
 	function adicionarParcela(i){
-		//alert($("#compra\\.valor").val());
+		//alert($("#venda\\.valor").val());
 		//alert($("#qtdParcelas").val());
 		
-		var parcela =  float2moeda(roundNumber(moeda2float($('#compra\\.valor').val()) / moeda2float($('#qtdParcelas').val())));
+		var parcela =  float2moeda(roundNumber(moeda2float($('#venda\\.valor').val()) / moeda2float($('#qtdParcelas').val())));
 		//var parcela = "0,00";
-		var dataParcela = Date.parseExact($('#compra\\.dataVencimento').val(),'dd/MM/yyyy').addMonths(i);
+		var dataParcela = Date.parseExact($('#venda\\.dataVencimento').val(),'dd/MM/yyyy').addMonths(i);
 		strLinha = '<tr id="parcela_' + i + '">';
 		strLinha += '<td style="vertical-align: middle;"><span title="Excluir" class="glyphicon glyphicon-remove" onclick="removerParcela(' + i +')"></span></td>';
 		
-		strLinha += '<td style="max-width:130px"><input name="compra.parcelas[' + i + '].dataVencimento" id="dataParcela' + i + '" data-date-format="dd/mm/yyyy" value="' + dataParcela.toString('dd/MM/yyyy') + '" class="form-control required datepicker" size="8" maxlength="10"/></td>';
-		strLinha += '<td style="max-width:130px"><input name="compra.parcelas[' + i + '].valor" id="valorParcela' + i + '" value="' + parcela + '" class="form-control required"  maxlength="18"/></td>';
-		if($("#compra\\.modalidadePagamento").val() == 'C'){
-			strLinha += '<td style="max-width:130px"><input name="compra.parcelas[' + i + '].chequeEmitido.numeroCheque" id="numChequeParcela' + i + '" value="" class="form-control required"  maxlength="18"/></td>';
+		strLinha += '<td style="max-width:130px"><input name="venda.parcelas[' + i + '].dataVencimento" id="dataParcela' + i + '" data-date-format="dd/mm/yyyy" value="' + dataParcela.toString('dd/MM/yyyy') + '" class="form-control required datepicker" size="8" maxlength="10"/></td>';
+		strLinha += '<td style="max-width:130px"><input name="venda.parcelas[' + i + '].valor" id="valorParcela' + i + '" value="' + parcela + '" class="form-control required"  maxlength="18"/></td>';
+		if($("#venda\\.modalidadePagamento").val() == 'C'){
+			strLinha += '<td style="max-width:130px"><input name="venda.parcelas[' + i + '].chequeEmitido.numeroCheque" id="numChequeParcela' + i + '" value="" class="form-control required"  maxlength="18"/></td>';
 		}else{
 			strLinha += '<td style="max-width:130px"></td>';
 		}
@@ -493,27 +491,27 @@
 	
 	function atualizaContas(){
 		
-		if($('input[name=compra\\.formaPagamento]:checked').val() == 'S'){
+		if($('input[name=venda\\.formaPagamento]:checked').val() == 'S'){
 			
 		}
 		
 		
-		if ($('#compra\\.modalidadePagamento').val() == 'C'){
+		if ($('#venda\\.modalidadePagamento').val() == 'C'){
     		$("#divCheque").show();
-    		$("#compra\\.conta\\.id").attr('disabled', false);
+    		$("#venda\\.conta\\.id").attr('disabled', false);
     	}else{
     		$("#divCheque").hide();
-    		$("#compra\\.conta\\.id").empty().append('');
-    		$("#compra\\.conta\\.id").val('');
+    		$("#venda\\.conta\\.id").empty().append('');
+    		$("#venda\\.conta\\.id").val('');
     		
-    		$("#compra\\.conta\\.id").attr('disabled', true);
+    		$("#venda\\.conta\\.id").attr('disabled', true);
     	}
 		
-		if($('input[name=compra\\.formaPagamento]:checked').val()) {
+		if($('input[name=venda\\.formaPagamento]:checked').val()) {
     		$.ajax({
 	        type: 'GET',
 	        url: '${pageContext.request.contextPath}/despesa/loadContas?_format=json',
-	        data:	{formaPagamento: $('#compra\\.modalidadePagamento').val(), tipoPagamento: $('input[name=compra\\.formaPagamento]:checked').val()},
+	        data:	{formaPagamento: $('#venda\\.modalidadePagamento').val(), tipoPagamento: $('input[name=venda\\.formaPagamento]:checked').val()},
 	 	    success: function(json){
 	 	    	
 	 	    	var jsonObject = eval(json);
@@ -521,7 +519,7 @@
 	 	    	var contas = jsonObject.list;
 	 	    	
 	 	    	var html = "";  
-	 	       html += "<select name='compra.conta.id' id='compra.conta.id' class=' form-control' data-live-search='true'>" ; 
+	 	       html += "<select name='venda.conta.id' id='venda.conta.id' class=' form-control' data-live-search='true'>" ; 
 	 	      html += "<option value=''>Selecione</option>";
 	 	       for(i=0;i<contas.length;i++) {  
 	 	           html += "<option value='"+contas[i].id +"'>"+contas[i].descricao+"</option>";                           
@@ -551,71 +549,71 @@
 
     <div class="container">
     <br>
-	<h2>Cadastro de Compra</h2>
+	<h2>Cadastro de venda</h2>
 	<div class="panel panel-default">
 	<div class="panel-body">
-	<h3>Dados da Compra</h3>
-	<form action="<c:url value='/compra/salvar'/>" id="formCompra" name="formCompra" method="post">
-		<input type="hidden" id="compraId" name="compra.id" value="${compra.id}"/>
+	<h3>Dados da venda</h3>
+	<form action="<c:url value='/venda/salvar'/>" id="formVenda" name="formVenda" method="post">
+		<input type="hidden" id="vendaId" name="venda.id" value="${venda.id}"/>
 		
-		<input type="hidden" id="fornecedor" name="compra.fornecedor.id" value="${fornecedor.id}"/>
+		<input type="hidden" id="cliente" name="venda.cliente.id" value="${cliente.id}"/>
 		
 		<div class="row">
-        	<div class="col-md-4"><label for="compra.centroAplicacao.id">Fornecedor:</label>
+        	<div class="col-md-4"><label for="venda.centroAplicacao.id">Cliente:</label>
         		
-				<label>${fornecedor.id} - ${fornecedor.apelido } - ${fornecedor.nome }</label>
+				<label>${cliente.id} - ${cliente.razaoSocial }</label>
         	</div>
-        	<div class="col-md-2"><label for="compra.data">Data:</label>
+        	<div class="col-md-2"><label for="venda.data">Data:</label>
         		<c:set var="now" value="<%=new java.util.Date()%>" />
-        		<input type="datetime"  name="compra.data" id="data"  value="<fmt:formatDate value="${compra.data == null ? now : compra.data }" type="date" pattern="dd/MM/yyyy"/>" class="required form-control datepicker" data-date-format="dd/mm/yyyy" ${not empty compra.id ? 'disabled="disabled"' : ''}/>
+        		<input type="datetime"  name="venda.data" id="data"  value="<fmt:formatDate value="${venda.data == null ? now : venda.data }" type="date" pattern="dd/MM/yyyy"/>" class="required form-control datepicker" data-date-format="dd/mm/yyyy" ${not empty venda.id ? 'disabled="disabled"' : ''}/>
 					
         	</div>
         	<div class="col-md-2">
-      			<label for="compra.numNf">Num NF:</label>
-				<input type="text" name="compra.numNf" id="numNf" value="${compra.numNf}" class="form-control" ${not empty compra.id ? 'disabled="disabled"' : ''}/>
+      			<label for="venda.numNf">Num NF:</label>
+				<input type="text" name="venda.numNf" id="numNf" value="${venda.numNf}" class="form-control" ${not empty venda.id ? 'disabled="disabled"' : ''}/>
       		</div>
       		<div class="col-md-4">
 				<label for="cboTipoFrete">Forma de Frete/Entrega:</label>
-				<select style="width: 180px;" id="cboTipoFrete" name="compra.tipoFrete" class="selectpicker form-control" ${not empty compra.id ? 'disabled="disabled"' : ''}>
+				<select style="width: 180px;" id="cboTipoFrete" name="venda.tipoFrete" class="selectpicker form-control" ${not empty venda.id ? 'disabled="disabled"' : ''}>
 					<option value="" >Selecione</option>
 					<c:forEach var="tipoFrete" items="${tiposFrete}">
-						<option value="${tipoFrete.name }" ${compra.tipoFrete eq tipoFrete ? 'selected' : ''}>${tipoFrete.descricao}</option>
+						<option value="${tipoFrete.name }" ${venda.tipoFrete eq tipoFrete ? 'selected' : ''}>${tipoFrete.descricao}</option>
 					</c:forEach>
 				</select>
 				</div>
         	
       	</div>
       	
-      	<div class="row">
+      	<%-- <div class="row">
 	   		<div class="col-md-4">
-	        	<label for="compra.centroAplicacao.id">Centro de Aplicação:</label>
-	        		<select id="compra.centroAplicacao.id" name="compra.centroAplicacao.id" class="selectpicker required form-control" data-live-search="true">
+	        	<label for="venda.centroAplicacao.id">Centro de Aplicação:</label>
+	        		<select id="venda.centroAplicacao.id" name="venda.centroAplicacao.id" class="selectpicker required form-control" data-live-search="true">
 							<option value ="">Selecione</option>
 							<c:forEach var="centro" items="${centros}" varStatus="contador">
 							
-								<option value ="${centro.id}" ${compra.centroAplicacao.id eq centro.id ? 'selected' : ''}>${centro.numero} - ${centro.descricao}</option>
+								<option value ="${centro.id}" ${venda.centroAplicacao.id eq centro.id ? 'selected' : ''}>${centro.numero} - ${centro.descricao}</option>
 			
 							</c:forEach>	
 					</select>
 	       	</div>
 	       	<div class="col-md-4">
-	       	<label for="compra.contaContabil.id">Conta Contábil:</label>
-	       		<select id="compra.contaContabil.id" name="compra.contaContabil.id" class="selectpicker required form-control" data-live-search="true">
+	       	<label for="venda.contaContabil.id">Conta Contábil:</label>
+	       		<select id="venda.contaContabil.id" name="venda.contaContabil.id" class="selectpicker required form-control" data-live-search="true">
 						<option value ="">Selecione</option>
 						<c:forEach var="conta" items="${contas}" varStatus="contador">
 						
-							<option value ="${conta.id}" ${compra.contaContabil.id eq conta.id ? 'selected' : ''}>${conta.numero} - ${conta.descricao}</option>
+							<option value ="${conta.id}" ${venda.contaContabil.id eq conta.id ? 'selected' : ''}>${conta.numero} - ${conta.descricao}</option>
 		
 						</c:forEach>	
 				</select>
 	       	</div>
-      	</div>
+      	</div> --%>
       	
       	<div class="row">
       		
-      		<div class="col-md-8"><label for="compra.observacao">Observação:</label>
+      		<div class="col-md-8"><label for="venda.observacao">Observação:</label>
       		
-      			<textarea rows="5" cols="83" name="compra.observacao" class="form-control" ${not empty compra.id ? 'disabled="disabled"' : ''}>${compra.observacao }</textarea>
+      			<textarea rows="5" cols="83" name="venda.observacao" class="form-control" ${not empty venda.id ? 'disabled="disabled"' : ''}>${venda.observacao }</textarea>
       		</div>
       		
       	</div>
@@ -624,7 +622,7 @@
       	
     	<div class="panel panel-default">
 			<div class="panel-body">
-				<h4>Itens da Compra</h4>
+				<h4>Itens da Venda</h4>
 				<button type="button" id="btnAdicionarItem" class="btn btn-default btn-md">
 				  <span class="glyphicon glyphicon-plus-sign"></span> Adicionar
 				</button>
@@ -647,50 +645,50 @@
 			<tbody>
 			
 				
-				<c:if test="${empty compra.id}">
+				<c:if test="${empty venda.id}">
 				<tr>
 					<td>
-						<select id="fornecedorMaterial_0" name="compra.itens[0].material.id" class= "required form-control">
+						<select id="clienteMaterial_0" name="venda.itens[0].material.id" class= "required form-control">
 							<option value ="">Selecione</option>
 							
 						</select>
 					</td>
 					<td>
-						<input type="text" name="compra.itens[0].quantidade" id="quantidade_0" value="" class="required form-control"/>
+						<input type="text" name="venda.itens[0].quantidade" id="quantidade_0" value="" class="required form-control"/>
 						
 					</td>
 					<td>
-						<input type="text" name="compra.itens[0].preco" id="preco_0" value="" class="form-control	" readonly="readonly">
+						<input type="text" name="venda.itens[0].preco" id="preco_0" value="" class="form-control	" readonly="readonly">
 					</td>
 					<td>
-						<input type="text" name="compra.itens[0].valor" id="valor_0" class="required form-control" value="<fmt:formatNumber value="${compra.valor}" minFractionDigits="2" type="number" />" readonly="readonly"/>
+						<input type="text" name="venda.itens[0].valor" id="valor_0" class="required form-control" value="<fmt:formatNumber value="${venda.valor}" minFractionDigits="2" type="number" />" readonly="readonly"/>
 					</td>
 					
 				</tr>
 				</c:if>
 				
-				<c:if test="${not empty compra.id}">
-					<c:forEach var="item" items="${compra.itens}" varStatus="contador">
+				<c:if test="${not empty venda.id}">
+					<c:forEach var="item" items="${venda.itens}" varStatus="contador">
 					<tr>
 						<td>
-							<select id="fornecedorMaterial_${contador}" name="compra.itens[${contador}].material.id" class="required form-control" disabled="disabled">
+							<select id="clienteMaterial_${contador}" name="venda.itens[${contador}].material.id" class="required form-control" disabled="disabled">
 								<option value ="">Selecione</option>
-								<c:forEach var="fornecedorMaterial" items="${fornecedorMateriais}" varStatus="contador">
+								<c:forEach var="clienteMaterial" items="${clienteMateriais}" varStatus="contador">
 								
-									<option value ="${fornecedorMaterial.material.id}" ${item.material.id eq fornecedorMaterial.material.id ? 'selected' : ''}>${fornecedorMaterial.material.descricao}</option>
+									<option value ="${clienteMaterial.material.id}" ${item.material.id eq clienteMaterial.material.id ? 'selected' : ''}>${clienteMaterial.material.descricao}</option>
 				
 								</c:forEach>	
 							</select>
 						</td>
 						<td>
-							<input type="text" name="compra.itens[${contador}].quantidade" id="quantidade_${contador}" value="<fmt:formatNumber value="${item.quantidade}" minFractionDigits="2" type="number" />" class="required form-control" readonly="readonly"/>
+							<input type="text" name="venda.itens[${contador}].quantidade" id="quantidade_${contador}" value="<fmt:formatNumber value="${item.quantidade}" minFractionDigits="2" type="number" />" class="required form-control" readonly="readonly"/>
 							
 						</td>
 						<td>
-							<input type="text" name="compra.itens[${contador}].preco" id="preco_${contador}" value="<fmt:formatNumber value="${item.preco}" minFractionDigits="2" type="number"/>" class="form-control	" readonly="readonly">
+							<input type="text" name="venda.itens[${contador}].preco" id="preco_${contador}" value="<fmt:formatNumber value="${item.preco}" minFractionDigits="2" type="number"/>" class="form-control	" readonly="readonly">
 						</td>
 						<td>
-							<input type="text" name="compra.itens[${contador}].valor" id="valor_${contador}" class="required form-control" value="<fmt:formatNumber value="${item.valor}" minFractionDigits="2" type="number" />" readonly="readonly"/>
+							<input type="text" name="venda.itens[${contador}].valor" id="valor_${contador}" class="required form-control" value="<fmt:formatNumber value="${item.valor}" minFractionDigits="2" type="number" />" readonly="readonly"/>
 						</td>
 						
 					</tr>
@@ -705,7 +703,7 @@
 				<div class="col-md-4">
 					<label for="divValorTotal">Valor Total:</label>
 					
-					<input type="text" name="compra.valor" id="compra.valor" class="required form-control" value="<fmt:formatNumber value="${compra.valor}" minFractionDigits="2" type="number" />" readonly="readonly"/>
+					<input type="text" name="venda.valor" id="venda.valor" class="required form-control" value="<fmt:formatNumber value="${venda.valor}" minFractionDigits="2" type="number" />" readonly="readonly"/>
 				
 				</div>
 				
@@ -719,25 +717,25 @@
 		</div>
 		<div class="panel panel-default">
 		  	<div class="panel-body">
-				<h4>Faturamento</h4> ${empty fornecedor.conta ? '': ' - Valor a ser abatido no saldo de adiantamentos do fornecedor' }
-				<c:if test="${empty fornecedor.conta }">
+				<h4>Faturamento</h4> ${empty cliente.conta ? '': ' - Valor a ser abatido no saldo de adiantamentos do cliente' }
+				<c:if test="${empty cliente.conta }">
 				
 				
 				<div class="row">
 					<div class="col-md-2">
 						<label for="optPagamentoAVista">Forma Pagamento:</label><br/>
-						<input type="radio" name="compra.formaPagamento" value="V" id="optPagamentoAVista" ${compra.formaPagamento.name == 'V' ? 'checked="checked"' : '' }/>&nbsp;À vista&nbsp;
-						<input type="radio" name="compra.formaPagamento" value="P" id="optPagamentoAPrazo" ${compra.formaPagamento.name == 'P' ? 'checked="checked"' : '' }/>&nbsp;À prazo&nbsp;
+						<input type="radio" name="venda.formaPagamento" value="V" id="optPagamentoAVista" ${venda.formaPagamento.name == 'V' ? 'checked="checked"' : '' }/>&nbsp;À vista&nbsp;
+						<input type="radio" name="venda.formaPagamento" value="P" id="optPagamentoAPrazo" ${venda.formaPagamento.name == 'P' ? 'checked="checked"' : '' }/>&nbsp;À prazo&nbsp;
 					</div>
 	        		
 			       	<div class="col-md-2">
-			        		<label for="compra.modalidadePagamento">Modalidade Pag.:</label>
+			        		<label for="venda.modalidadePagamento">Modalidade Pag.:</label>
 			        		<div id="ajaxResultDiv">
-			        		<select id="compra.modalidadePagamento" name="compra.modalidadePagamento" class=" required form-control" >
+			        		<select id="venda.modalidadePagamento" name="venda.modalidadePagamento" class=" required form-control" >
 									<option value ="">Selecione</option>
 									<c:forEach var="modalidade" items="${modalidades}" varStatus="contador">
 									
-										<option value ="${modalidade.id}" ${compra.modalidade.id eq modalidade.id ? 'selected' : ''}>${centro.numero} - ${centro.descricao}</option>
+										<option value ="${modalidade.id}" ${venda.modalidade.id eq modalidade.id ? 'selected' : ''}>${centro.numero} - ${centro.descricao}</option>
 					
 									</c:forEach>	
 								</select>
@@ -746,18 +744,18 @@
 			        <div class="col-md-2" id="divCheque" style="display:none;">
 	      	
         				<label for="">Número Cheque:</label>
-        				<input name="compra.chequeEmitidoList[0].numeroCheque"  id="compra.chequeEmitidoList[0].numeroCheque" value="" class="form-control required " maxlength="15"  />
+        				<input name="venda.chequeEmitidoList[0].numeroCheque"  id="venda.chequeEmitidoList[0].numeroCheque" value="" class="form-control required " maxlength="15"  />
         			</div>
 		       </div> 
 				    <div class="row">
 						<div class="col-md-4">
-			        		<label for="compra.conta.id">Conta Financeira:</label>
+			        		<label for="venda.conta.id">Conta Financeira:</label>
 							<div id="divCboContas">
-				        		<select id="compra.conta.id" name="compra.conta.id" class=" form-control " >
+				        		<select id="venda.conta.id" name="venda.conta.id" class=" form-control " >
 										<option value ="">Selecione</option>
 										<c:forEach var="conta" items="${contasFinanceiras}" varStatus="contador">
 										
-											<option value ="${conta.id}" ${compra.conta.id eq conta.id ? 'selected' : ''}>${conta.numero} - ${conta.descricao}</option>
+											<option value ="${conta.id}" ${venda.conta.id eq conta.id ? 'selected' : ''}>${conta.numero} - ${conta.descricao}</option>
 						
 										</c:forEach>	
 								</select>
@@ -766,16 +764,16 @@
 			        	
       	
       				<div class="col-md-2">
-        				<label for="compra.dataCompetencia">Data Competência:</label>
-        				<input name="compra.dataCompetencia" id="compra.dataCompetencia" value=" <fmt:formatDate value="${compra.dataCompetencia }" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" size="8" maxlength="10" />
+        				<label for="venda.dataCompetencia">Data Competência:</label>
+        				<input name="venda.data" id="venda.data" value=" <fmt:formatDate value="${venda.data }" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" size="8" maxlength="10" />
         			</div>
         			<div class="col-md-2">
-        				<label for="compra.dataVencimento">Data Vencimento:</label>
-        				<input name="compra.dataVencimento" id="compra.dataVencimento"  value="<fmt:formatDate value="${compra.dataVencimento }" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" size="8" maxlength="10" />
+        				<label for="venda.dataVencimento">Data Vencimento:</label>
+        				<input name="venda.dataVencimento" id="venda.dataVencimento"  value="<fmt:formatDate value="${venda.dataVencimento }" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" size="8" maxlength="10" />
         			</div>
       				<div class="col-md-2">
       					<label for="qtdParcelas">Qtd.Parcelas:</label>
-        				<input id="qtdParcelas" value="${fn:length(compra.parcelas)}" size="10" class="form-control "/>
+        				<input id="qtdParcelas" value="${fn:length(venda.parcelas)}" size="10" class="form-control "/>
         			</div>
         	
         	<div class="col-md-2"><br/>
@@ -802,16 +800,16 @@
 			</tr>
 			</thead>
 			<tbody>
-			<c:forEach var="parcela" items="${compra.parcelas}" varStatus="contador">
+			<c:forEach var="parcela" items="${venda.parcelas}" varStatus="contador">
 
 				
 				<tr id="parcela_${contador.index }">
 				
 					<td style="vertical-align: middle;"><a href="#" onclick="removerParcela(${contador.index}); return false;"><span title="Excluir" class="glyphicon glyphicon-remove" ></span></a></td>
-					<td style="max-width:110px"><input name="compra.parcelas[${contador.index}].dataVencimento" id="dataParcela${contador.index}" data-date-format="dd/mm/yyyy" value="<fmt:formatDate value="${parcela.dataVencimento }" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" size="8" maxlength="10"/></td>
-					<td style="max-width:110px"><input name="compra.parcelas[${contador.index}].valor" id="valorParcela${contador.index}" value="<fmt:formatNumber value="${parcela.valor}" minFractionDigits="2" type="currency"/>" class="form-control required"  maxlength="18"/></td>
+					<td style="max-width:110px"><input name="venda.parcelas[${contador.index}].dataVencimento" id="dataParcela${contador.index}" data-date-format="dd/mm/yyyy" value="<fmt:formatDate value="${parcela.dataVencimento }" type="date" pattern="dd/MM/yyyy"/>" class="form-control required datepicker" size="8" maxlength="10"/></td>
+					<td style="max-width:110px"><input name="venda.parcelas[${contador.index}].valor" id="valorParcela${contador.index}" value="<fmt:formatNumber value="${parcela.valor}" minFractionDigits="2" type="currency"/>" class="form-control required"  maxlength="18"/></td>
 					<c:if test="${not empty parcela.chequeEmitido }">
-						<td style="max-width:110px"><input name="compra.parcelas[${contador.index}].chequeEmitido.numeroCheque" id="numChequeParcela${contador.index}" value="${parcela.chequeEmitido.numeroCheque}" class="form-control required"  maxlength="18"/></td>
+						<td style="max-width:110px"><input name="venda.parcelas[${contador.index}].chequeEmitido.numeroCheque" id="numChequeParcela${contador.index}" value="${parcela.chequeEmitido.numeroCheque}" class="form-control required"  maxlength="18"/></td>
 					</c:if>
 					<c:if test="${ empty parcela.chequeEmitido }">
 					<td style="max-width:110px"></td>
@@ -824,11 +822,11 @@
 			</table>
 			</div>
 			</c:if>
-      		<c:if test="${not empty fornecedor.conta }">
+      		<c:if test="${not empty cliente.conta }">
       			<div class="row">
       				<div class="col-md-8">
       				<label>Saldo Atual:</label>
-      				<label><fmt:formatNumber value="${fornecedor.conta.saldo}" minFractionDigits="2" type="currency" /></label>
+      				<label><fmt:formatNumber value="${cliente.conta.saldo}" minFractionDigits="2" type="currency" /></label>
       				</div>
       			</div>
       		</c:if>
@@ -839,12 +837,12 @@
 			</div>
       	<div class="row">
 			<div class="col-md-1">
-				<button type="button" id="btnAdicionar" class="btn btn-default btn-md"  ${not empty compra.id ? 'disabled="disabled"' : ''}>
+				<button type="button" id="btnAdicionar" class="btn btn-default btn-md"  ${not empty venda.id ? 'disabled="disabled"' : ''}>
 				  <span class="glyphicon glyphicon-floppy-disk"></span> Salvar
 				</button>
 			</div>
 			<div class="col-md-1">
-				<button type="button" id="btnCancelar" class="btn btn-default btn-md"  ${not empty compra.id and compra.status.name eq 'A' ? '' : 'disabled="disabled"'}>
+				<button type="button" id="btnCancelar" class="btn btn-default btn-md"  ${not empty venda.id and venda.status.name eq 'A' ? '' : 'disabled="disabled"'}>
 				  <span class="glyphicon glyphicon-remove"></span> Cancelar
 				</button>
 			</div>

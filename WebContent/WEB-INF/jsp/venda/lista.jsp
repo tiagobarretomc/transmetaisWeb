@@ -45,7 +45,7 @@
         		<label for="clienteId">Cliente:</label>
 	        	<select id="cliente" name="clienteId" class="selectpicker form-control" data-live-search="true">
 					<option value ="">Selecione</option>
-					<c:forEach var="cliente" items="${cliente}" varStatus="contador">
+					<c:forEach var="cliente" items="${clientes}" varStatus="contador">
 						<option value ="${cliente.id}">${cliente.razaoSocial}</option>
 					</c:forEach>	
 				</select>

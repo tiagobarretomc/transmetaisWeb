@@ -16,25 +16,18 @@ import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.CentroAplicacao;
 import br.com.transmetais.bean.Cliente;
 import br.com.transmetais.bean.ClienteMaterial;
-import br.com.transmetais.bean.Compra;
 import br.com.transmetais.bean.Conta;
-import br.com.transmetais.bean.ContaAPagarCompra;
 import br.com.transmetais.bean.ContaAReceberVenda;
 import br.com.transmetais.bean.ContaContabil;
 import br.com.transmetais.bean.Estoque;
-import br.com.transmetais.bean.Fornecedor;
-import br.com.transmetais.bean.FornecedorMaterial;
-import br.com.transmetais.bean.ItemCompra;
 import br.com.transmetais.bean.ItemVenda;
 import br.com.transmetais.bean.Material;
 import br.com.transmetais.bean.MovimentacaoVenda;
-import br.com.transmetais.bean.ParcelaCompra;
 import br.com.transmetais.bean.ParcelaVenda;
 import br.com.transmetais.bean.Venda;
 import br.com.transmetais.dao.CentroAplicacaoDAO;
 import br.com.transmetais.dao.ClienteDAO;
 import br.com.transmetais.dao.ClienteMaterialDAO;
-import br.com.transmetais.dao.ContaAPagarDAO;
 import br.com.transmetais.dao.ContaAReceberDAO;
 import br.com.transmetais.dao.ContaContabilDAO;
 import br.com.transmetais.dao.ContaDAO;
@@ -68,7 +61,7 @@ public class VendaController {
 	//private ChequeEmitidoDAO chequeEmitidoDAO;
 	private MovimentacaoDAO movimentacaoDAO;
 	
-	public VendaController(Result result, VendaDAO vendaDao, ClienteDAO clienteDao, ClienteMaterialDAO clienteMaterialDAO, ContaAPagarDAO contaAPagarDAO, 
+	public VendaController(Result result, VendaDAO vendaDao, ClienteDAO clienteDao, ClienteMaterialDAO clienteMaterialDAO, ContaAReceberDAO contaAReceberDAO, 
 			ContaDAO contaDao, MaterialDAO materialDao, EstoqueDAO estoqueDAO,ContaContabilDAO contaContabilDAO, CentroAplicacaoDAO centroAplicacaoDAO,
 			MovimentacaoDAO movimentacaoDAO) {
 		this.dao = vendaDao;

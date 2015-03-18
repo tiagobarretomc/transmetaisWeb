@@ -9,6 +9,7 @@ import br.com.caelum.vraptor.Result;
 import br.com.caelum.vraptor.view.Results;
 import br.com.transmetais.bean.Cliente;
 import br.com.transmetais.bean.ClienteMaterial;
+import br.com.transmetais.bean.FornecedorMaterial;
 import br.com.transmetais.bean.Material;
 import br.com.transmetais.dao.ClienteDAO;
 import br.com.transmetais.dao.ClienteMaterialDAO;
@@ -139,6 +140,14 @@ public class ClienteMaterialController {
 		result.include("tiposFrete",TipoFreteCliente.values());
 		
 		return cliente;
+	}
+	
+	public void obterPreco(ClienteMaterial clienteMaterial) throws DAOException{
+		clienteMaterial = dao.obterAtivoPorClienteAndMaterial(clienteMaterial);
+		
+		//result.include();
+		result.use(Results.http()).body(clienteMaterial.getValor().toString());
+		result.nothing();
 	}
 	
 }
