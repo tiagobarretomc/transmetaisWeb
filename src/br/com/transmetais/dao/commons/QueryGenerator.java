@@ -14,6 +14,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Persistence;
+import javax.persistence.Transient;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -399,7 +400,8 @@ public class QueryGenerator {
 			for (Field field : clazz.getDeclaredFields()) {
 				String f = fieldName != null ? fieldName.concat(UNDERSCORE).concat(field.getName()):field.getName();
 				fieldAnottation = (field.getAnnotation(Column.class) != null 
-						|| field.getAnnotation(JoinColumn.class) != null);
+						|| field.getAnnotation(JoinColumn.class) != null)
+						|| (field.getAnnotation(Transient.class) != null && specificConditions.containsKey(f));
 				if(field.getAnnotation(Id.class) != null){
 					id = ReflectionsUtil.getValue(obj, field);
 					if(id != null && field.getType().isPrimitive() && "0".equals(id.toString())) {
@@ -410,6 +412,7 @@ public class QueryGenerator {
 						id = null;
 					}
 				}
+				
 				if(!fieldAnottation){
 					Method meth = ReflectionsUtil.getMethodGet(clazz, field.getName());
 					if(meth != null){

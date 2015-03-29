@@ -19,6 +19,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
 import br.com.transmetais.type.TipoFreteEnum;
@@ -62,6 +63,14 @@ public abstract class ComprovantePesagem {
 	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true)
 	@JoinColumn(name="arquivo_id")
 	private Arquivo arquivo;
+	
+	/**
+	 * Para filtro
+	 */
+	@Transient
+	private Date dataInicio;
+	@Transient
+	private Date dataFim;
 
 	public Long getId() {
 		return id;
@@ -173,6 +182,22 @@ public abstract class ComprovantePesagem {
 
 	public void setArquivo(Arquivo arquivo) {
 		this.arquivo = arquivo;
+	}
+
+	public Date getDataInicio() {
+		return dataInicio;
+	}
+
+	public void setDataInicio(Date dataInicio) {
+		this.dataInicio = dataInicio;
+	}
+
+	public Date getDataFim() {
+		return dataFim;
+	}
+
+	public void setDataFim(Date dataFim) {
+		this.dataFim = dataFim;
 	}
 
 }

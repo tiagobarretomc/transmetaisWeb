@@ -12,6 +12,7 @@ import br.com.transmetais.bean.ContaAPagar;
 import br.com.transmetais.bean.ContaAPagarCompra;
 import br.com.transmetais.bean.ContaAPagarDespesa;
 import br.com.transmetais.bean.Despesa;
+import br.com.transmetais.bean.Fornecedor;
 import br.com.transmetais.bean.Parcela;
 import br.com.transmetais.dao.ContaAPagarDAO;
 import br.com.transmetais.dao.commons.CrudDAOJPA;
@@ -21,14 +22,19 @@ import br.com.transmetais.type.StatusMovimentacaoEnum;
 @Component
 public class ContaAPagarDaoImpl extends CrudDAOJPA<ContaAPagar> implements ContaAPagarDAO{
 	
-	public List<ContaAPagar> findByFilter(Date dataInicio, Date dataFim, StatusMovimentacaoEnum status) throws DAOException {
+	public List<ContaAPagar> findByFilter(Fornecedor fornecedor, Date dataInicio, Date dataFim, StatusMovimentacaoEnum status) throws DAOException {
 		EntityManager manager = factory.createEntityManager(); 
 		
 		try {
-			String query = "SELECT c from ContaAPagar c ";
+			String query = "SELECT c from ContaAPagar c left join c.compra compr left join c.despesa desp";
 			
 			String clausulaWhere = " WHERE ";
-			
+			if(fornecedor != null && fornecedor.getId() != null){
+				if(clausulaWhere != " WHERE "){
+					clausulaWhere += " AND ";
+				}
+				clausulaWhere += " (compr.fornecedor.id = :fornecedor or desp.fornecedor.id = :fornecedor)  ";
+			}
 			if (dataInicio != null){
 				if(clausulaWhere != " WHERE "){
 					clausulaWhere += " AND ";
@@ -56,7 +62,9 @@ public class ContaAPagarDaoImpl extends CrudDAOJPA<ContaAPagar> implements Conta
 			query += " ORDER BY c.dataPrevista ASC";
 			Query hqlQuery = manager.createQuery(query);
 			
-			
+			if(fornecedor != null && fornecedor.getId() != null){
+				hqlQuery.setParameter("fornecedor", fornecedor.getId());
+			}
 			if (dataInicio != null){
 				hqlQuery.setParameter("dataInicio", dataInicio);
 				

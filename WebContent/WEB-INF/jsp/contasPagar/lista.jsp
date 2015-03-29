@@ -85,7 +85,19 @@
 		<form action="<c:url value='/contasPagar/'/>" id="formCompra" name="formCompra" method="post">
 		<!-- <input type="hidden" name="_format" value="json"> -->
 		<div class="row">
-        	
+        	<div class="col-md-3">
+        		<label for="fornecedor.id">Fornecedor:</label>
+				<select id="fornecedor.id" name="fornecedor.id"
+					class="selectpicker form-control" data-live-search="true">
+					<option value="">Selecione</option>
+					<c:forEach var="f" items="${fornecedores}"
+						varStatus="contador">
+						<option value="${f.id}"
+							${fornecedor.id eq f.id  ? 'selected' : ''}>${f.apelido}
+							- ${f.nome}</option>
+					</c:forEach>
+				</select>
+        	</div>
         	<div class="col-md-3">
         	<label for="dataInicio">Data Início:</label>
         	

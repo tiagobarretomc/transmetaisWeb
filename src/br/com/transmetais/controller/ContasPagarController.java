@@ -10,6 +10,7 @@ import br.com.transmetais.bean.Conta;
 import br.com.transmetais.bean.ContaAPagar;
 import br.com.transmetais.bean.ContaAPagarCompra;
 import br.com.transmetais.bean.ContaAPagarDespesa;
+import br.com.transmetais.bean.Fornecedor;
 import br.com.transmetais.bean.Movimentacao;
 import br.com.transmetais.bean.MovimentacaoContasAPagar;
 import br.com.transmetais.bean.ParcelaCompra;
@@ -19,6 +20,7 @@ import br.com.transmetais.dao.CompraDAO;
 import br.com.transmetais.dao.ContaAPagarDAO;
 import br.com.transmetais.dao.ContaDAO;
 import br.com.transmetais.dao.DespesaDAO;
+import br.com.transmetais.dao.FornecedorDAO;
 import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.ParcelaDAO;
 import br.com.transmetais.dao.commons.DAOException;
@@ -41,11 +43,12 @@ public class ContasPagarController {
 	private DespesaDAO despesaDao;
 	private ParcelaDAO parcelaDao;
 	private ChequeEmitidoDAO chequeEmitidoDAO;
+	private FornecedorDAO fornecedorDAO;
 	
 	
 	public ContasPagarController(Result result,ContaAPagarDAO dao, ContaDAO contaDao, 
 			MovimentacaoDAO movimentacaoDao, CompraDAO compraDao, 
-			DespesaDAO despesaDao, ParcelaDAO parcelaDao,ChequeEmitidoDAO chequeEmitidoDAO) {
+			DespesaDAO despesaDao, ParcelaDAO parcelaDao,ChequeEmitidoDAO chequeEmitidoDAO, FornecedorDAO fornecedorDAO) {
 		this.dao = dao;
 		this.result = result;
 		this.contaDao = contaDao;
@@ -55,23 +58,27 @@ public class ContasPagarController {
 		this.despesaDao = despesaDao;
 		this.parcelaDao = parcelaDao;
 		this.chequeEmitidoDAO = chequeEmitidoDAO;
+		this.fornecedorDAO = fornecedorDAO;
 		
 	}
 	
 	//tela de listagem de compras
 	@Path({"/contasPagar/","/contasPagar","/contasPagar/lista"})
-	public List<ContaAPagar> lista(Date dataInicio, Date dataFim, StatusMovimentacaoEnum status){
+	public List<ContaAPagar> lista(Fornecedor fornecedor, Date dataInicio, Date dataFim, StatusMovimentacaoEnum status){
 		List<ContaAPagar> lista = null;
 		
 		try {
 			
 			
-			lista = dao.findByFilter(dataInicio, dataFim, status);
+			lista = dao.findByFilter(fornecedor,dataInicio, dataFim, status);
 			result.include("statusList",StatusMovimentacaoEnum.values());
 			result.include("dataInicio",dataInicio);
 			result.include("dataFim",dataFim);
+			result.include("fornecedor",fornecedor);
 			result.include("status",status);
-
+			
+			List<Fornecedor> fornecedores = fornecedorDAO.findAll();
+			result.include("fornecedores",fornecedores);
 			
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
@@ -82,13 +89,13 @@ public class ContasPagarController {
 	}
 	
 	
-		public List<ContaAPagar> loadListaMovimentacao(Date dataInicio, Date dataFim, StatusMovimentacaoEnum status){
+		public List<ContaAPagar> loadListaMovimentacao(Fornecedor fornecedor, Date dataInicio, Date dataFim, StatusMovimentacaoEnum status){
 			List<ContaAPagar> lista = null;
 			
 			try {
 				
 				
-				lista = dao.findByFilter(dataInicio, dataFim, status);
+				lista = dao.findByFilter(fornecedor, dataInicio, dataFim, status);
 
 			} catch (DAOException e) {
 				// TODO Auto-generated catch block
@@ -100,7 +107,7 @@ public class ContasPagarController {
 	
 	public void salvar(Movimentacao movimentacao) {
 		
-		result.redirectTo(ContasPagarController.class).lista(null, null, null);
+		result.redirectTo(ContasPagarController.class).lista(null,null, null, null);
 	}
 	
 	@Path({"/contasPagar/{contaAPagar.id}"})
@@ -300,7 +307,7 @@ public class ContasPagarController {
 		}
 		
 		result.include("mensagem", "Confirmação de pagamento da conta efetuado com sucesso!");
-		result.redirectTo(this.getClass()).lista(null,null, null);
+		result.redirectTo(this.getClass()).lista(null,null,null, null);
 	}
 	
 	
