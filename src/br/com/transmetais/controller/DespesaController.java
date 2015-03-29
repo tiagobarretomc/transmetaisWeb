@@ -2,6 +2,7 @@ package br.com.transmetais.controller;
 
 import static br.com.caelum.vraptor.view.Results.json;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,8 +15,10 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import br.com.caelum.vraptor.Path;
+import br.com.caelum.vraptor.Post;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.caelum.vraptor.Validator;
 import br.com.transmetais.bean.CentroAplicacao;
 import br.com.transmetais.bean.ChequeEmitidoDespesa;
 import br.com.transmetais.bean.Conta;
@@ -41,10 +44,11 @@ import br.com.transmetais.type.StatusDespesaEnum;
 import br.com.transmetais.type.StatusMovimentacaoEnum;
 import br.com.transmetais.type.TipoOperacaoEnum;
 import br.com.transmetais.type.TipoPagamentoEnum;
+import br.com.transmetais.util.EntityUtil;
 
 @Resource
 @Path("/despesa")
-public class DespesaController extends BaseController<Despesa,DespesaDAO>{
+public class DespesaController {
 	
 	private CentroAplicacaoDAO centroAplicacaoDAO;
 	private ContaContabilDAO contaContabilDAO;
@@ -53,14 +57,26 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 	private MovimentacaoDAO movimentacaoDAO;
 	private ChequeEmitidoDAO chequeEmitidoDao;
 	private FornecedorDAO fornecedorDao;
+	protected  Result result;
+	protected  DespesaDAO dao;
+	protected Validator validator;
 	
 	
+	@Autowired
+	public void setResult(Result result) {
+		this.result = result;
+	}
+
+	@Autowired
+	public void setValidator(Validator validator) {
+		this.validator = validator;
+	}
+
 	
-	@Override
 	protected Despesa createInstance() {
 		return new Despesa();
 	}
-	@Override
+	
 	protected void postPersistUpdate(Despesa bean, Result result) {
 		
 		if (bean.getModalidadePagamento() == FormaPagamentoEnum.C && bean.getChequeEmitido() != null){
@@ -170,7 +186,7 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 		
 		
 	}
-	@Override
+	
 	protected void initForm(Despesa bean) {
 		
 		List<ContaContabil> listaContas;
@@ -194,8 +210,17 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 		}
 		
 	}
-	@Override
-	protected void prePersistUpdate(Despesa bean) {
+	
+	protected void prePersistUpdate(Despesa bean) throws DAOException {
+		
+		
+		//Verificando se trata-se de uma alteracao;
+		if(bean.getId()!= null && bean.getId() > 0){
+			Despesa oldBean = dao.findById(bean.getId());
+				
+			
+			
+		}
 		
 		if(bean.getModalidadePagamento() == FormaPagamentoEnum.C && bean.getParcelas() == null){
 			if(bean.getChequeEmitido() != null){
@@ -267,34 +292,47 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 	}
 	
 	
-	public List<Despesa> lista(){
-		List<Despesa> lista = null;
-		
-		try {
-			lista = dao.findAll();
-			DespesaFiltro filter = new DespesaFiltro();
-			initFilter(filter);
-			result.include("filter",filter);
-			result.include("beanList",lista);
-			List<Fornecedor> fornecedores = fornecedorDao.findAll();
-			result.include("fornecedores",fornecedores);
-			result.include("statusList",StatusDespesaEnum.values());
-			
-		} catch (DAOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return lista;
-	}
+//	public List<Despesa> lista(){
+//		List<Despesa> lista = null;
+//		
+//		try {
+//			lista = dao.findAll();
+//			DespesaFiltro filter = new DespesaFiltro();
+//			initFilter(filter);
+//			result.include("filter",filter);
+//			result.include("beanList",lista);
+//			List<Fornecedor> fornecedores = fornecedorDao.findAll();
+//			result.include("fornecedores",fornecedores);
+//			result.include("statusList",StatusDespesaEnum.values());
+//			
+//		} catch (DAOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		return lista;
+//	}
 	
 	@Path({"/lista","/lista/"})
 	public List<Despesa> lista(DespesaFiltro filter) throws DAOException{
 		List<Despesa> lista = null;
 		
-		lista = dao.findByFilter(filter);
+		
 		initFilter(filter);
+		lista = dao.findByFilter(filter);
+		BigDecimal valorTotal = BigDecimal.ZERO;
+		for (Despesa despesa : lista) {
+			valorTotal = valorTotal.add(despesa.getValor());
+		}
+		
 		result.include("beanList",lista);
+		
+		result.include("filter",filter);
+		result.include("beanList",lista);
+		result.include("valorTotal",valorTotal);
+		List<Fornecedor> fornecedores = fornecedorDao.findAll();
+		result.include("fornecedores",fornecedores);
+		result.include("statusList",StatusDespesaEnum.values());
 		
 		return lista;
 		
@@ -334,6 +372,8 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 	}
 	
 	
+	
+	
 	@Autowired 
 	public void setContaAPagarDAO(ContaAPagarDAO contaAPagarDAO) {
 		this.contaAPagarDAO = contaAPagarDAO;
@@ -360,6 +400,10 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 		this.fornecedorDao = fornecedorDao;
 	}
 	
+	@Autowired
+	public void setDao(DespesaDAO dao) {
+		this.dao = dao;
+	}
 	
 	
 	public void loadModalidades(TipoPagamentoEnum tipoPagamento) throws Exception{
@@ -421,6 +465,100 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 	}
 	
 	
+	@Path("/remove/{id}")
+	public void remove(Long id) throws DAOException {
+		Despesa bean = dao.findById(id);
+		String msg = null;
+		if (bean != null){
+			try{
+				dao.removeEntity(bean);
+				msg = "Registro excluído com sucesso." ;
+				result.include("mensagem", msg);
+			}catch(DAOException e){
+				result.include("erro", e.getMessage());
+
+			}
+		}
+		result.forwardTo(this.getClass()).lista(new DespesaFiltro());
+	  }
+
+	public void form(Despesa bean){
+		initForm(bean);
+		result.include("bean",bean);
+	}
 	
+	@Path({"/{id}","/form","/novo"})
+	public Despesa form(Long id) throws DAOException{
+		Despesa bean = null;
+		
+		
+		if (id != null){
+			
+			bean = dao.findById(id);
+			
+		}else{
+			bean = createInstance();
+		}
+		
+		initForm(bean);
+		
+		result.include("bean",bean);
+		
+		return bean;
+	}
+	@SuppressWarnings("unchecked")
+	@Post
+	public void add(Despesa bean) throws DAOException {
+		boolean isSucesso = false;
+		prePersistUpdate(bean);
+	 	validateForm(bean);
+		Long id = (Long)EntityUtil.getId(bean.getClass(), bean);
+		String msg = null;
+		if (id != null && id > 0){
+			if(update(bean)){
+				msg = "Registro alterado com sucesso." ;
+				isSucesso = true;
+			} 
+		}else{
+			if(persist(bean)){
+				msg = "Registro incluído com sucesso." ;
+				isSucesso = true;
+			}
+		}
+		if(isSucesso){
+			postPersistUpdate(bean, result);
+			result.include("mensagem", msg);
+			result.forwardTo(this.getClass()).lista(new DespesaFiltro());
+		}else{
+			result.include("erro","Erro ao incluir registro.");
+			result.forwardTo(this.getClass()).form(bean);;
+		}
+	  }
+	
+	
+	public boolean persist(Despesa bean){
+		try {
+			dao.addEntity(bean);
+			return true;
+		} catch (DAOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	public boolean update(Despesa bean){
+		try {
+			dao.updateEntity(bean);
+			return true;
+		} catch (Exception e) {
+			result.include("erro", "Erro ao alterar registro.");
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	protected void validateForm(Despesa bean){
+		validator.validate(bean);
+		validator.onErrorUsePageOf(this.getClass()).form(bean);
+	}
 
 }
