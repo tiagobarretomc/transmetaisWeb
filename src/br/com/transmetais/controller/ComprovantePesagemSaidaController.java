@@ -9,20 +9,19 @@ import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.Cliente;
-import br.com.transmetais.bean.ComprovantePesagem;
-import br.com.transmetais.bean.ComprovantePesagemEntrada;
 import br.com.transmetais.bean.ComprovantePesagemSaida;
 import br.com.transmetais.bean.ItemPesagemSaida;
 import br.com.transmetais.dao.ClienteDAO;
 import br.com.transmetais.dao.ProdutoDAO;
 import br.com.transmetais.dao.commons.DAOException;
+import br.com.transmetais.dao.impl.ComprovantePesagemSaidaDaoImpl;
 import br.com.transmetais.util.EntityUtil;
 
 import com.google.gson.Gson;
 
 @Resource
 @Path("/cps")
-public class ComprovantePesagemSaidaController extends ComprovantePesagemController<ComprovantePesagemSaida> {
+public class ComprovantePesagemSaidaController extends ComprovantePesagemController<ComprovantePesagemSaida,  ComprovantePesagemSaidaDaoImpl> {
 
 	private ClienteDAO clienteDAO;
 	private ProdutoDAO produtoDAO;

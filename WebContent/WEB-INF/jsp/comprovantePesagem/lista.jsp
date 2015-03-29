@@ -107,7 +107,12 @@
 					<th></th>
 					<th>Data de emissão</th>
 					<th>Número do ticket</th>
+					<c:if test="${filter.class.simpleName eq 'ComprovantePesagemEntrada' }">
 					<th>Fornecedor</th>
+					</c:if>
+					<c:if test="${filter.class.simpleName eq 'ComprovantePesagemSaida' }">
+					<th>Cliente</th>
+					</c:if>
 					<th>Placa do veículo</th>
 					<th>Peso Líquido</th>
 	
@@ -124,7 +129,12 @@
 								title="Excluir" class="glyphicon glyphicon-remove"></span></a></td>
 						<td><fmt:formatDate value="${comprovantePesagem.dataEmissao}" type="date" pattern="dd/MM/yyyy"/></td>
 						<td>${comprovantePesagem.numeroTicket}</td>
-						<td>${comprovantePesagem.fornecedor.apelido} - ${comprovantePesagem.fornecedor.nome}</td>
+						<c:if test="${filter.class.simpleName eq 'ComprovantePesagemEntrada' }">
+							<td>${comprovantePesagem.fornecedor.apelido} - ${comprovantePesagem.fornecedor.nome}</td>
+						</c:if>
+						<c:if test="${filter.class.simpleName eq 'ComprovantePesagemSaida' }">
+							<td>${comprovantePesagem.cliente.razaoSocial}</td>
+						</c:if>
 						<td>${comprovantePesagem.placaVeiculo}</td>
 						<td><fmt:formatNumber value="${comprovantePesagem.pesoLiquido}" minFractionDigits="2" type="number"/></td>
 	

@@ -8,13 +8,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.transmetais.bean.Cliente;
 import br.com.transmetais.bean.ComprovantePesagemEntrada;
+import br.com.transmetais.bean.ComprovantePesagemSaida;
 import br.com.transmetais.bean.Fornecedor;
 import br.com.transmetais.bean.GrupoMaterial;
 import br.com.transmetais.bean.ItemPesagemEntrada;
 import br.com.transmetais.dao.FornecedorDAO;
 import br.com.transmetais.dao.MaterialDAO;
 import br.com.transmetais.dao.commons.DAOException;
+import br.com.transmetais.dao.impl.ComprovantePesagemEntradaDaoImpl;
 import br.com.transmetais.util.EntityUtil;
 
 import com.google.gson.ExclusionStrategy;
@@ -24,7 +27,7 @@ import com.google.gson.GsonBuilder;
 
 @Resource
 @Path("/cpe")
-public class ComprovantePesagemEntradaController extends ComprovantePesagemController<ComprovantePesagemEntrada>{
+public class ComprovantePesagemEntradaController extends ComprovantePesagemController<ComprovantePesagemEntrada, ComprovantePesagemEntradaDaoImpl>{
 
 	private FornecedorDAO fornecedorDAO;
 	private MaterialDAO materialDAO;
@@ -42,12 +45,24 @@ public class ComprovantePesagemEntradaController extends ComprovantePesagemContr
 		}
 	}
 	@Override
+	protected void initFilter(ComprovantePesagemEntrada filter) {
+		// TODO Auto-generated method stub
+		super.initFilter(filter);
+		List<Fornecedor> fornecedores = null;
+		try {
+			fornecedores = fornecedorDAO.findAll();
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+		result.include("fornecedores",fornecedores);
+	}
+	@Override
 	protected void initForm(ComprovantePesagemEntrada bean)  {
 		try{
 			super.initForm(bean);
 			List<Fornecedor> fornecedores = fornecedorDAO.findAll();
 			result.include("fornecedores",fornecedores);
-	
+			
 			
 			Gson gson = new Gson();
 			String json = gson.toJson(EntityUtil.retrieveCombo(materialDAO.findAll(), "id", "descricao"));

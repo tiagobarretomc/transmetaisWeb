@@ -39,7 +39,7 @@ public class UsuarioDAOImpl extends CrudDAOJPA<Usuario> implements UsuarioDAO{
 	}
 	public Usuario getUsuarioByLoginSenha(String login, String senha) throws DAOException {
 		String senhaCriptografada = SecurityUtil.encriptyWord(senha);
-		return findSingleByCriteria(Restrictions.eq("login", login), Restrictions.eq("login", login));
+		return findSingleByCriteria(Restrictions.eq("login", login), Restrictions.eq("senha", senhaCriptografada));
 	}
 	public boolean verificarAcesso(Usuario usuario, GrupoUsuario grupo)
 			throws DAOException {

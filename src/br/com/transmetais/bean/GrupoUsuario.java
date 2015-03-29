@@ -1,7 +1,7 @@
 package br.com.transmetais.bean;
 
 public enum GrupoUsuario {
-	ADMINISTRADOR(1), FINANCEIRO(2), COMERCIAL(3), FORNECEDOR(4);
+	ADMINISTRADOR(1), FINANCEIRO(2), COMERCIAL(3), FORNECEDOR(4), OPERACIONAL(5);
 	private int codigo;
 	
 	GrupoUsuario(int codigo){

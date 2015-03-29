@@ -115,6 +115,7 @@ public class CrudDAOJPA<T> implements CrudDAO<T> {
             manager.merge(entity);
             manager.getTransaction().commit();
         } catch (Exception e) {
+        	e.printStackTrace();
             manager.getTransaction().rollback();
             throw new DAOException(e);
         } finally {
