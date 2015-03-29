@@ -45,7 +45,7 @@
         		<label for="clienteId">Cliente:</label>
 	        	<select id="cliente" name="clienteId" class="selectpicker form-control" data-live-search="true">
 					<option value ="">Selecione</option>
-					<c:forEach var="cliente" items="${cliente}" varStatus="contador">
+					<c:forEach var="cliente" items="${clientes}" varStatus="contador">
 						<option value ="${cliente.id}">${cliente.razaoSocial}</option>
 					</c:forEach>	
 				</select>
@@ -130,7 +130,7 @@
 		<th >Data</th>
 		<th >Cliente</th>
 		<th >Tipo Frete</th>
-		<th>Total</th>
+		<th>NF-e</th>
 		<th>Status</th>
 		<th>Material</th>
 		<th>Quantidade</th>
@@ -154,7 +154,7 @@
 					
 				</td>
 				<td rowspan="${fn:length(venda.itens)}">
-					${compra.cliente.razaoSocial}
+					${venda.cliente.razaoSocial}
 				</td>
 				
 				
@@ -163,7 +163,7 @@
 				</td>
 				<td rowspan="${fn:length(venda.itens)}">
 						
-						<fmt:formatNumber value="${venda.valor}" minFractionDigits="2" type="currency"/>
+						${venda.numNf }
 					</td>
 					
 				<td rowspan="${fn:length(venda.itens)}">

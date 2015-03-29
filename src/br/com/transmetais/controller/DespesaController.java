@@ -2,9 +2,11 @@ package br.com.transmetais.controller;
 
 import static br.com.caelum.vraptor.view.Results.json;
 
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,7 @@ import br.com.transmetais.bean.Conta;
 import br.com.transmetais.bean.ContaAPagarDespesa;
 import br.com.transmetais.bean.ContaContabil;
 import br.com.transmetais.bean.Despesa;
+import br.com.transmetais.bean.Fornecedor;
 import br.com.transmetais.bean.MovimentacaoDespesa;
 import br.com.transmetais.bean.ParcelaDespesa;
 import br.com.transmetais.dao.CentroAplicacaoDAO;
@@ -28,8 +31,10 @@ import br.com.transmetais.dao.ContaAPagarDAO;
 import br.com.transmetais.dao.ContaContabilDAO;
 import br.com.transmetais.dao.ContaDAO;
 import br.com.transmetais.dao.DespesaDAO;
+import br.com.transmetais.dao.FornecedorDAO;
 import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.commons.DAOException;
+import br.com.transmetais.filtros.DespesaFiltro;
 import br.com.transmetais.type.FormaPagamentoEnum;
 import br.com.transmetais.type.SituacaoChequeEnum;
 import br.com.transmetais.type.StatusDespesaEnum;
@@ -47,6 +52,7 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 	private ContaDAO contaDAO;
 	private MovimentacaoDAO movimentacaoDAO;
 	private ChequeEmitidoDAO chequeEmitidoDao;
+	private FornecedorDAO fornecedorDao;
 	
 	
 	
@@ -169,13 +175,16 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 		
 		List<ContaContabil> listaContas;
 		List<CentroAplicacao> listaCentroAplicacao;
+		List<Fornecedor> fornecedores;
 		
 		try {
 			listaContas = contaContabilDAO.findAll();
 			listaCentroAplicacao = centroAplicacaoDAO.findAll();
+			fornecedores = fornecedorDao.findAll();
 			
 			result.include("contas", listaContas);
 			result.include("centros", listaCentroAplicacao);
+			result.include("fornecedores", fornecedores);
 			
 			
 			
@@ -257,6 +266,63 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 		
 	}
 	
+	
+	public List<Despesa> lista(){
+		List<Despesa> lista = null;
+		
+		try {
+			lista = dao.findAll();
+			DespesaFiltro filter = new DespesaFiltro();
+			initFilter(filter);
+			result.include("filter",filter);
+			result.include("beanList",lista);
+			List<Fornecedor> fornecedores = fornecedorDao.findAll();
+			result.include("fornecedores",fornecedores);
+			result.include("statusList",StatusDespesaEnum.values());
+			
+		} catch (DAOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return lista;
+	}
+	
+	@Path({"/lista","/lista/"})
+	public List<Despesa> lista(DespesaFiltro filter) throws DAOException{
+		List<Despesa> lista = null;
+		
+		lista = dao.findByFilter(filter);
+		initFilter(filter);
+		result.include("beanList",lista);
+		
+		return lista;
+		
+	}
+	protected void initFilter(DespesaFiltro filter){
+		
+		Calendar data = new GregorianCalendar();  
+	       
+	     
+		if (filter.getDataFim() == null){
+			
+			 int ultimo_dia_mes = data.getActualMaximum(Calendar.DAY_OF_MONTH);  
+			 data.set(Calendar.DAY_OF_MONTH, ultimo_dia_mes);  
+			 
+			 filter.setDataFim(data.getTime());
+		}
+	     
+		if(filter.getDataInicio() == null){
+			
+			int primeiro_dia_mes = data.getActualMinimum(Calendar.DAY_OF_MONTH);
+			data.set(Calendar.DAY_OF_MONTH, primeiro_dia_mes);
+			 
+			
+			filter.setDataInicio(data.getTime());
+		}
+		
+	}
+	
 	@Autowired 
 	public void setCentroAplicacaoDAO(CentroAplicacaoDAO centroAplicacaoDAO) {
 		this.centroAplicacaoDAO = centroAplicacaoDAO;
@@ -287,6 +353,11 @@ public class DespesaController extends BaseController<Despesa,DespesaDAO>{
 	@Autowired
 	public void setChequeEmitidoDao(ChequeEmitidoDAO chequeEmitidoDao) {
 		this.chequeEmitidoDao = chequeEmitidoDao;
+	}
+	
+	@Autowired
+	public void setFornecedorDao(FornecedorDAO fornecedorDao) {
+		this.fornecedorDao = fornecedorDao;
 	}
 	
 	

@@ -29,6 +29,10 @@
 	    $("#btnFiltrar").click(function(){
 			$("#divTabela").load( '<c:url value="/${controller}/filtrar"/>', $('#formComprovantePesagem').serialize() );
 		});
+	    
+	    $('.selectpicker').selectpicker({
+            //'selectedText': 'cat'
+        });
     });
 </script>
 

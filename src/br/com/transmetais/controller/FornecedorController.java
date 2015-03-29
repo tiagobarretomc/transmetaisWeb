@@ -89,6 +89,8 @@ public class FornecedorController {
 							fornecedor.setConta(fornecedorAnterior.getConta());
 						}
 					}
+				}else{
+					fornecedor.setConta(null);
 				}
 				
 				

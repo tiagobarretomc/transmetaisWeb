@@ -16,25 +16,18 @@ import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.CentroAplicacao;
 import br.com.transmetais.bean.Cliente;
 import br.com.transmetais.bean.ClienteMaterial;
-import br.com.transmetais.bean.Compra;
 import br.com.transmetais.bean.Conta;
-import br.com.transmetais.bean.ContaAPagarCompra;
 import br.com.transmetais.bean.ContaAReceberVenda;
 import br.com.transmetais.bean.ContaContabil;
 import br.com.transmetais.bean.Estoque;
-import br.com.transmetais.bean.Fornecedor;
-import br.com.transmetais.bean.FornecedorMaterial;
-import br.com.transmetais.bean.ItemCompra;
 import br.com.transmetais.bean.ItemVenda;
 import br.com.transmetais.bean.Material;
 import br.com.transmetais.bean.MovimentacaoVenda;
-import br.com.transmetais.bean.ParcelaCompra;
 import br.com.transmetais.bean.ParcelaVenda;
 import br.com.transmetais.bean.Venda;
 import br.com.transmetais.dao.CentroAplicacaoDAO;
 import br.com.transmetais.dao.ClienteDAO;
 import br.com.transmetais.dao.ClienteMaterialDAO;
-import br.com.transmetais.dao.ContaAPagarDAO;
 import br.com.transmetais.dao.ContaAReceberDAO;
 import br.com.transmetais.dao.ContaContabilDAO;
 import br.com.transmetais.dao.ContaDAO;
@@ -48,7 +41,6 @@ import br.com.transmetais.type.StatusDespesaEnum;
 import br.com.transmetais.type.StatusMovimentacaoEnum;
 import br.com.transmetais.type.StatusVendaEnum;
 import br.com.transmetais.type.TipoFreteCliente;
-import br.com.transmetais.type.TipoFreteEnum;
 import br.com.transmetais.type.TipoOperacaoEnum;
 import br.com.transmetais.type.TipoPagamentoEnum;
 
@@ -68,7 +60,7 @@ public class VendaController {
 	//private ChequeEmitidoDAO chequeEmitidoDAO;
 	private MovimentacaoDAO movimentacaoDAO;
 	
-	public VendaController(Result result, VendaDAO vendaDao, ClienteDAO clienteDao, ClienteMaterialDAO clienteMaterialDAO, ContaAPagarDAO contaAPagarDAO, 
+	public VendaController(Result result, VendaDAO vendaDao, ClienteDAO clienteDao, ClienteMaterialDAO clienteMaterialDAO, ContaAReceberDAO contaAReceberDAO, 
 			ContaDAO contaDao, MaterialDAO materialDao, EstoqueDAO estoqueDAO,ContaContabilDAO contaContabilDAO, CentroAplicacaoDAO centroAplicacaoDAO,
 			MovimentacaoDAO movimentacaoDAO) {
 		this.dao = vendaDao;
@@ -87,7 +79,7 @@ public class VendaController {
 	
 	//tela de listagem de compras
 	@Path({"/venda/","/venda","/venda/lista"})
-	public List<Venda> lista(Long clienteId, Date dataInicio, Date dataFim, List<TipoFreteEnum> tiposFretes, List<Long> materiaisSelecionados, List<StatusVendaEnum> statusVendas){
+	public List<Venda> lista(Long clienteId, Date dataInicio, Date dataFim, List<TipoFreteCliente> tiposFretes, List<Long> materiaisSelecionados, List<StatusVendaEnum> statusVendas){
 		List<Venda> lista = null;
 		
 		try {
@@ -116,7 +108,7 @@ public class VendaController {
 			
 			result.include("clientes", clientes);
 			result.include("materiais", materiais);
-			result.include("tiposFrete",TipoFreteEnum.values());
+			result.include("tiposFrete",TipoFreteCliente.values());
 			result.include("statusList",StatusVendaEnum.values());
 			
 			result.include("valorTotal", valorTotal);
@@ -136,7 +128,7 @@ public class VendaController {
 	}
 	
 	
-		public List<Venda> loadListaVenda(Long clienteId, Date dataInicio, Date dataFim, List<TipoFreteEnum> tiposFretes, List<Long> materiaisSelecionados, List<StatusVendaEnum> statusVendas){
+		public List<Venda> loadListaVenda(Long clienteId, Date dataInicio, Date dataFim, List<TipoFreteCliente> tiposFretes, List<Long> materiaisSelecionados, List<StatusVendaEnum> statusVendas){
 			List<Venda> lista = null;
 			
 			try {
@@ -165,7 +157,7 @@ public class VendaController {
 				result.include("quantidade", quantidade);
 				result.include("precoMedio", precoMedio);
 				
-				result.include("compras",lista);
+				result.include("vendas",lista);
 			} catch (DAOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -504,7 +496,7 @@ public class VendaController {
 			
 			List<ClienteMaterial> clienteMaterial = clienteMaterialDAO.obterAtivosPorFiltro(venda.getCliente(),venda.getTipoFrete());
 			result.include("fornecedorMateriais", clienteMaterial);
-			result.include("tiposFrete",TipoFreteEnum.values());
+			result.include("tiposFrete",TipoFreteCliente.values());
 			
 			//this.result.use(Results.json()).from(fornecedorMateriais, "formulario").serialize();
 		}

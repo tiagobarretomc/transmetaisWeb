@@ -25,7 +25,7 @@ public class ItemVenda {
 	private Material material;
 	private BigDecimal quantidade;
 	private BigDecimal valor;
-	private BigDecimal precoUnitario;
+	private BigDecimal preco;
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="venda_id")
 	private Venda venda;
@@ -56,11 +56,11 @@ public class ItemVenda {
 	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
-	public BigDecimal getPrecoUnitario() {
-		return precoUnitario;
+	public BigDecimal getPreco() {
+		return preco;
 	}
-	public void setPrecoUnitario(BigDecimal precoUnitario) {
-		this.precoUnitario = precoUnitario;
+	public void setPreco(BigDecimal precoUnitario) {
+		this.preco = precoUnitario;
 	}
 	public Venda getVenda() {
 		return venda;

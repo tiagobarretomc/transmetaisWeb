@@ -422,9 +422,23 @@
         		<label for="bean.valor">Valor:</label>
         		<input name="bean.valor" id="valor" value="<fmt:formatNumber value="${bean.valor}" minFractionDigits="2" type="currency"/>" class="form-control required"  maxlength="18"/>
         	</div>
+        	<div class="col-md-4">
+        		<label for="bean.fornecedor.id">Fornecedor:</label>
+		        	<select id="bean.fornecedor.id" name="bean.fornecedor.id" class="selectpicker form-control required" data-live-search="true">
+						<option value ="" >Selecione</option>
+						<c:forEach var="fornecedor" items="${fornecedores}" varStatus="contador">
+							<option value ="${fornecedor.id}" ${bean.fornecedor.id eq fornecedor.id  ? 'selected' : ''}>${fornecedor.apelido} - ${fornecedor.nome}</option>
+						</c:forEach>	
+					</select>
+        	</div>
         	
         	
-        	<div class="col-md-2"><label for="optPagamentoAVista">Forma Pagamento:</label><br/>
+        	
+        	
+        	
+      	</div>
+		<div class="row">
+			<div class="col-md-2"><label for="optPagamentoAVista">Forma Pagamento:</label><br/>
 				<input type="radio" name="bean.formaPagamento" value="V" id="optPagamentoAVista" ${bean.formaPagamento.name == 'V' ? 'checked="checked"' : '' }/>&nbsp;À vista&nbsp;
 				<input type="radio" name="bean.formaPagamento" value="P" id="optPagamentoAPrazo" ${bean.formaPagamento.name == 'P' ? 'checked="checked"' : '' }/>&nbsp;À prazo&nbsp;</div>
         	
@@ -441,10 +455,6 @@
 						</select>
 	        		</div>
 	        </div>
-        	
-        	
-      	</div>
-		<div class="row">
 			<div class="col-md-4">
         		<label for="bean.contaContabil.id">Conta Financeira:</label>
 				<div id="divCboContas">
@@ -469,17 +479,7 @@
 						</c:forEach>	
 					</select>
         	</div>
-        	<div class="col-md-4">
-        	<label for="bean.contaContabil.id">Conta Contábil:</label>
-        		<select id="bean.contaContabil.id" name="bean.contaContabil.id" class="selectpicker required form-control" data-live-search="true">
-						<option value ="">Selecione</option>
-						<c:forEach var="conta" items="${contas}" varStatus="contador">
-						
-							<option value ="${conta.id}" ${bean.contaContabil.id eq conta.id ? 'selected' : ''}>${conta.numero} - ${conta.descricao}</option>
-		
-						</c:forEach>	
-				</select>
-        	</div>
+        	
         	
 				
         	
@@ -489,6 +489,17 @@
 	      	
         		<label for="">Número Cheque:</label>
         		<input name="bean.chequeEmitidoList[0].numeroCheque"  id="bean.chequeEmitidoList[0].numeroCheque" value="" class="form-control required " maxlength="15"  />
+        	</div>
+        <div class="col-md-4">
+        	<label for="bean.contaContabil.id">Conta Contábil:</label>
+        		<select id="bean.contaContabil.id" name="bean.contaContabil.id" class="selectpicker required form-control" data-live-search="true">
+						<option value ="">Selecione</option>
+						<c:forEach var="conta" items="${contas}" varStatus="contador">
+						
+							<option value ="${conta.id}" ${bean.contaContabil.id eq conta.id ? 'selected' : ''}>${conta.numero} - ${conta.descricao}</option>
+		
+						</c:forEach>	
+				</select>
         	</div>
       	<div class="col-md-2">
         		<label for="bean.dataCompetencia">Data Competência:</label>
@@ -503,7 +514,10 @@
         		<input id="qtdParcelas" value="${fn:length(bean.parcelas)}" size="10" class="form-control "/>
         	</div>
         	
-        	<div class="col-md-2"><br/>
+        	
+      	</div>
+      	<div class="row">
+      		<div class="col-md-2"><br/>
       			<button type="button" id="btnGerarParcelas" class="btn btn-default btn-md" style="margin-top: 4px;">
 				  Gerar Parcelas
 				</button>

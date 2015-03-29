@@ -17,6 +17,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import br.com.transmetais.type.FormaPagamentoEnum;
 import br.com.transmetais.type.StatusMovimentacaoEnum;
 
 @Entity
@@ -124,6 +125,12 @@ public class ContaAReceber {
 		this.dataCancelamento = dataCancelamento;
 	}
 
-	
+	public FormaPagamentoEnum getModalidadePagamento() {
+		if (this instanceof ContaAReceberVenda){
+			return ((ContaAReceberVenda)this).getVenda().getModalidadePagamento();
+		}
+		
+		return null;
+	}
 	
 }
