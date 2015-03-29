@@ -33,7 +33,7 @@
 		
 		<div class="panel panel-default">
   	<div class="panel-body">
-		<form action="<c:url value='/despesa/filtrar'/>" id="formDespesa" name="formDespesa" method="post">
+		<form action="<c:url value='/despesa/lista'/>" id="formDespesa" name="formDespesa" method="post">
 		<!-- <input type="hidden" name="_format" value="json"> -->
 		<div class="row">
 		
@@ -51,17 +51,17 @@
         	<div class="col-md-2">
         	<label for="dataInicio">Data Início:</label>
         	
-        		<input type="datetime"  name="dataInicio" id="dataInicio" class="datepicker form-control" data-date-format="dd/mm/yyyy" value="<fmt:formatDate value="${filter.dataInicio}" type="date" pattern="dd/MM/yyyy"/>" />
+        		<input type="datetime"  name="filter.dataInicio" id="filter.dataInicio" class="datepicker form-control" data-date-format="dd/mm/yyyy" value="<fmt:formatDate value="${filter.dataInicio}" type="date" pattern="dd/MM/yyyy"/>" />
 					
         	</div>
         	<div class="col-md-2">
         	<label for="dataFim">Data Fim:</label>
-        		<input type="datetime"  name="dataFim" id="dataFim" class="datepicker form-control" data-date-format="dd/mm/yyyy" value="<fmt:formatDate value="${filter.dataFim}" type="date" pattern="dd/MM/yyyy"/>" />
+        		<input type="datetime"  name="filter.dataFim" id="filter.dataFim" class="datepicker form-control" data-date-format="dd/mm/yyyy" value="<fmt:formatDate value="${filter.dataFim}" type="date" pattern="dd/MM/yyyy"/>" />
 					
         	</div>
         	<div class="col-md-3">
         		<label for="status">Status:</label>
-				<select  id="status" name="status" class="selectpicker form-control"  >
+				<select  id="filter.status" name="filter.status" class="selectpicker form-control"  >
 					<option value="" ></option>
 					<c:forEach var="statusL" items="${statusList}">
 						<option value="${statusL.name }" ${statusL.name eq filter.status.name ? 'selected' : ''}>${statusL.descricao}</option>
@@ -69,6 +69,12 @@
 				</select>
         	</div>
         	
+        </div>
+        <div class="row">
+        	<div class="col-md-5">
+        	<label for="filter.descricao">Descrição:</label>
+        	<input type="text"  name="filter.descricao" id="filter.descricao" class="form-control" data-date-format="dd/mm/yyyy" value="${filter.descricao }" />
+        	</div>
         </div>
        
         <br/>
@@ -86,7 +92,6 @@
 	<tr>
 		<th ></th>
 		<th >Código</th>
-		<th >Fornecedor</th>
 		<th >Descrição</th>
 		<th >Data Vencimento</th>
 		<th >Centro de Aplicação</th>
@@ -105,9 +110,7 @@
 			<td>
 				${despesa.id} 
 			</td>
-			<td>
-				${despesa.fornecedor.nome }
-			</td>
+			
 			<td>
 				${despesa.descricao} 
 			</td>
@@ -123,3 +126,13 @@
 		</c:forEach>
 	</tbody>
 	</table>
+	
+	<div class="panel panel-default">
+  	<div class="panel-body">
+	<div class="row">
+		<div class="col-md-4"><b>Valor Total:</b> <fmt:formatNumber value="${valorTotal}" minFractionDigits="2" type="currency"/></div>
+		
+	
+	</div>
+	</div>
+	</div>

@@ -26,16 +26,16 @@ public class DespesaDaoImpl extends CrudDAOJPA<Despesa> implements DespesaDAO{
 				if(clausulaWhere != " WHERE "){
 					clausulaWhere += " AND ";
 				}
-				clausulaWhere += " d.data >= :dataInicio ";
+				clausulaWhere += " d.dataVencimento >= :dataInicio ";
 			}
 			if (filter.getDataFim() !=null){
 				if(clausulaWhere != " WHERE "){
 					clausulaWhere += " AND ";
 				}
-				clausulaWhere += " d.data <= :dataFim";
+				clausulaWhere += " d.dataVencimento <= :dataFim";
 			}
 			
-			if (filter.getFornecedor() !=null){
+			if (filter.getFornecedor() !=null && filter.getFornecedor().getId() !=null){
 				if(clausulaWhere != " WHERE "){
 					clausulaWhere += " AND ";
 				}
@@ -49,10 +49,17 @@ public class DespesaDaoImpl extends CrudDAOJPA<Despesa> implements DespesaDAO{
 				clausulaWhere += " d.status in ( :status) ";
 			}
 			
+			if(filter != null && filter.getDescricao()!=null && filter.getDescricao() != ""){
+				if(clausulaWhere != " WHERE "){
+					clausulaWhere += " AND ";
+				}
+				clausulaWhere += " d.descricao like  :descricao ";
+			}
+			
 			if (clausulaWhere != " WHERE ")
 				query += clausulaWhere;
 			
-			query += " ORDER BY c.data DESC";
+			query += " ORDER BY d.dataVencimento DESC";
 			Query hqlQuery = manager.createQuery(query);
 			
 			
@@ -73,8 +80,12 @@ public class DespesaDaoImpl extends CrudDAOJPA<Despesa> implements DespesaDAO{
 				hqlQuery.setParameter("status", filter.getStatus());
 			}
 			
-			if(filter.getFornecedor() != null){
+			if (filter.getFornecedor() !=null && filter.getFornecedor().getId() !=null){
 				hqlQuery.setParameter("fornecedorId", filter.getFornecedor().getId());
+			}
+			
+			if(filter != null && filter.getDescricao()!=null && filter.getDescricao() != ""){
+				hqlQuery.setParameter("descricao", "%" + filter.getDescricao() + "%");
 			}
 			
 			

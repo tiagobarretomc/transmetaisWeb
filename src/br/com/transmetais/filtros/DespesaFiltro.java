@@ -11,6 +11,7 @@ public class DespesaFiltro {
 	private Fornecedor fornecedor;
 	private Date dataInicio;
 	private Date dataFim;
+	private String descricao;
 	public StatusDespesaEnum getStatus() {
 		return status;
 	}
@@ -34,6 +35,14 @@ public class DespesaFiltro {
 	}
 	public void setDataFim(Date dataFim) {
 		this.dataFim = dataFim;
+	}
+	
+	public String getDescricao() {
+		return descricao;
+	}
+	
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
 	}
 	
 	
