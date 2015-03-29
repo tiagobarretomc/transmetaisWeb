@@ -104,6 +104,23 @@ public class ChequeEmitidoController extends BaseController<ChequeEmitido, Chequ
 			
 			
 			result.include("beanList",lista);
+			
+			BigDecimal valorTotal = BigDecimal.ZERO;
+			BigDecimal totalCompensado = BigDecimal.ZERO;
+			BigDecimal totalACompensar = BigDecimal.ZERO;
+			for (ChequeEmitido cheq : lista) {
+				valorTotal = valorTotal.add(cheq.getValor());
+				if(cheq.getStatus() == SituacaoChequeEnum.A){
+					totalACompensar = totalACompensar.add(cheq.getValor());
+				}else if(cheq.getStatus() == SituacaoChequeEnum.C){
+					totalCompensado = totalCompensado.add(cheq.getValor());
+				}
+			}
+			
+			result.include("valorTotal",valorTotal);
+			result.include("totalCompensado",totalCompensado);
+			result.include("totalACompensar",totalACompensar);
+			
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -7,19 +7,23 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import br.com.caelum.vraptor.ioc.Component;
+import br.com.transmetais.bean.ContaAPagar;
 import br.com.transmetais.bean.ContaAReceber;
 import br.com.transmetais.dao.ContaAReceberDAO;
 import br.com.transmetais.dao.commons.CrudDAOJPA;
 import br.com.transmetais.dao.commons.DAOException;
+import br.com.transmetais.type.StatusMovimentacaoEnum;
 
 @Component
 public class ContaAReceberDaoImpl extends CrudDAOJPA<ContaAReceber> implements ContaAReceberDAO{
 	
-	public List<ContaAReceber> findByFilter(Date dataInicio, Date dataFim) throws DAOException {
+	
+	
+	public List<ContaAReceber> findByFilter(Date dataInicio, Date dataFim, StatusMovimentacaoEnum status) throws DAOException {
 		EntityManager manager = factory.createEntityManager(); 
 		
 		try {
-			String query = "SELECT c from ContaAPagar c ";
+			String query = "SELECT c from ContaAReceber c ";
 			
 			String clausulaWhere = " WHERE ";
 			
@@ -34,6 +38,13 @@ public class ContaAReceberDaoImpl extends CrudDAOJPA<ContaAReceber> implements C
 					clausulaWhere += " AND ";
 				}
 				clausulaWhere += " c.dataPrevista <= :dataFim";
+			}
+			
+			if (status !=null){
+				if(clausulaWhere != " WHERE "){
+					clausulaWhere += " AND ";
+				}
+				clausulaWhere += " c.status = :status";
 			}
 			
 			
@@ -54,12 +65,17 @@ public class ContaAReceberDaoImpl extends CrudDAOJPA<ContaAReceber> implements C
 				hqlQuery.setParameter("dataFim", dataFim);
 			}
 			
+			if (status !=null){
+				
+				hqlQuery.setParameter("status", status);
+			}
+			
 			
 			return hqlQuery.getResultList();
 		} catch (Exception e) {
 		    throw new DAOException(e);
 		} finally {
 		}
-	} 
+	}
 
 }

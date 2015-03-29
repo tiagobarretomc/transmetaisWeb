@@ -41,7 +41,6 @@ import br.com.transmetais.type.StatusDespesaEnum;
 import br.com.transmetais.type.StatusMovimentacaoEnum;
 import br.com.transmetais.type.StatusVendaEnum;
 import br.com.transmetais.type.TipoFreteCliente;
-import br.com.transmetais.type.TipoFreteEnum;
 import br.com.transmetais.type.TipoOperacaoEnum;
 import br.com.transmetais.type.TipoPagamentoEnum;
 
@@ -80,7 +79,7 @@ public class VendaController {
 	
 	//tela de listagem de compras
 	@Path({"/venda/","/venda","/venda/lista"})
-	public List<Venda> lista(Long clienteId, Date dataInicio, Date dataFim, List<TipoFreteEnum> tiposFretes, List<Long> materiaisSelecionados, List<StatusVendaEnum> statusVendas){
+	public List<Venda> lista(Long clienteId, Date dataInicio, Date dataFim, List<TipoFreteCliente> tiposFretes, List<Long> materiaisSelecionados, List<StatusVendaEnum> statusVendas){
 		List<Venda> lista = null;
 		
 		try {
@@ -109,7 +108,7 @@ public class VendaController {
 			
 			result.include("clientes", clientes);
 			result.include("materiais", materiais);
-			result.include("tiposFrete",TipoFreteEnum.values());
+			result.include("tiposFrete",TipoFreteCliente.values());
 			result.include("statusList",StatusVendaEnum.values());
 			
 			result.include("valorTotal", valorTotal);
@@ -129,7 +128,7 @@ public class VendaController {
 	}
 	
 	
-		public List<Venda> loadListaVenda(Long clienteId, Date dataInicio, Date dataFim, List<TipoFreteEnum> tiposFretes, List<Long> materiaisSelecionados, List<StatusVendaEnum> statusVendas){
+		public List<Venda> loadListaVenda(Long clienteId, Date dataInicio, Date dataFim, List<TipoFreteCliente> tiposFretes, List<Long> materiaisSelecionados, List<StatusVendaEnum> statusVendas){
 			List<Venda> lista = null;
 			
 			try {
@@ -158,7 +157,7 @@ public class VendaController {
 				result.include("quantidade", quantidade);
 				result.include("precoMedio", precoMedio);
 				
-				result.include("compras",lista);
+				result.include("vendas",lista);
 			} catch (DAOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -497,7 +496,7 @@ public class VendaController {
 			
 			List<ClienteMaterial> clienteMaterial = clienteMaterialDAO.obterAtivosPorFiltro(venda.getCliente(),venda.getTipoFrete());
 			result.include("fornecedorMateriais", clienteMaterial);
-			result.include("tiposFrete",TipoFreteEnum.values());
+			result.include("tiposFrete",TipoFreteCliente.values());
 			
 			//this.result.use(Results.json()).from(fornecedorMateriais, "formulario").serialize();
 		}

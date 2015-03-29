@@ -12,7 +12,7 @@ import br.com.transmetais.dao.VendaDAO;
 import br.com.transmetais.dao.commons.CrudDAOJPA;
 import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.type.StatusVendaEnum;
-import br.com.transmetais.type.TipoFreteEnum;
+import br.com.transmetais.type.TipoFreteCliente;
 
 @Component
 public class VendaDaoImpl extends CrudDAOJPA<Venda> implements VendaDAO{
@@ -41,7 +41,7 @@ public class VendaDaoImpl extends CrudDAOJPA<Venda> implements VendaDAO{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<Venda> findByFilter(Long clienteId, Date dataInicio, Date dataFim, List<TipoFreteEnum> tiposFretes, List<Long> materiaisIds,List<StatusVendaEnum> statusVendaLista) throws DAOException {
+	public List<Venda> findByFilter(Long clienteId, Date dataInicio, Date dataFim, List<TipoFreteCliente> tiposFretes, List<Long> materiaisIds,List<StatusVendaEnum> statusVendaLista) throws DAOException {
 		EntityManager manager = factory.createEntityManager(); 
 		
 		try {
