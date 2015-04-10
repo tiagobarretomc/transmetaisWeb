@@ -96,6 +96,11 @@
 							Transferência - ${movimentacao.transferencia.id} - de: ${movimentacao.transferencia.contaOrigem.descricao } para:  ${movimentacao.transferencia.contaDestino.descricao }
 						
 					</c:if>
+					<c:if test="${movimentacao.class.name  == 'br.com.transmetais.bean.MovimentacaoVenda'}">
+						
+							Venda - ${movimentacao.venda.id} - Cliente: ${movimentacao.venda.cliente.razaoSocial }
+						
+					</c:if>
 				</td>
 				
 				<td >

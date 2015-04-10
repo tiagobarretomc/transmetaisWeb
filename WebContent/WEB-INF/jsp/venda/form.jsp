@@ -163,7 +163,9 @@
 			        data:	{'clienteMaterial.material.id': $(this).val(), 'clienteMaterial.cliente.id' : $("#cliente").val(), 'clienteMaterial.tipoFrete': $("#cboTipoFrete").val()},
 			        //data:	{'clienteMaterial.id': $(this).val()},
 			 	    success: function(json){
-			 	    	var preco = float2moeda(parseFloat(json));
+			 	    	//alert(json)
+			 	    	//var preco = float2moeda(parseFloat(json));
+			 	    	var preco = json.replace(".",",");
 			 	    	
 			 	    	
 			 	    	$("#preco_"+indiceCampo).attr('value',preco);

@@ -218,9 +218,10 @@ public class DespesaController {
 		if(bean.getId()!= null && bean.getId() > 0){
 			Despesa oldBean = dao.findById(bean.getId());
 				
-			
-			
 		}
+		
+		if(bean.getFornecedor()!=null && bean.getFornecedor().getId()==null)
+			bean.setFornecedor(null);
 		
 		if(bean.getModalidadePagamento() == FormaPagamentoEnum.C && bean.getParcelas() == null){
 			if(bean.getChequeEmitido() != null){

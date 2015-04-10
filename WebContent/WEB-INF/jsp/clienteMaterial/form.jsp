@@ -23,7 +23,8 @@
             prefix: '',
             centsSeparator: ',',
             thousandsSeparator: '.',
-            limit: 12
+            limit: 12,
+            centsLimit: 4
         });
 		
 	});
@@ -115,7 +116,7 @@
 		<c:forEach var="materialCliente" items="${cliente.clientesMateriais}" varStatus="contador">
 		<tr>
 			<td>${materialCliente.material.descricao}</td>
-			<td><fmt:formatNumber value="${materialCliente.valor}" minFractionDigits="2" type="currency"/> </td>
+			<td><fmt:formatNumber value="${materialCliente.valor}" minFractionDigits="4" type="currency"/> </td>
 			<td>${materialCliente.tipoFrete.descricao}</td>
 			<td>${materialCliente.status}</td>
 			<td><fmt:formatDate value="${materialCliente.inicioVigencia}" type="date" pattern="dd/MM/yyyy"/></td>

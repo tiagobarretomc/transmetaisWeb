@@ -424,7 +424,7 @@
         	</div>
         	<div class="col-md-4">
         		<label for="bean.fornecedor.id">Fornecedor:</label>
-		        	<select id="bean.fornecedor.id" name="bean.fornecedor.id" class="selectpicker form-control required" data-live-search="true">
+		        	<select id="bean.fornecedor.id" name="bean.fornecedor.id" class="selectpicker form-control " data-live-search="true">
 						<option value ="" >Selecione</option>
 						<c:forEach var="fornecedor" items="${fornecedores}" varStatus="contador">
 							<option value ="${fornecedor.id}" ${bean.fornecedor.id eq fornecedor.id  ? 'selected' : ''}>${fornecedor.apelido} - ${fornecedor.nome}</option>

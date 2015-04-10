@@ -234,6 +234,8 @@ public class VendaController {
 			//Quando se tratar de despesa/compra a vista a data de vencimento é a mesma data da competencia
 			if (venda.getFormaPagamento() == TipoPagamentoEnum.V){
 				venda.setDataVencimento(venda.getData());
+				venda.setStatus(StatusVendaEnum.P);
+				venda.setDataRecebimento(venda.getData());
 			}
 			
 			

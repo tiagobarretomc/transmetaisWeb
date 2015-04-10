@@ -148,8 +148,10 @@
 	</thead>
 	<tbody>
 	<c:set var="varCont" value="1" />
+	<c:set var="valorTotal" value="0" />
 		<c:forEach var="conta" items="${contaAPagarList}" varStatus="contador">
-	
+	<c:set var="valorTotal"
+						value="${valorTotal + conta.valor}" />
 		<tr>
 			
 			
@@ -203,9 +205,21 @@
 	</tbody>
 	</table>
 	<br/>
-
+<div class="panel panel-default">
+			<div class="panel-body">
+				<div class="row">
+					<div class="col-md-4">
+						<b>Valor Total:</b>
+						<fmt:formatNumber value="${valorTotal}"
+							minFractionDigits="2" type="currency" />
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 	</div>
+	
+	
 	
 	 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
