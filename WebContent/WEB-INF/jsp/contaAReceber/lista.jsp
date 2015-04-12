@@ -126,6 +126,7 @@
 		<th ></th>
 		<th >Data</th>
 		<th >Descrição</th>
+		<th >NF-e</th>
 		<th >Valor</th>
 		<th>Status</th>
 		<th>Dt Pagamento</th>
@@ -160,6 +161,16 @@
 						<c:if test="${conta.class.name  == 'br.com.transmetais.bean.ContaAReceberVenda'}">
 							<b>Venda <fmt:formatNumber minIntegerDigits="4" value="${conta.venda.id}" groupingUsed="" /></b> Cliente: ${conta.venda.cliente.razaoSocial }
 						</c:if>
+						
+						
+					 
+				</td>
+				
+				<td>
+					
+						
+					<b>${conta.venda.numNf}</b> 
+						
 						
 						
 					 

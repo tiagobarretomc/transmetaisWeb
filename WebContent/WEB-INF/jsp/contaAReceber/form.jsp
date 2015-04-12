@@ -81,6 +81,7 @@ $("#btnVoltar").click(function(){
         	var multa = 0.00;
         	var valorTotal = moeda2float($("#contaAReceber\\.valor").val());
         	
+        	alert('teste');
         	
         	if($("#contaAReceber\\.juros").val() != '' ){
         		

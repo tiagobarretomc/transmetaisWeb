@@ -103,7 +103,7 @@
 				</div>
         	<div class="col-md-4">
         		<label for="compra.status">Status Venda:</label>
-				<select style="width: 180px;" id="venda.status" name="statusVenda" class="selectpicker form-control" multiple >
+				<select style="width: 180px;" id="venda.status" name="statusVendas" class="selectpicker form-control" multiple >
 					
 					<c:forEach var="status" items="${statusList}">
 						<option value="${status.name }" >${status.descricao}</option>

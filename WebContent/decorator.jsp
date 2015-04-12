@@ -195,6 +195,7 @@ form {
 	          	<li><a href="<c:url value='/cpe/lista'/>">Comprovante de pesagem de Entrada</a></li>
 	          	 <li><a href="<c:url value='/compra/'/>">Compras</a></li>
 	          	<li><a href="<c:url value='/adiantamento/'/>">Adiantamento a Fornecedores</a></li>
+	          	<li><a href="<c:url value='/estoque/lista'/>">Estoque</a></li>
 	          	
 	            
 	          </ul>

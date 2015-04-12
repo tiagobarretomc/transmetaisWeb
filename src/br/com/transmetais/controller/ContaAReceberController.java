@@ -162,14 +162,14 @@ public class ContaAReceberController {
 		
 		movimentacao.setValor(contaAReceberOrig.getValorTotal());
 		movimentacao.setData(contaAReceberOrig.getDataPagamento());
-		movimentacao.setTipoOperacao(TipoOperacaoEnum.D);
+		movimentacao.setTipoOperacao(TipoOperacaoEnum.C);
 		
 		movimentacaoDao.addEntity(movimentacao);
 		
-		//Alterar o Saldo da Conta Sacada
-//		Conta contaSacada = contaDao.findById(contaAReceberOrig.getConta().getId());
-//		contaSacada.setSaldo(contaSacada.getSaldo().subtract(contaAReceberOrig.getValor()));
-//		contaDao.updateEntity(contaSacada);
+		//Alterar o Saldo da Conta Creditada
+		Conta contaCreditada = contaDao.findById(contaAReceberOrig.getConta().getId());
+		contaCreditada.setSaldo(contaCreditada.getSaldo().add(contaAReceberOrig.getValorTotal()));
+		contaDao.updateEntity(contaCreditada);
 		
 		
 		if (contaAReceberOrig instanceof ContaAReceberVenda ){

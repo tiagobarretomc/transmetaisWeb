@@ -10,9 +10,10 @@
 	<tr>
 		<th ></th>
 		<th >Data</th>
-		<th >Fornecedor</th>
+		<th >Cliente</th>
 		<th >Tipo Frete</th>
-		<th>Total</th>
+		<th>NF-e</th>
+		<th>Status</th>
 		<th>Material</th>
 		<th>Quantidade</th>
 		<th>Valor</th>
@@ -20,14 +21,14 @@
 	</tr>
 	</thead>
 	<tbody>
-	
+	<c:set var="varCont" value="1" />
 		<c:forEach var="venda" items="${vendas}" varStatus="contador">
 	
 		<tr>
 			
 			
 				<td rowspan="${fn:length(venda.itens)}">
-					<a href="${pageContext.request.contextPath}/venda/${venda.id}"><span title="Alterar" style="color: black;" class="glyphicon glyphicon-edit"></span></a>
+					<a href="${pageContext.request.contextPath}/venda/${venda.id}"><span title="Detalhar" style="color: black;" class="glyphicon glyphicon-search"></span></a>
 					 
 				</td>
 				<td rowspan="${fn:length(venda.itens)}">
@@ -44,8 +45,12 @@
 				</td>
 				<td rowspan="${fn:length(venda.itens)}">
 						
-						<fmt:formatNumber value="${venda.valor}" minFractionDigits="2" type="currency"/>
+						${venda.numNf }
 					</td>
+					
+				<td rowspan="${fn:length(venda.itens)}">
+					${venda.status.descricao}
+				</td>
 				
 				<c:forEach var="item" items="${venda.itens}" varStatus="cont" >
 					<c:if test="${cont.count gt '1'}">

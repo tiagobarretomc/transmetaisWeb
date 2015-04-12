@@ -20,6 +20,7 @@ import br.com.transmetais.bean.Conta;
 import br.com.transmetais.bean.ContaAReceberVenda;
 import br.com.transmetais.bean.ContaContabil;
 import br.com.transmetais.bean.Estoque;
+import br.com.transmetais.bean.EstoqueMovimentacaoSaida;
 import br.com.transmetais.bean.ItemVenda;
 import br.com.transmetais.bean.Material;
 import br.com.transmetais.bean.MovimentacaoVenda;
@@ -32,6 +33,7 @@ import br.com.transmetais.dao.ContaAReceberDAO;
 import br.com.transmetais.dao.ContaContabilDAO;
 import br.com.transmetais.dao.ContaDAO;
 import br.com.transmetais.dao.EstoqueDAO;
+import br.com.transmetais.dao.EstoqueMovimentacaoDAO;
 import br.com.transmetais.dao.MaterialDAO;
 import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.VendaDAO;
@@ -59,10 +61,11 @@ public class VendaController {
 	private CentroAplicacaoDAO centroAplicacaoDAO;
 	//private ChequeEmitidoDAO chequeEmitidoDAO;
 	private MovimentacaoDAO movimentacaoDAO;
+	private EstoqueMovimentacaoDAO estoqueMovimentacaoDAO;
 	
 	public VendaController(Result result, VendaDAO vendaDao, ClienteDAO clienteDao, ClienteMaterialDAO clienteMaterialDAO, ContaAReceberDAO contaAReceberDAO, 
 			ContaDAO contaDao, MaterialDAO materialDao, EstoqueDAO estoqueDAO,ContaContabilDAO contaContabilDAO, CentroAplicacaoDAO centroAplicacaoDAO,
-			MovimentacaoDAO movimentacaoDAO) {
+			MovimentacaoDAO movimentacaoDAO, EstoqueMovimentacaoDAO estoqueMovimentacaoDAO) {
 		this.dao = vendaDao;
 		this.clienteDao = clienteDao;
 		this.clienteMaterialDAO = clienteMaterialDAO;
@@ -75,6 +78,7 @@ public class VendaController {
 		this.centroAplicacaoDAO = centroAplicacaoDAO;
 		
 		this.movimentacaoDAO = movimentacaoDAO;
+		this.estoqueMovimentacaoDAO = estoqueMovimentacaoDAO;
 	}
 	
 	//tela de listagem de compras
@@ -266,6 +270,8 @@ public class VendaController {
 				venda.setStatus(StatusVendaEnum.A);
 				dao.addEntity(venda);
 				
+				
+				
 				if(cliente.getConta()!=null){
 					
 					//Setando os dados da Movimentacao.
@@ -438,8 +444,17 @@ public class VendaController {
 					
 					estoque.setDataAlteracao(new Date());
 					
+					BigDecimal precoMedio = BigDecimal.ZERO;
+					
+					if(estoque.getValor().compareTo(BigDecimal.ZERO) > 0 && estoque.getQuantidade().compareTo(BigDecimal.ZERO) > 0){
+						
+						precoMedio = estoque.getValor().divide( estoque.getQuantidade());
+					}else{
+						precoMedio = item.getPreco();
+					}
+					
 					estoque.setQuantidade(estoque.getQuantidade().subtract(item.getQuantidade()));
-					estoque.setValor(estoque.getValor().subtract(item.getValor()));
+					estoque.setValor(estoque.getValor().subtract(precoMedio));
 					
 					//
 					if (estoque.getId() !=null && estoque.getId() != 0){
@@ -448,6 +463,15 @@ public class VendaController {
 						estoque.setMaterial(item.getMaterial());
 						estoqueDAO.addEntity(estoque);
 					}
+					
+					//Adicionar Movimentacao de estoqeu
+					EstoqueMovimentacaoSaida estoqueMovimentacao = new EstoqueMovimentacaoSaida();
+					estoqueMovimentacao.setData(item.getVenda().getData());
+					estoqueMovimentacao.setQuantidade(item.getQuantidade());
+					estoqueMovimentacao.setValor(item.getValor());
+					estoqueMovimentacao.setVenda(item.getVenda());
+					
+					estoqueMovimentacaoDAO.addEntity(estoqueMovimentacao);
 					
 				}
 				
