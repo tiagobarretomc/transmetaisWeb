@@ -449,7 +449,7 @@
 							<option value ="">Selecione</option>
 							<c:forEach var="modalidade" items="${modalidades}" varStatus="contador">
 							
-								<option value ="${modalidade.id}" ${bean.modalidade.id eq modalidade.id ? 'selected' : ''}>${centro.numero} - ${centro.descricao}</option>
+								<option value ="${modalidade.name}" ${bean.modalidadePagamento.name eq modalidade.name ? 'selected' : ''}>${modalidade.descricao}</option>
 			
 							</c:forEach>	
 						</select>
@@ -462,7 +462,7 @@
 							<option value ="">Selecione</option>
 							<c:forEach var="conta" items="${contasFinanceiras}" varStatus="contador">
 							
-								<option value ="${conta.id}" ${bean.conta.id eq conta.id ? 'selected' : ''}>${conta.numero} - ${conta.descricao}</option>
+								<option value ="${conta.id}" ${bean.conta.id eq conta.id ? 'selected' : ''}>${conta.descricao}</option>
 			
 							</c:forEach>	
 					</select>
@@ -485,11 +485,17 @@
         	
       	</div>
       	<div class="row">
-      	<div class="col-md-2" id="divCheque" style="display:none;">
+      	<c:if test="${empty bean.parcelas and not empty bean.chequeEmitido }">
+      		<div class="col-md-2" id="divCheque" >
+      	</c:if>
+      	<c:if test="${not empty bean.parcelas or empty bean.chequeEmitido or empty bean.id}">
+      		<div class="col-md-2" id="divCheque" style="display:none;">
+      	</c:if>
+      	<!-- <div class="col-md-2" id="divCheque" style="display:none;"> -->
 	      	
         		<label for="">Número Cheque:</label>
-        		<input name="bean.chequeEmitidoList[0].numeroCheque"  id="bean.chequeEmitidoList[0].numeroCheque" value="" class="form-control required " maxlength="15"  />
-        	</div>
+        		<input name="bean.chequeEmitidoList[0].numeroCheque"  id="bean.chequeEmitidoList[0].numeroCheque" value="${bean.chequeEmitido.numeroCheque }" class="form-control required " maxlength="15"  />
+        </div>
         <div class="col-md-4">
         	<label for="bean.contaContabil.id">Conta Contábil:</label>
         		<select id="bean.contaContabil.id" name="bean.contaContabil.id" class="selectpicker required form-control" data-live-search="true">

@@ -16,7 +16,6 @@ import br.com.transmetais.dao.EstoqueMovimentacaoDAO;
 import br.com.transmetais.dao.MaterialDAO;
 import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.type.TipoEstoqueMovimentacaoEnum;
-import br.com.transmetais.util.EntityUtil;
 
 @Resource
 @Path("/estoque")

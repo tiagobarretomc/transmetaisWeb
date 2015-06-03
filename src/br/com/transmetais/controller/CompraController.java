@@ -3,9 +3,12 @@ package br.com.transmetais.controller;
 import static br.com.caelum.vraptor.view.Results.json;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,6 +19,7 @@ import br.com.caelum.vraptor.Result;
 import br.com.transmetais.bean.CentroAplicacao;
 import br.com.transmetais.bean.ChequeEmitidoCompra;
 import br.com.transmetais.bean.Compra;
+import br.com.transmetais.bean.ComprovantePesagemEntrada;
 import br.com.transmetais.bean.Conta;
 import br.com.transmetais.bean.ContaAPagarCompra;
 import br.com.transmetais.bean.ContaContabil;
@@ -23,6 +27,7 @@ import br.com.transmetais.bean.Estoque;
 import br.com.transmetais.bean.Fornecedor;
 import br.com.transmetais.bean.FornecedorMaterial;
 import br.com.transmetais.bean.ItemCompra;
+import br.com.transmetais.bean.ItemPesagemEntrada;
 import br.com.transmetais.bean.Material;
 import br.com.transmetais.bean.MovimentacaoCompra;
 import br.com.transmetais.bean.ParcelaCompra;
@@ -38,6 +43,7 @@ import br.com.transmetais.dao.FornecedorMaterialDAO;
 import br.com.transmetais.dao.MaterialDAO;
 import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.commons.DAOException;
+import br.com.transmetais.dao.impl.ComprovantePesagemEntradaDaoImpl;
 import br.com.transmetais.type.FormaPagamentoEnum;
 import br.com.transmetais.type.SituacaoChequeEnum;
 import br.com.transmetais.type.StatusCompraEnum;
@@ -62,10 +68,11 @@ public class CompraController {
 	private CentroAplicacaoDAO centroAplicacaoDAO;
 	private ChequeEmitidoDAO chequeEmitidoDAO;
 	private MovimentacaoDAO movimentacaoDAO;
+	private ComprovantePesagemEntradaDaoImpl comprovantePesagemDAO;
 	
 	public CompraController(Result result, CompraDAO compraDao, FornecedorDAO fornecedorDao, FornecedorMaterialDAO fornecedorMaterialDao, ContaAPagarDAO contaAPagarDAO, 
 			ContaDAO contaDao, MaterialDAO materialDao, EstoqueDAO estoqueDAO,ContaContabilDAO contaContabilDAO, CentroAplicacaoDAO centroAplicacaoDAO,
-			ChequeEmitidoDAO chequeEmitidoDAO, MovimentacaoDAO movimentacaoDAO) {
+			ChequeEmitidoDAO chequeEmitidoDAO, MovimentacaoDAO movimentacaoDAO, ComprovantePesagemEntradaDaoImpl comprovantePesagemDAO) {
 		this.dao = compraDao;
 		this.fornecedorDao = fornecedorDao;
 		this.fornecedorMaterialDao = fornecedorMaterialDao;
@@ -78,12 +85,40 @@ public class CompraController {
 		this.centroAplicacaoDAO = centroAplicacaoDAO;
 		this.chequeEmitidoDAO = chequeEmitidoDAO;
 		this.movimentacaoDAO = movimentacaoDAO;
+		this.comprovantePesagemDAO = comprovantePesagemDAO;
 	}
 	
 	//tela de listagem de compras
 	@Path({"/compra/","/compra","/compra/lista"})
 	public List<Compra> lista(Long fornecedorId, Date dataInicio, Date dataFim, List<TipoFreteEnum> tiposFretes, List<Long> materiaisSelecionados, List<StatusCompraEnum> statusCompas){
 		List<Compra> lista = null;
+		
+		Calendar data = new GregorianCalendar();  
+	       
+	     
+		if (dataFim == null){
+			
+			 int ultimo_dia_mes = data.getActualMaximum(Calendar.DAY_OF_MONTH);  
+			 data.set(Calendar.DAY_OF_MONTH, ultimo_dia_mes);  
+			 data.set(Calendar.HOUR_OF_DAY, 0);
+			 data.set(Calendar.MINUTE, 0);
+			 data.set(Calendar.SECOND, 0);
+			 data.set(Calendar.MILLISECOND, 0);
+			 dataFim = data.getTime();
+			 
+		}
+	     
+		if(dataInicio == null){
+			
+			int primeiro_dia_mes = data.getActualMinimum(Calendar.DAY_OF_MONTH);
+			data.set(Calendar.DAY_OF_MONTH, primeiro_dia_mes);
+			 data.set(Calendar.HOUR_OF_DAY, 0);
+			 data.set(Calendar.MINUTE, 0);
+			 data.set(Calendar.SECOND, 0);
+			 data.set(Calendar.MILLISECOND, 0); 
+			
+			dataInicio = data.getTime();
+		}
 		
 		try {
 			List<Fornecedor> fornecedores = fornecedorDao.findAll();
@@ -116,6 +151,10 @@ public class CompraController {
 			result.include("valorTotal", valorTotal);
 			result.include("quantidade", quantidade);
 			result.include("precoMedio", precoMedio);
+			
+			result.include("dataInicio",dataInicio);
+			result.include("dataFim",dataFim);
+			
 			
 			result.include("compras",lista);
 			
@@ -473,6 +512,17 @@ public class CompraController {
 				//contaDao.updateEntity(compra.getConta());
 			}
 			
+			
+			if(compra.getComprovantePesagem() != null){
+				
+				ComprovantePesagemEntrada comprovante = comprovantePesagemDAO.findById(compra.getComprovantePesagem().getId());
+				comprovante.setFaturado("S");
+				comprovantePesagemDAO.updateEntity(comprovante);
+				
+				
+			}
+			
+			
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -602,6 +652,48 @@ public class CompraController {
 		
 		result.nothing();
 		
+	}
+	
+	@Path("/emitirCompra/{id}")
+	public void EmitirCompra(Long id) throws DAOException {
+		
+		ComprovantePesagemEntrada bean = comprovantePesagemDAO.findById(id);
+		
+		if (bean!= null && (bean.getFaturado() == null || bean.getFaturado().equals("N"))){
+			
+			Compra compra = new Compra();
+			
+			compra.setData(bean.getDataEmissao());
+			compra.setFornecedor(bean.getFornecedor());
+			compra.setTipoFrete(bean.getTipoFrete());
+			compra.setComprovantePesagem(bean);
+			compra.setItens(new ArrayList<ItemCompra>());
+			compra.setValor(BigDecimal.ZERO);
+			
+			ItemCompra item = null;
+			for (ItemPesagemEntrada itemPesagem : bean.getItens()) {
+				item = new ItemCompra();
+				item.setCompra(compra);
+				item.setMaterial(itemPesagem.getMaterial());
+				item.setQuantidade(itemPesagem.getPesoLiquido());
+				List<FornecedorMaterial> listaFornecMat =  fornecedorMaterialDao.obterAtivosPorFiltro(compra.getFornecedor(), compra.getTipoFrete());
+				
+				for (FornecedorMaterial fornecedorMaterial : listaFornecMat) {
+					if (fornecedorMaterial.getMaterial().getId().equals(itemPesagem.getMaterial().getId())){
+						item.setPreco(fornecedorMaterial.getValor());
+						item.setValor(item.getPreco().multiply(item.getQuantidade()));
+						compra.setValor(compra.getValor().add(item.getValor()));
+						break;
+					}
+				}
+				compra.getItens().add(item);
+			}
+			
+			result.forwardTo(this).form(compra);
+		}else{
+			result.forwardTo(this).lista(null, null, null, null, null, null);
+		}
+	
 	}
 
 }

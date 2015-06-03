@@ -21,6 +21,10 @@
 		qtdItensPesagem = ${fn:length(itensPesagem)};
 	}
     $(document).ready(function(){
+    	
+    	$("#bntFaturar").click(function(){
+    		document.location.href = "${pageContext.request.contextPath}/emitirCompra/${bean.id}";
+    	});
         
         $("#btnAdicionarItem").click(function(){
     		var strLinha = '<tr id="item_' + qtdItensPesagem + '">';
@@ -394,14 +398,25 @@
 				  <span class="glyphicon glyphicon-arrow-left"></span> Voltar
 				</button>
 	      	</div>
-	      	<div class="col-md-8">
-				
-	      	</div>
+	      	
 	      	<div class="col-md-2">
 				<button type="submit" id="bntSalvar" class="btn btn-default btn-md form-control">
 				  <span class="glyphicon glyphicon-floppy-disk"></span> Salvar
 				</button>
 	      	</div>
+	      	<c:if test="${bean.class.simpleName eq 'ComprovantePesagemEntrada' }">
+	      	<div class="col-md-6">
+				
+	      	</div>
+	      	<c:if test="${bean.faturado ne 'S' }">
+	      	
+		      	<div class="col-md-2">
+					<button type="button" id="bntFaturar" class="btn btn-default btn-md form-control">
+					  <span class="glyphicon glyphicon-floppy-disk"></span> Faturar
+					</button>
+		      	</div>
+	      	</c:if>
+	      	</c:if>
 	      	
       	</div>
 		</form>

@@ -14,6 +14,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlTransient;
 
 
 
@@ -27,9 +28,11 @@ public class Produto {
 	private String descricao;
 	@ManyToOne
 	@JoinColumn(name="unidade_medida_id")
+	@XmlTransient
 	private UnidadeMedida unidadeMedida;
 	@ManyToOne
 	@JoinColumn(name="grupo_material_id")
+	@XmlTransient
 	private GrupoMaterial grupoMaterial;
 	
 	@ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
@@ -37,6 +40,7 @@ public class Produto {
 			@JoinColumn(name = "produto_id", nullable = false, updatable = false) }, 
 			inverseJoinColumns = { @JoinColumn(name = "regra_tributacao_id", 
 					nullable = false, updatable = false) })
+	@XmlTransient
 	private List<RegraTributacao> regrasTributacao = new ArrayList<RegraTributacao>();
 	private String ncm;
 	

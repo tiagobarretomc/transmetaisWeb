@@ -60,12 +60,12 @@
         	<div class="col-md-3">
         	<label for="dataInicio">Data Início:</label>
         	
-        		<input type="datetime"  name="dataInicio" id="dataInicio" class="datepicker form-control" data-date-format="dd/mm/yyyy" value="" />
+        		<input type="datetime"  name="dataInicio" id="dataInicio" class="datepicker form-control" data-date-format="dd/mm/yyyy" value="<fmt:formatDate value="${dataInicio }" type="date" pattern="dd/MM/yyyy"/>" />
 					
         	</div>
         	<div class="col-md-3">
         	<label for="dataFim">Data Fim:</label>
-        		<input type="datetime"  name="dataFim" id="dataFim" class="datepicker form-control" data-date-format="dd/mm/yyyy" value="" />
+        		<input type="datetime"  name="dataFim" id="dataFim" class="datepicker form-control" data-date-format="dd/mm/yyyy" value="<fmt:formatDate value="${dataFim }" type="date" pattern="dd/MM/yyyy"/>" />
 					
         	</div>
         </div>

@@ -1,16 +1,20 @@
 
 package br.com.transmetais.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import br.com.caelum.vraptor.Get;
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
 import br.com.caelum.vraptor.Result;
+import br.com.transmetais.bean.Compra;
 import br.com.transmetais.bean.ComprovantePesagemEntrada;
 import br.com.transmetais.bean.Fornecedor;
 import br.com.transmetais.bean.GrupoMaterial;
+import br.com.transmetais.bean.ItemCompra;
 import br.com.transmetais.bean.ItemPesagemEntrada;
 import br.com.transmetais.dao.FornecedorDAO;
 import br.com.transmetais.dao.MaterialDAO;
@@ -82,6 +86,9 @@ public class ComprovantePesagemEntradaController extends ComprovantePesagemContr
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
 	@Autowired 
 	public void setFornecedorDAO(FornecedorDAO fornecedorDAO) {
 		this.fornecedorDAO = fornecedorDAO;

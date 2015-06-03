@@ -186,12 +186,20 @@ $("#btnVoltar").click(function(){
 							<input name="" id="conta.despesa.dataCompetencia" value="<fmt:formatDate value="${contaAPagar.despesa.dataCompetencia}" type="date" pattern="dd/MM/yyyy"/>" class="form-control "  maxlength="10" readonly="readonly"/>
 							</div>
 							<div class="col-md-2">
+								<label for="conta.despesa.dataVencimento">Dt Vencimento:</label> 
+							<input name="" id="conta.despesa.dataVencimento" value="<fmt:formatDate value="${contaAPagar.despesa.dataVencimento}" type="date" pattern="dd/MM/yyyy"/>" class="form-control "  maxlength="10" readonly="readonly"/>
+							</div>
+							<div class="col-md-2">
 								<label for="conta.despesa.formaPagamento">Forma pagamento:</label> 
 							<input name="" id="conta.despesa.formaPagamento" value="${contaAPagar.despesa.formaPagamento.descricao }" class="form-control "  maxlength="10" readonly="readonly"/>
 							</div>
 							<div class="col-md-2">
 								<label for="contaAPagar.despesa.modalidadePagamento.descricao">Mod. pagamento:</label> 
 							<input name="" id="contaAPagar.despesa.modalidadePagamento.descricao" value="${contaAPagar.despesa.modalidadePagamento.descricao }" class="form-control "   readonly="readonly"/>
+							</div>
+							<div class="col-md-2">
+								<label for="contaAPagar.despesa.fornecedor.nome">Fornecedor:</label> 
+							<input name="" id="contaAPagar.despesa.fornecedor.nome" value="${contaAPagar.despesa.fornecedor.nome }" class="form-control "   readonly="readonly"/>
 							</div>
 							<c:if test="${(empty contaApagar.parcela) && (contaAPagar.modalidadePagamento == 'C')}">
 								<div class="col-md-2">

@@ -267,7 +267,12 @@ public class VendaController {
 				//insercao - nova compra
 				//FornecedorMaterial fornecedorMaterial = fornecedorMaterialDao.findById(compra.getFornecedorMaterial().getId());
 				//compra.setConta(fornecedorMaterial.getFornecedor().getConta());
-				venda.setStatus(StatusVendaEnum.A);
+				if (venda.getFormaPagamento() == TipoPagamentoEnum.V ){
+					venda.setStatus(StatusVendaEnum.P);
+				}else{
+					
+					venda.setStatus(StatusVendaEnum.A);
+				}
 				dao.addEntity(venda);
 				
 				
@@ -448,7 +453,7 @@ public class VendaController {
 					
 					if(estoque.getValor().compareTo(BigDecimal.ZERO) > 0 && estoque.getQuantidade().compareTo(BigDecimal.ZERO) > 0){
 						
-						precoMedio = estoque.getValor().divide( estoque.getQuantidade());
+						precoMedio = estoque.getValor().divide( estoque.getQuantidade(), BigDecimal.ROUND_HALF_UP);
 					}else{
 						precoMedio = item.getPreco();
 					}

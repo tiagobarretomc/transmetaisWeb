@@ -1,7 +1,10 @@
 
 package br.com.transmetais.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,7 +20,10 @@ import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.dao.impl.ComprovantePesagemSaidaDaoImpl;
 import br.com.transmetais.util.EntityUtil;
 
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 @Resource
 @Path("/cps")
@@ -62,7 +68,17 @@ public class ComprovantePesagemSaidaController extends ComprovantePesagemControl
 			String json = gson.toJson(EntityUtil.retrieveCombo(produtoDAO.findAll(), "id", "descricao"));
 			result.include("produtoList",json);
 			
-			json = gson.toJson(bean.getItens());
+			gson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
+				
+				public boolean shouldSkipField(FieldAttributes arg0) {
+					return arg0.getAnnotation(XmlTransient.class) != null;
+				}
+				
+				public boolean shouldSkipClass(Class<?> arg0) {
+					return false;
+				}
+			}).create();
+			json = gson.toJson(bean.getItens().toArray());
 			result.include("itensPesagem",json);
 			
 		}catch(DAOException e){

@@ -149,6 +149,7 @@ public abstract class BaseController<E, T extends CrudDAO<E>> {
 		lista = dao.findByFilter(filter);
 		initFilter(filter);
 		result.include("beanList",lista);
+		result.include("filter",filter);
 		
 		return lista;
 		

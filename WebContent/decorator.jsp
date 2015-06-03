@@ -18,7 +18,21 @@
 <link href="/transmetaisWeb/css/datepicker.css" rel="stylesheet"
 	type="text/css">
 
+<style>
+@media print {
+  .visible-print  { display: inherit !important; }
+  .hidden-print   { display: none !important; }
+   a[href]:after {
+    content: none !important;
+  }
+   table { page-break-inside:auto }
+    td   { page-break-inside:avoid; } /* This is the key */
+    thead { display:table-header-group }
+    tfoot { display:table-footer-group }
+}
+ 
 
+</style>
 
 <!--  
 		

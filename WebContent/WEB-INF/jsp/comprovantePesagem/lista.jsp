@@ -165,6 +165,7 @@
 					</c:if>
 					<th>Placa do veículo</th>
 					<th>Peso Líquido</th>
+					<th>Faturado</th>
 
 				</tr>
 			</thead>
@@ -195,6 +196,9 @@
 						<td><fmt:formatNumber
 								value="${comprovantePesagem.pesoLiquido}" minFractionDigits="2"
 								type="number" /></td>
+								
+						<td>${comprovantePesagem.faturado}
+						</td>
 
 					</tr>
 				</c:forEach>

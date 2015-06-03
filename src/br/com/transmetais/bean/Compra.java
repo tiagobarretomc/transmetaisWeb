@@ -244,6 +244,13 @@ public class Compra {
 		this.dataCompetencia = dataCompetencia;
 	}
 	
+	public ComprovantePesagemEntrada getComprovantePesagem() {
+		return comprovantePesagem;
+	}
 	
+	public void setComprovantePesagem(
+			ComprovantePesagemEntrada comprovantePesagem) {
+		this.comprovantePesagem = comprovantePesagem;
+	}
 	
 }

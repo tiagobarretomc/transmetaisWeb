@@ -126,7 +126,7 @@
     	
     	
     	$("#cboTipoFrete").change(function(){
-    		
+    		alert("entrou");
     		for(i=0;i<qtdItens;i++){
     			$('#fornecedorMaterial_' + i + ' option[value!=""]').remove();
     		}
@@ -559,7 +559,7 @@
 		<input type="hidden" id="compraId" name="compra.id" value="${compra.id}"/>
 		
 		<input type="hidden" id="fornecedor" name="compra.fornecedor.id" value="${fornecedor.id}"/>
-		
+		<input type="hidden" id="compra.comprovantePesagem.id" name="compra.comprovantePesagem.id" value="${compra.comprovantePesagem.id}"/>
 		<div class="row">
         	<div class="col-md-4"><label for="compra.centroAplicacao.id">Fornecedor:</label>
         		
@@ -647,7 +647,7 @@
 			<tbody>
 			
 				
-				<c:if test="${empty compra.id}">
+				<c:if test="${empty compra.tipoFrete}">
 				<tr>
 					<td>
 						<select id="fornecedorMaterial_0" name="compra.itens[0].material.id" class= "required form-control">
@@ -669,11 +669,11 @@
 				</tr>
 				</c:if>
 				
-				<c:if test="${not empty compra.id}">
+				<c:if test="${not empty compra.tipoFrete}">
 					<c:forEach var="item" items="${compra.itens}" varStatus="contador">
 					<tr>
 						<td>
-							<select id="fornecedorMaterial_${contador}" name="compra.itens[${contador}].material.id" class="required form-control" disabled="disabled">
+							<select id="fornecedorMaterial_${contador.index}" name="compra.itens[${contador.index}].material.id" class="required form-control" >
 								<option value ="">Selecione</option>
 								<c:forEach var="fornecedorMaterial" items="${fornecedorMateriais}" varStatus="contador">
 								
@@ -683,14 +683,14 @@
 							</select>
 						</td>
 						<td>
-							<input type="text" name="compra.itens[${contador}].quantidade" id="quantidade_${contador}" value="<fmt:formatNumber value="${item.quantidade}" minFractionDigits="2" type="number" />" class="required form-control" readonly="readonly"/>
+							<input type="text" name="compra.itens[${contador.index}].quantidade" id="quantidade_${contador.index}" value="<fmt:formatNumber value="${item.quantidade}" minFractionDigits="2" type="number" />" class="required form-control" />
 							
 						</td>
 						<td>
-							<input type="text" name="compra.itens[${contador}].preco" id="preco_${contador}" value="<fmt:formatNumber value="${item.preco}" minFractionDigits="2" type="number"/>" class="form-control	" readonly="readonly">
+							<input type="text" name="compra.itens[${contador.index}].preco" id="preco_${contador.index}" value="<fmt:formatNumber value="${item.preco}" minFractionDigits="2" type="number"/>" class="form-control	" readonly="readonly">
 						</td>
 						<td>
-							<input type="text" name="compra.itens[${contador}].valor" id="valor_${contador}" class="required form-control" value="<fmt:formatNumber value="${item.valor}" minFractionDigits="2" type="number" />" readonly="readonly"/>
+							<input type="text" name="compra.itens[${contador.index}].valor" id="valor_${contador.index}" class="required form-control" value="<fmt:formatNumber value="${item.valor}" minFractionDigits="2" type="number" />" readonly="readonly"/>
 						</td>
 						
 					</tr>

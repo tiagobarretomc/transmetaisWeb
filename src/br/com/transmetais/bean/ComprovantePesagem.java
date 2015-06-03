@@ -63,6 +63,7 @@ public abstract class ComprovantePesagem {
 	@OneToOne(cascade=CascadeType.ALL,orphanRemoval=true)
 	@JoinColumn(name="arquivo_id")
 	private Arquivo arquivo;
+	private String faturado;
 	
 	/**
 	 * Para filtro
@@ -198,6 +199,14 @@ public abstract class ComprovantePesagem {
 
 	public void setDataFim(Date dataFim) {
 		this.dataFim = dataFim;
+	}
+	
+	public String getFaturado() {
+		return faturado;
+	}
+	
+	public void setFaturado(String faturado) {
+		this.faturado = faturado;
 	}
 
 }

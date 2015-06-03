@@ -1,6 +1,8 @@
 package br.com.transmetais.controller;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import br.com.caelum.vraptor.Path;
@@ -68,6 +70,31 @@ public class ContasPagarController {
 		List<ContaAPagar> lista = null;
 		
 		try {
+			
+			Calendar data = new GregorianCalendar();
+			if (dataFim == null){
+				
+				 int ultimo_dia_mes = data.getActualMaximum(Calendar.DAY_OF_MONTH);  
+				 data.set(Calendar.DAY_OF_MONTH, ultimo_dia_mes);  
+				 data.set(Calendar.HOUR_OF_DAY, 0);
+				 data.set(Calendar.MINUTE, 0);
+				 data.set(Calendar.SECOND, 0);
+				 data.set(Calendar.MILLISECOND, 0);
+				 dataFim = data.getTime();
+				 
+			}
+		     
+			if(dataInicio == null){
+				
+				int primeiro_dia_mes = data.getActualMinimum(Calendar.DAY_OF_MONTH);
+				data.set(Calendar.DAY_OF_MONTH, primeiro_dia_mes);
+				data.set(Calendar.HOUR_OF_DAY, 0);
+				 data.set(Calendar.MINUTE, 0);
+				 data.set(Calendar.SECOND, 0);
+				 data.set(Calendar.MILLISECOND, 0);
+				
+				dataInicio = data.getTime();
+			}
 			
 			
 			lista = dao.findByFilter(fornecedor,dataInicio, dataFim, status);
@@ -307,7 +334,7 @@ public class ContasPagarController {
 		}
 		
 		result.include("mensagem", "Confirmação de pagamento da conta efetuado com sucesso!");
-		result.redirectTo(this.getClass()).lista(null,null,null, null);
+		result.forwardTo(this.getClass()).lista(null,null,null, null);
 	}
 	
 	

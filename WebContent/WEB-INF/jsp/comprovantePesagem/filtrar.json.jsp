@@ -1,6 +1,14 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<c:if test="${filter.class.simpleName eq 'ComprovantePesagemEntrada' }">
 
+	<c:set var="pageTitle" value="Comprovante de Pesagem - Entrada" />
+	<c:set var="controller" value="cpe" />
+</c:if>
+<c:if test="${filter.class.simpleName eq 'ComprovantePesagemSaida' }">
+	<c:set var="controller" value="cps" />
+	<c:set var="pageTitle" value="Comprovante de Pesagem - Saída" />
+</c:if>
 <div id="divTabela">
 	<c:set var="totalPesoLiquido" value="0" />
 	<table class="table table-bordered table-striped">
@@ -20,8 +28,9 @@
 				</c:if>
 				<th>Placa do veículo</th>
 				<th>Peso Líquido</th>
+				<th>Faturado</th>
 
-			</tr>
+			</tr>	
 		</thead>
 		<tbody>
 			<c:forEach var="comprovantePesagem" items="${beanList}"
@@ -50,7 +59,7 @@
 					<td><fmt:formatNumber
 							value="${comprovantePesagem.pesoLiquido}" minFractionDigits="2"
 							type="number" /></td>
-
+					<td>${comprovantePesagem.faturado}</td>
 				</tr>
 			</c:forEach>
 		</tbody>

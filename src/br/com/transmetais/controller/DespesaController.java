@@ -193,6 +193,7 @@ public class DespesaController {
 		List<CentroAplicacao> listaCentroAplicacao;
 		List<Fornecedor> fornecedores;
 		
+		
 		try {
 			listaContas = contaContabilDAO.findAll();
 			listaCentroAplicacao = centroAplicacaoDAO.findAll();
@@ -201,7 +202,20 @@ public class DespesaController {
 			result.include("contas", listaContas);
 			result.include("centros", listaCentroAplicacao);
 			result.include("fornecedores", fornecedores);
+			result.include("modalidades", FormaPagamentoEnum.values());
 			
+			
+			if(bean != null && bean.getId()!=null){
+				
+				
+				List<Conta> lista = contaDAO.obterContasFinanceiras();
+				
+				
+				
+				result.include("contasFinanceiras",lista);
+				
+				
+			}
 			
 			
 		} catch (DAOException e) {
@@ -347,7 +361,10 @@ public class DespesaController {
 			
 			 int ultimo_dia_mes = data.getActualMaximum(Calendar.DAY_OF_MONTH);  
 			 data.set(Calendar.DAY_OF_MONTH, ultimo_dia_mes);  
-			 
+			 data.set(Calendar.HOUR_OF_DAY, 0);
+			 data.set(Calendar.MINUTE, 0);
+			 data.set(Calendar.SECOND, 0);
+			 data.set(Calendar.MILLISECOND, 0);
 			 filter.setDataFim(data.getTime());
 		}
 	     
@@ -355,7 +372,10 @@ public class DespesaController {
 			
 			int primeiro_dia_mes = data.getActualMinimum(Calendar.DAY_OF_MONTH);
 			data.set(Calendar.DAY_OF_MONTH, primeiro_dia_mes);
-			 
+			data.set(Calendar.HOUR_OF_DAY, 0);
+			 data.set(Calendar.MINUTE, 0);
+			 data.set(Calendar.SECOND, 0);
+			 data.set(Calendar.MILLISECOND, 0);
 			
 			filter.setDataInicio(data.getTime());
 		}

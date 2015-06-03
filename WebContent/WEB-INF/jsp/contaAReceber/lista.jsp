@@ -86,18 +86,18 @@
 		<!-- <input type="hidden" name="_format" value="json"> -->
 		<div class="row">
         	
-        	<div class="col-md-3">
+        	<div class="col-xs-3">
         	<label for="dataInicio">Data Início:</label>
         	
         		<input type="datetime"  name="dataInicio" id="dataInicio" class="datepicker form-control" data-date-format="dd/mm/yyyy" value="<fmt:formatDate value="${dataInicio}" type="date" pattern="dd/MM/yyyy"/>" />
 					
         	</div>
-        	<div class="col-md-3">
+        	<div class="col-xs-3">
         	<label for="dataFim">Data Fim:</label>
         		<input type="datetime"  name="dataFim" id="dataFim" class="datepicker form-control" data-date-format="dd/mm/yyyy" value="<fmt:formatDate value="${dataFim}" type="date" pattern="dd/MM/yyyy"/>" />
 					
         	</div>
-        	<div class="col-md-3">
+        	<div class="col-xs-3">
         		<label for="status">Status:</label>
 				<select  id="status" name="status" class="selectpicker form-control"  >
 					<option value="" ></option>
@@ -110,7 +110,7 @@
         </div>
        
         <br/>
-        <button id="btnFiltrar" type="submit" class="btn btn-default btn-sm">
+        <button id="btnFiltrar" type="submit" class="btn btn-default btn-sm hidden-print ">
   		<span class="glyphicon glyphicon-filter"></span> Filtrar
 		</button>
         </form>
@@ -123,7 +123,7 @@
 		
 		<thead>
 	<tr>
-		<th ></th>
+		<th class="hidden-print"></th>
 		<th >Data</th>
 		<th >Descrição</th>
 		<th >NF-e</th>
@@ -142,7 +142,7 @@
 		<tr>
 			
 			
-				<td >
+				<td class="hidden-print">
 				<%--
 					<a href="${pageContext.request.contextPath}/contasPagar/${movimentacao.id}"><span title="Detalhar" style="color: black;" class="glyphicon glyphicon-ok-sign"></span></a>
 					
