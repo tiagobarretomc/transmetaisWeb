@@ -2,6 +2,7 @@ package br.com.transmetais.bean;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,6 +16,7 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import br.com.transmetais.type.FormaPagamentoEnum;
@@ -49,6 +51,10 @@ public class ContaAPagar {
 	@Column(name="data_cancelamento")
 	private Date dataCancelamento;
 	
+	
+	
+	@OneToMany(mappedBy="contaAPagar", fetch=FetchType.LAZY)
+	private List<MovimentacaoContasAPagar> movimentacoesContasAPagar;
 	
 	public Integer getId() {
 		return id;
@@ -165,6 +171,13 @@ public class ContaAPagar {
 		this.dataCancelamento = dataCancelamento;
 	}
 	
+	public List<MovimentacaoContasAPagar> getMovimentacoesContasAPagar() {
+		return movimentacoesContasAPagar;
+	}
 	
+	public void setMovimentacoesContasAPagar(
+			List<MovimentacaoContasAPagar> movimentacoesContasAPagar) {
+		this.movimentacoesContasAPagar = movimentacoesContasAPagar;
+	}
 	
 }

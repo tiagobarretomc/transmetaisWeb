@@ -234,7 +234,14 @@ form {
 	          	<li><a href="<c:url value='/contaBancaria/extrato/'/>">Movimentação das Contas</a></li>
 	          </ul>
 	        </li>
-							<li><a href="#">Consultas</a></li>
+			
+			<li class="dropdown">
+	          <a href="#" class="dropdown-toggle" data-toggle="dropdown">Consultas <b class="caret"></b></a>
+	          <ul class="dropdown-menu">
+	          	 <li><a href="<c:url value='/consulta/despesa/'/>">Despesa</a></li>
+	          	 
+	          </ul>
+	        </li>
 
 
 

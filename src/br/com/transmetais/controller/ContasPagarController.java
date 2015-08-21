@@ -143,16 +143,17 @@ public class ContasPagarController {
 		
 		contaAPagar = dao.findById(contaAPagar.getId());
 		List<Conta> contas = null;
-		if (contaAPagar.getModalidadePagamento() == FormaPagamentoEnum.T){
-			contas = contaDao.obterContasBancarias();
-		}else{
-			contas = contaDao.obterContasFinanceiras();
-		}
+//		if (contaAPagar.getModalidadePagamento() == FormaPagamentoEnum.T){
+//			contas = contaDao.obterContasBancarias();
+//		}else{
+//			contas = contaDao.obterContasFinanceiras();
+//		}
+		contas = contaDao.obterContasFinanceiras();
 		result.include("contas", contas);
 		
 		
 //		if (contaAPagar instanceof ContaAPagarDespesa){
-//			ContaAPagarDespesa contaApagarDespesa = (ContaAPagarDespesa)contaAPagar;
+//			ContaAPagarDespesa contaApagarDespesa = (ContaAPafgarDespesa)contaAPagar;
 //			
 ////			//Verificando se tratar-se de pagamento em cheque
 ////			if(contaApagarDespesa.getDespesa().getModalidadePagamento() == FormaPagamentoEnum.C){
@@ -233,7 +234,7 @@ public class ContasPagarController {
 		
 		//Alterar o Saldo da Conta Sacada
 		Conta contaSacada = contaDao.findById(contaAPagarOrig.getConta().getId());
-		contaSacada.setSaldo(contaSacada.getSaldo().subtract(contaAPagarOrig.getValor()));
+		contaSacada.setSaldo(contaSacada.getSaldo().subtract(contaAPagarOrig.getValorTotal()));
 		contaDao.updateEntity(contaSacada);
 		
 		

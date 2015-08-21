@@ -581,8 +581,8 @@
       	
       	
       	<br/>
-		<button type="submit" id="btnAdicionar" class="btn btn-default btn-md"   ${empty bean.id  ? '' : 'style="display: none;"' }>
-		  <span class="glyphicon glyphicon-floppy-disk"></span> Salvar${bean.id}
+		<button type="submit" id="btnAdicionar" class="btn btn-default btn-md" >
+		  <span class="glyphicon glyphicon-floppy-disk"></span> Salvar
 		</button>
 		</form>
 </div>

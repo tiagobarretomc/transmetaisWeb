@@ -7,6 +7,6 @@
     <mapping path="/fonts/*" exclue="true" />
     <mapping path="/img/*" exclue="true" />
     <mapping path="*.json*" exclue="true" />
-    <mapping path="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js" exclue="true" />
+    <mapping path="*.js" exclue="true" />
     
 </sitemesh>

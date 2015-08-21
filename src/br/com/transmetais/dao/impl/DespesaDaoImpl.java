@@ -26,13 +26,13 @@ public class DespesaDaoImpl extends CrudDAOJPA<Despesa> implements DespesaDAO{
 				if(clausulaWhere != " WHERE "){
 					clausulaWhere += " AND ";
 				}
-				clausulaWhere += " d.dataVencimento >= :dataInicio ";
+				clausulaWhere += " d.dataCompetencia >= :dataInicio ";
 			}
 			if (filter.getDataFim() !=null){
 				if(clausulaWhere != " WHERE "){
 					clausulaWhere += " AND ";
 				}
-				clausulaWhere += " d.dataVencimento <= :dataFim";
+				clausulaWhere += " d.dataCompetencia <= :dataFim";
 			}
 			
 			if (filter.getFornecedor() !=null && filter.getFornecedor().getId() !=null){
@@ -95,5 +95,7 @@ public class DespesaDaoImpl extends CrudDAOJPA<Despesa> implements DespesaDAO{
 		} finally {
 		}
 	}
+	
+	
 	
 }

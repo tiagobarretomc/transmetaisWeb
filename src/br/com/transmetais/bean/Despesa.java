@@ -61,6 +61,11 @@ public class Despesa {
 	private Fornecedor fornecedor;
 	@OneToMany(mappedBy="despesa", fetch=FetchType.LAZY)
 	private List<ChequeEmitidoDespesa> chequeEmitidoList;
+	@OneToMany(mappedBy="despesa", fetch=FetchType.LAZY)
+	private List<MovimentacaoDespesa> movimentacoesDespesa;
+	@OneToMany(mappedBy="despesa", fetch=FetchType.LAZY)
+	private List<ContaAPagarDespesa> contasApagarList;
+			
 	
 	
 	
@@ -180,6 +185,23 @@ public class Despesa {
 	
 	public void setDataCancelamento(Date dataCancelamento) {
 		this.dataCancelamento = dataCancelamento;
+	}
+	
+	public List<ContaAPagarDespesa> getContasApagarList() {
+		return contasApagarList;
+	}
+	
+	public void setContasApagarList(List<ContaAPagarDespesa> contasApagarList) {
+		this.contasApagarList = contasApagarList;
+	}
+	
+	public List<MovimentacaoDespesa> getMovimentacoesDespesa() {
+		return movimentacoesDespesa;
+	}
+	
+	public void setMovimentacoesDespesa(
+			List<MovimentacaoDespesa> movimentacoesDespesa) {
+		this.movimentacoesDespesa = movimentacoesDespesa;
 	}
 
 }

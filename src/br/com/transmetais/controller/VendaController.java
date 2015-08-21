@@ -42,6 +42,7 @@ import br.com.transmetais.type.FormaPagamentoEnum;
 import br.com.transmetais.type.StatusDespesaEnum;
 import br.com.transmetais.type.StatusMovimentacaoEnum;
 import br.com.transmetais.type.StatusVendaEnum;
+import br.com.transmetais.type.TipoEstoqueMovimentacaoEnum;
 import br.com.transmetais.type.TipoFreteCliente;
 import br.com.transmetais.type.TipoOperacaoEnum;
 import br.com.transmetais.type.TipoPagamentoEnum;
@@ -322,7 +323,7 @@ public class VendaController {
 							MovimentacaoVenda movimentacao = new MovimentacaoVenda();
 							movimentacao.setVenda(venda);
 							movimentacao.setData(venda.getData());
-							movimentacao.setTipoOperacao(TipoOperacaoEnum.D);
+							movimentacao.setTipoOperacao(TipoOperacaoEnum.C);
 							movimentacao.setValor(venda.getValor());
 							movimentacao.setConta(venda.getConta());
 							
@@ -475,7 +476,8 @@ public class VendaController {
 					estoqueMovimentacao.setQuantidade(item.getQuantidade());
 					estoqueMovimentacao.setValor(item.getValor());
 					estoqueMovimentacao.setVenda(item.getVenda());
-					
+					estoqueMovimentacao.setMaterial(item.getMaterial());
+					estoqueMovimentacao.setTipoMovimentacao(TipoEstoqueMovimentacaoEnum.S);
 					estoqueMovimentacaoDAO.addEntity(estoqueMovimentacao);
 					
 				}
@@ -490,7 +492,7 @@ public class VendaController {
 			e.printStackTrace();
 		}
 		
-		result.redirectTo(CompraController.class).lista(null, null, null, null, null, null);
+		result.redirectTo(VendaController.class).lista(null, null, null, null, null, null);
 	}
 	
 	@Path({"/venda/{venda.id}","/venda/form","/venda/novo/{venda.cliente.id}"})

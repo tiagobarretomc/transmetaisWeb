@@ -14,7 +14,6 @@ import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.util.SecurityUtil;
 
 @Component
-@ApplicationScoped
 public class UsuarioDAOImpl extends CrudDAOJPA<Usuario> implements UsuarioDAO{
 	
 	private static UsuarioDAOImpl instance = null;

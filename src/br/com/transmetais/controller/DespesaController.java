@@ -26,6 +26,7 @@ import br.com.transmetais.bean.ContaAPagarDespesa;
 import br.com.transmetais.bean.ContaContabil;
 import br.com.transmetais.bean.Despesa;
 import br.com.transmetais.bean.Fornecedor;
+import br.com.transmetais.bean.MovimentacaoContasAPagar;
 import br.com.transmetais.bean.MovimentacaoDespesa;
 import br.com.transmetais.bean.ParcelaDespesa;
 import br.com.transmetais.dao.CentroAplicacaoDAO;
@@ -36,6 +37,7 @@ import br.com.transmetais.dao.ContaDAO;
 import br.com.transmetais.dao.DespesaDAO;
 import br.com.transmetais.dao.FornecedorDAO;
 import br.com.transmetais.dao.MovimentacaoDAO;
+import br.com.transmetais.dao.ParcelaDAO;
 import br.com.transmetais.dao.commons.DAOException;
 import br.com.transmetais.filtros.DespesaFiltro;
 import br.com.transmetais.type.FormaPagamentoEnum;
@@ -60,6 +62,7 @@ public class DespesaController {
 	protected  Result result;
 	protected  DespesaDAO dao;
 	protected Validator validator;
+	protected ParcelaDAO parcelaDao;
 	
 	
 	@Autowired
@@ -426,6 +429,10 @@ public class DespesaController {
 		this.dao = dao;
 	}
 	
+	@Autowired
+	public void setParcelaDao(ParcelaDAO parcelaDao) {
+		this.parcelaDao = parcelaDao;
+	}
 	
 	public void loadModalidades(TipoPagamentoEnum tipoPagamento) throws Exception{
 		
@@ -568,7 +575,67 @@ public class DespesaController {
 	}
 	public boolean update(Despesa bean){
 		try {
-			dao.updateEntity(bean);
+			
+			Despesa despesa = dao.findById(bean.getId());
+			
+			//Para as despesas que foram pagas a vista
+			for (MovimentacaoDespesa movimentacao : despesa.getMovimentacoesDespesa()) {
+				
+				movimentacaoDAO.removeEntity(movimentacao);
+				
+				movimentacao.getConta().getSaldo().add(movimentacao.getValor());
+				
+				contaDAO.updateEntity(movimentacao.getConta());
+			}
+			
+			
+			//para as despesas a prazo
+			for (ContaAPagarDespesa contaapagar : despesa.getContasApagarList()) {
+				
+				for (MovimentacaoContasAPagar movimentacao : contaapagar.getMovimentacoesContasAPagar()) {
+					
+					movimentacaoDAO.removeEntity(movimentacao);
+					
+					movimentacao.getConta().getSaldo().add(movimentacao.getValor());
+					
+					contaDAO.updateEntity(movimentacao.getConta());
+				}
+				
+				contaAPagarDAO.removeEntity(contaapagar);
+				
+			}
+			
+			for (ChequeEmitidoDespesa cheque : despesa.getChequeEmitidoList()) {
+				
+				chequeEmitidoDao.removeEntity(cheque);
+				
+			}
+			
+			for (ParcelaDespesa parcela  : despesa.getParcelas()) {
+				
+				parcelaDao.removeEntity(parcela);
+				
+			}
+			
+			
+			
+			
+			despesa.setDescricao(bean.getDescricao());
+			despesa.setFornecedor(bean.getFornecedor());
+			despesa.setCentroAplicacao(bean.getCentroAplicacao());
+			despesa.setContaContabil(bean.getContaContabil());
+			despesa.setConta(bean.getConta());
+			despesa.setModalidadePagamento(bean.getModalidadePagamento());
+			despesa.setFormaPagamento(bean.getFormaPagamento());
+			despesa.setDataCompetencia(bean.getDataCompetencia());
+			despesa.setDataVencimento(bean.getDataVencimento());
+			despesa.setParcelas(bean.getParcelas());
+			
+			
+			dao.updateEntity(despesa);
+			
+			
+			
 			return true;
 		} catch (Exception e) {
 			result.include("erro", "Erro ao alterar registro.");
