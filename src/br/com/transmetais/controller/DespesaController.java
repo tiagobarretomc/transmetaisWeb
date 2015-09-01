@@ -509,6 +509,27 @@ public class DespesaController {
 		}
 		result.forwardTo(this.getClass()).lista(new DespesaFiltro());
 	  }
+	
+	@Path("/cancelar/{id}")
+	public void cancelar(Despesa bean) throws DAOException {
+		Despesa despesa = dao.findById(bean.getId());
+		//despesa.setMotivo
+		bean.setStatus(StatusDespesaEnum.C);
+		
+		bean.setDataCancelamento(new Date());
+		String msg = null;
+		if (bean != null){
+			try{
+				dao.removeEntity(bean);
+				msg = "Registro excluído com sucesso." ;
+				result.include("mensagem", msg);
+			}catch(DAOException e){
+				result.include("erro", e.getMessage());
+
+			}
+		}
+		result.forwardTo(this.getClass()).lista(new DespesaFiltro());
+	  }
 
 	public void form(Despesa bean){
 		initForm(bean);

@@ -512,7 +512,7 @@
 		if($('input[name=venda\\.formaPagamento]:checked').val()) {
     		$.ajax({
 	        type: 'GET',
-	        url: '${pageContext.request.contextPath}/despesa/loadContas?_format=json',
+	        url: '${pageContext.request.contextPath}/venda/loadContas?_format=json',
 	        data:	{formaPagamento: $('#venda\\.modalidadePagamento').val(), tipoPagamento: $('input[name=venda\\.formaPagamento]:checked').val()},
 	 	    success: function(json){
 	 	    	

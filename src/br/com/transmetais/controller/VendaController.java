@@ -588,8 +588,8 @@ public class VendaController {
 	public void loadContas(TipoPagamentoEnum tipoPagamento, FormaPagamentoEnum formaPagamento) throws Exception{
 		
 	
-		List<Conta> lista = null;
-		
+		List<Conta> lista = contaDao.findAll();
+		/*
 		//Carregar as contas financeiras apenas quando for despesa paga a vista
 		if (tipoPagamento == TipoPagamentoEnum.V){
 			// se for pagamento em dinheiro carregar contas de fundo fixo
@@ -610,7 +610,7 @@ public class VendaController {
 		}else if(formaPagamento == FormaPagamentoEnum.C){
 			lista = (List<Conta>)contaDao.obterContasBancarias();
 		}
-		
+		*/
 		if (lista != null)
 			result.use(json()).from(lista).serialize();
 		

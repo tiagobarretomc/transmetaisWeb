@@ -12,8 +12,8 @@
   
       <properties>
          <property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
-         <property name="hibernate.connection.username" value="transmetais"/>
-         <property name="hibernate.connection.password" value="guerra"/>
+         <property name="hibernate.connection.username" value="root"/>
+         <property name="hibernate.connection.password" value=""/>
          <property name="hibernate.connection.url" value="jdbc:mysql://localhost/transmetais"/>
          <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLInnoDBDialect"/>
          <property name="hibernate.format_sql" value="true" />
