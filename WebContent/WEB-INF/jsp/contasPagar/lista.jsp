@@ -188,7 +188,7 @@
 				
 				<td>
 						<c:set var="valor" value="0"/>
-						<fmt:formatNumber value="${ conta.valor}" minFractionDigits="2" type="currency"/>
+						<fmt:formatNumber value="${ conta.status.name eq 'P' ? conta.valorTotal : conta.valor}" minFractionDigits="2" type="currency"/>
 					</td>
 					
 				<td >
