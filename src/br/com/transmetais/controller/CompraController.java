@@ -3,6 +3,7 @@ package br.com.transmetais.controller;
 import static br.com.caelum.vraptor.view.Results.json;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -12,6 +13,8 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.mail.MessagingException;
 
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
@@ -23,6 +26,7 @@ import br.com.transmetais.bean.ComprovantePesagemEntrada;
 import br.com.transmetais.bean.Conta;
 import br.com.transmetais.bean.ContaAPagarCompra;
 import br.com.transmetais.bean.ContaContabil;
+import br.com.transmetais.bean.Email;
 import br.com.transmetais.bean.Estoque;
 import br.com.transmetais.bean.Fornecedor;
 import br.com.transmetais.bean.FornecedorMaterial;
@@ -43,7 +47,9 @@ import br.com.transmetais.dao.FornecedorMaterialDAO;
 import br.com.transmetais.dao.MaterialDAO;
 import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.commons.DAOException;
+import br.com.transmetais.dao.impl.CompraDaoImpl;
 import br.com.transmetais.dao.impl.ComprovantePesagemEntradaDaoImpl;
+import br.com.transmetais.mail.EmailService;
 import br.com.transmetais.type.FormaPagamentoEnum;
 import br.com.transmetais.type.SituacaoChequeEnum;
 import br.com.transmetais.type.StatusCompraEnum;
@@ -69,10 +75,11 @@ public class CompraController {
 	private ChequeEmitidoDAO chequeEmitidoDAO;
 	private MovimentacaoDAO movimentacaoDAO;
 	private ComprovantePesagemEntradaDaoImpl comprovantePesagemDAO;
+	private EmailService emailService;
 	
 	public CompraController(Result result, CompraDAO compraDao, FornecedorDAO fornecedorDao, FornecedorMaterialDAO fornecedorMaterialDao, ContaAPagarDAO contaAPagarDAO, 
 			ContaDAO contaDao, MaterialDAO materialDao, EstoqueDAO estoqueDAO,ContaContabilDAO contaContabilDAO, CentroAplicacaoDAO centroAplicacaoDAO,
-			ChequeEmitidoDAO chequeEmitidoDAO, MovimentacaoDAO movimentacaoDAO, ComprovantePesagemEntradaDaoImpl comprovantePesagemDAO) {
+			ChequeEmitidoDAO chequeEmitidoDAO, MovimentacaoDAO movimentacaoDAO, ComprovantePesagemEntradaDaoImpl comprovantePesagemDAO, EmailService emailService) {
 		this.dao = compraDao;
 		this.fornecedorDao = fornecedorDao;
 		this.fornecedorMaterialDao = fornecedorMaterialDao;
@@ -86,6 +93,7 @@ public class CompraController {
 		this.chequeEmitidoDAO = chequeEmitidoDAO;
 		this.movimentacaoDAO = movimentacaoDAO;
 		this.comprovantePesagemDAO = comprovantePesagemDAO;
+		this.emailService = emailService;
 	}
 	
 	//tela de listagem de compras
@@ -510,6 +518,36 @@ public class CompraController {
 				
 				//compra.getConta().setSaldo(compra.getConta().getSaldo().subtract(movimentacao.getValor()));
 				//contaDao.updateEntity(compra.getConta());
+				compra = dao.findById(compra.getId());
+				emailService.enviarEmailCompraEmitida(compra);
+//				Email email = new Email();
+//				email.setAssunto("Compra - " + compra.getId().toString());
+//				String mensagem = "<html>Compra: " + compra.getId() + "<br>";
+//				email.setMensagem("");
+//				mensagem += email.getMensagem().concat("Fornecedor: " + compra.getFornecedor().getApelido() + " - " + compra.getFornecedor().getNome() + "<br>");
+//				mensagem += email.getMensagem().concat("<br>");
+//				
+//				mensagem += email.getMensagem().concat("Itens compra : <br>");
+//				for (ItemCompra item : compra.getItens()) {
+//					mensagem += email.getMensagem().concat(item.getMaterial().getDescricao() + "<br>");
+//					mensagem += email.getMensagem().concat("Pre&ccedil;o (" + item.getMaterial().getUnidadeMedida().getSigla() + "): " + NumberFormat.getCurrencyInstance().format(item.getPreco()) + "<br>");
+//					mensagem += email.getMensagem().concat("Quantidade (" + item.getMaterial().getUnidadeMedida().getSigla() + "): " + NumberFormat.getNumberInstance().format(item.getQuantidade()) + "<br>");
+//					mensagem += email.getMensagem().concat("Valor: " +  NumberFormat.getCurrencyInstance().format(item.getValor())   + "<br>");
+//					
+//					
+//				}
+//				
+//				mensagem += email.getMensagem().concat("<br>");
+//				
+//				mensagem += email.getMensagem().concat("Valor Total: " + NumberFormat.getCurrencyInstance().format(compra.getValor()) + "<br>");
+//				
+//				mensagem += email.getMensagem().concat("<br>");
+//				
+//				mensagem += email.getMensagem().concat("Forma de pagamento: " + compra.getFormaPagamento().getDescricao()  + "<br>");
+//				mensagem += email.getMensagem().concat("Modalidade de pagamento: " + compra.getModalidadePagamento().getDescricao()  + "<br>");
+//				mensagem += email.getMensagem().concat("</html>");
+//				email.setMensagem(mensagem);
+//				email.enviar();
 			}
 			
 			
@@ -526,7 +564,7 @@ public class CompraController {
 		} catch (DAOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		} 
 		
 		result.redirectTo(CompraController.class).lista(null, null, null, null, null, null);
 	}
@@ -689,10 +727,13 @@ public class CompraController {
 				compra.getItens().add(item);
 			}
 			
+			
 			result.forwardTo(this).form(compra);
 		}else{
 			result.forwardTo(this).lista(null, null, null, null, null, null);
 		}
+		
+		
 	
 	}
 

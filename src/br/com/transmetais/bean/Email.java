@@ -56,7 +56,7 @@ public class Email {
 	public void enviar() throws MessagingException{
 		Mail mail = Mail.createMail(this.para, this.assunto, this.mensagem);
 		mail.setFrom(this.deAlias, this.de);
-		MailSSL.getInstance().send(mail);
+		MailSSL.getGoogleInstance("valmir@tmetais.com","combatente").send(mail);
 
 	}
 }

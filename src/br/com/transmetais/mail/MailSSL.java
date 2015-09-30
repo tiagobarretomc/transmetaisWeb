@@ -1,11 +1,11 @@
 package br.com.transmetais.mail;
 
-import java.util.Date;
 import java.util.Properties;
 
 import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -26,6 +26,11 @@ public class MailSSL {
 	private boolean ssl = false;
 	private boolean debug = false;
 	
+	
+	static Properties mailServerProperties;
+	static Session getMailSession;
+	static MimeMessage generateMailMessage;
+	
 //	public MailSSL()
 //	{
 		//FIXME Logobada.tmp
@@ -39,6 +44,7 @@ public class MailSSL {
 		this.SMTP_AUTH_PWD = smtpPassword;
 		this.SMTP_HOST_NAME = smtpHost;
 		this.SMTP_HOST_PORT = smtpPort;
+		this.ssl = ssl;
 	}
 	
 	/** Retorna uma instancia do servidor de email padrao */
@@ -98,54 +104,57 @@ public class MailSSL {
 	
 	public void send(Mail mail) throws MessagingException
     {
-        Properties props = new Properties();
+		Properties props = new Properties();
+        /** Parâmetros de conexão com servidor Gmail */
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "465");
 
-        if(ssl){
-	        props.put("mail.transport.protocol", "smtps");
-	        props.put("mail.smtps.host", SMTP_HOST_NAME);
-	        props.put("mail.smtps.auth", "true");
-        }
-        else{
-        	props.put("mail.transport.protocol", "smtp");
-        	props.put("mail.smtp.auth", "true");
-			props.put("mail.smtp.host", SMTP_HOST_NAME);
-			props.put("mail.smtp.user", SMTP_AUTH_USER);
-			//deus eh quem sabe, evita o erro de javax.mail.MessagingException: 501 Syntax: HELO hostname
-			props.put("mail.smtp.localhost", "toto");
-        }
-        
-        //System.out.println(props.toString());
-        Session mailSession = Session.getDefaultInstance(props, null);       
-        mailSession.setDebug(debug);
-        
-        Transport transport = mailSession.getTransport();
+        Session session = Session.getDefaultInstance(props,
+                    new javax.mail.Authenticator() {
+                         protected PasswordAuthentication getPasswordAuthentication() 
+                         {
+                               return new PasswordAuthentication("transmetaisweb@tmetais.com", "combatente");
+                         }
+                    });
 
-        MimeMessage msg = new MimeMessage(mailSession);
-        msg.setSubject(mail.getSubject() == null ? "" : mail.getSubject());
-        //msg.setContent(mail.getMessage(), "text/html");
-        //tava com problemas na acentuacao
-        msg.setText(mail.getMessage(), "UTF-8", "html");
-        msg.setSentDate(new Date());
-        
-        msg.setFrom(mail.getFrom());
-        
-        if(mail.getReply()!=null){
-        	msg.setReplyTo(new Address[]{mail.getReply()});
-        }
-        
-        for(String receive : mail.getReceivers()) {
-        	msg.addRecipient(Message.RecipientType.TO, new InternetAddress(receive));
-		}
-        
-        for(String copy : mail.getCopies()) {
-        	msg.addRecipient(Message.RecipientType.CC, new InternetAddress(copy));
-		}
-        
-        transport.connect(SMTP_HOST_NAME, SMTP_HOST_PORT, SMTP_AUTH_USER, SMTP_AUTH_PWD);
-        
+        /** Ativa Debug para sessão */
+        session.setDebug(true);
 
-        transport.sendMessage(msg, msg.getRecipients(Message.RecipientType.TO));
-        transport.close();
+        try {
+        	
+
+              Message message = new MimeMessage(session);
+              message.setFrom(new InternetAddress("transmetaisweb@tmetais.com")); //Remetente
+              
+              String destinatario = "";
+              for (String dest : mail.getReceivers()) {
+            	  if(destinatario!=""){
+            		  destinatario = destinatario + "," + dest;
+            	  }
+            	  else{
+            		  destinatario = dest;
+            	  }
+				
+			}
+
+              Address[] toUser = InternetAddress //Destinatário(s)
+                         .parse(destinatario);  
+
+              message.setRecipients(Message.RecipientType.TO, toUser);
+              message.setSubject(mail.getSubject());//Assunto
+             // message.setText();
+              message.setContent (mail.getMessage(), "text/html");
+              /**Método para enviar a mensagem criada*/
+              Transport.send(message);
+
+              
+
+         } catch (MessagingException e) {
+              throw new RuntimeException(e);
+        }
     }	
 	
 //	public static void main(String[] args) throws Exception
@@ -170,17 +179,11 @@ public class MailSSL {
 //	}
 	
 	
-	public static void main(String[] args) throws Exception
-	{
-		//https://www.google.com/a/cpanel/autosbr.com/Dashboard
-		Mail mail = Mail.createMail(new String[]{"wrlsportsnews@gmail.com"}, "SMTP teste", "Foi");
-		mail.setFrom("Aroldo hehehe", "wrlsportsnews@autosbr.com");
-		MailSSL.getInstance().send(mail);
-		
-//		MailSSL sender = new MailSSL("bruno", "010203","174.132.34.212" ,25,false);
-//		sender.setDebug(true);
-//		sender.send(mail);
-		
-		System.out.println("fim");
-	}
+	public static void main(String[] args) {
+        
+  }
+
+
+
+
 }

@@ -26,6 +26,7 @@ import br.com.transmetais.dao.FornecedorDAO;
 import br.com.transmetais.dao.MovimentacaoDAO;
 import br.com.transmetais.dao.ParcelaDAO;
 import br.com.transmetais.dao.commons.DAOException;
+import br.com.transmetais.mail.EmailService;
 import br.com.transmetais.type.FormaPagamentoEnum;
 import br.com.transmetais.type.SituacaoChequeEnum;
 import br.com.transmetais.type.StatusCompraEnum;
@@ -46,11 +47,12 @@ public class ContasPagarController {
 	private ParcelaDAO parcelaDao;
 	private ChequeEmitidoDAO chequeEmitidoDAO;
 	private FornecedorDAO fornecedorDAO;
+	private EmailService emailService;
 	
 	
 	public ContasPagarController(Result result,ContaAPagarDAO dao, ContaDAO contaDao, 
 			MovimentacaoDAO movimentacaoDao, CompraDAO compraDao, 
-			DespesaDAO despesaDao, ParcelaDAO parcelaDao,ChequeEmitidoDAO chequeEmitidoDAO, FornecedorDAO fornecedorDAO) {
+			DespesaDAO despesaDao, ParcelaDAO parcelaDao,ChequeEmitidoDAO chequeEmitidoDAO, FornecedorDAO fornecedorDAO, EmailService emailService) {
 		this.dao = dao;
 		this.result = result;
 		this.contaDao = contaDao;
@@ -61,6 +63,7 @@ public class ContasPagarController {
 		this.parcelaDao = parcelaDao;
 		this.chequeEmitidoDAO = chequeEmitidoDAO;
 		this.fornecedorDAO = fornecedorDAO;
+		this.emailService = emailService;
 		
 	}
 	
@@ -70,6 +73,8 @@ public class ContasPagarController {
 		List<ContaAPagar> lista = null;
 		
 		try {
+			
+			//emailService.enviarEmailContasAPagar(null);
 			
 			Calendar data = new GregorianCalendar();
 			if (dataFim == null){

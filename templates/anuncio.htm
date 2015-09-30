@@ -1,0 +1,37 @@
+<#setting locale="pt_BR">
+<#assign anoFab = "${anuncio.anoFabricacao}"/>
+<#assign opcionais = ""/>
+<#list anuncio.opcional as opcional>
+	<#assign opcionais = "${opcionais},${opcional.descricao}"/>
+</#list>
+
+<div id="descricaoCarro" class="detalhes">
+	<ul id="colDetalhe">           
+		<li><h6>Ano: <strong>${anuncio.anoFabricacao?string("0")} <#if anuncio.anoModelo?exists && !(anuncio.anoModelo??)>/${anoModelo?string("0")}</#if></strong></h6></li>           
+		<#if anuncio.cor?exists><li><h6>Cor: <strong>${anuncio.cor.descricao}</strong></h6></li></#if>           
+		<#if anuncio.tipoCombustivel?exists><li><h6>Combust&iacute;vel: <strong>${anuncio.tipoCombustivel.descricao}</strong></h6></li></#if>           
+		<#if !(anuncio.placa??)><li><h6>Final da placa: <strong>${anuncio.placa?string[anuncio.placa?length - 1]}</strong></h6></li></#if>          
+	</ul>          
+	<ul id="colDetalhe">           
+		<li><h6>Km: <strong>${anuncio.km?string.number}</strong></h6></li>           
+		<#if anuncio.numPortas?exists><li><h6>Portas: <strong>${anuncio.numPortas} portas</strong></h6></li></#if>            
+		<#if anuncio.tipoCambio?exists><li><h6>C&acirc;mbio: <strong>${anuncio.tipoCambio.descricao}</strong></h6></li>  </#if>          
+		<#if anuncio.tipoCarroceria?exists><li><h6>Carroceria: <strong>${anuncio.tipoCarroceria.descricao}</strong></h6></li></#if> 
+	</ul> 
+	<#if opcionais?has_content>                   
+	<ul id="ctl00_ConteudoCompraMaster_ltrOpcional" class="consideracoes">           
+	<li>            
+		<h5>Opcionais</h5>            
+		<p>${opcionais?string[1..]}</p>           
+	</li>          
+	</ul>
+	</#if> 
+	<#if anuncio.comentario?has_content>         
+	<ul id="ctl00_ConteudoCompraMaster_ltrObservacao" class="consideracoesObservacoes">                  
+		<li>            
+			<h5>Observa&ccedil;&otilde;es do vendedor</h5>            
+			<p>${anuncio.comentario}</p>           
+		</li>          
+	</ul>
+	</#if>
+</div>

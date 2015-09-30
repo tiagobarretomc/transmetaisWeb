@@ -16,7 +16,7 @@ public class FreemarkerUtil {
 	// private static final String TEMPLATES_FOLDER = System
 	// .getProperty("user.dir") + AutosBr.TEMPLATES_FOLDER;
 
-	private static final String TEMPLATES_FOLDER = "";
+	private static final String TEMPLATES_FOLDER = TransmetaisWeb.TEMPLATES_FOLDER;
 
 	public static final String parseTemplate(Map map, String templateName)
 			throws TemplateException, IOException {

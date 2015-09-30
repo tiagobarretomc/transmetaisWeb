@@ -1,0 +1,56 @@
+<#setting locale="pt_BR">
+
+
+<div class="container">
+    
+	<div class="panel panel-default">
+	<div class="panel-body">
+	<h3>Dados da Compra</h3>           
+		<div class="col-md-2">
+		<label for="compra.id">C&oacute;digo:</label>
+    	<label>${compra.id}</label>
+					
+        </div>
+        <div class="col-md-2">
+      			<label for="compra.numNf">Data:</label>
+				<label>${compra.data?string("dd/MM/yyyy")}</label>
+      		</div> 
+		          
+		         
+	     
+	
+	<div class="col-md-2">
+      			<label for="compra.numNf">Fornecedor:</label>
+				<label>${compra.fornecedor.apelido} - ${compra.fornecedor.nome}</label>
+      		</div> 
+	
+	<table   id="tabelaItens">
+				
+	<thead>
+			<tr>
+				
+				<th >Material</th>
+				<th >Quantidade</th>
+				<th>Pre&ccedil;o</th>
+				<th >Valor</th>
+			</tr>
+	</thead>
+			<tbody>
+			<#list compra.itens as item><br>
+   				<tr>
+   					<td>${item.material.sigla}</td>
+   					<td>${item.quantidade?string.number}</td>
+   					<td>${item.preco?string.currency}</td>
+   					<td>${item.valor?string.currency}</td>
+   				</tr>
+			</#list>
+			
+			</tbody>
+	
+</table>
+
+
+
+	</div>     
+</div>
+</div>
